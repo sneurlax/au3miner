@@ -1,10 +1,10 @@
 Select
-      Case FileExists("au3miner.ini")
-         Global $_sInstallDir = IniRead("au3miner.ini" ,"settings", "installdir",@TempDir&"\au3miner\")
-      Case FileExists(@TempDir&"\au3miner\au3miner.ini")
-         Global $_sInstallDir = IniRead(@TempDir&"\au3miner.ini", "settings", "installdir", @TempDir&"\au3miner\")
-      Case Else
-         Global $_sInstallDir = @TempDir&"\au3miner\"
+	  Case FileExists("au3miner.ini")
+		 Global $_sInstallDir = IniRead("au3miner.ini" ,"settings", "installdir",@TempDir&"\au3miner\")
+	  Case FileExists(@TempDir&"\au3miner\au3miner.ini")
+		 Global $_sInstallDir = IniRead(@TempDir&"\au3miner.ini", "settings", "installdir", @TempDir&"\au3miner\")
+	  Case Else
+		 Global $_sInstallDir = @TempDir&"\au3miner\"
 EndSelect
 
 Install($_sInstallDir)
@@ -13,58 +13,58 @@ Func Install($_fInstallDir)
    If Not FileExists( $_fInstallDir ) Then $_fInstallDir = @TempDir
 
    If Not FileExists($_fInstallDir) Then
-      Do
-          DirCreate($_fInstallDir)
-      Until FileExists($_fInstallDir)
+	  Do
+		  DirCreate($_fInstallDir)
+	  Until FileExists($_fInstallDir)
    EndIf
    If Not FileExists($_fInstallDir&"qtminer\") Then
-      Do
-          DirCreate($_fInstallDir&"qtminer\")
-      Until FileExists($_fInstallDir&"qtminer\")
+	  Do
+		  DirCreate($_fInstallDir&"qtminer\")
+	  Until FileExists($_fInstallDir&"qtminer\")
    EndIf
-   FileInstall("C:\au3miner\qtminer\qt_ca.qm", $_fInstallDir & "qtminer\qt_ca.qm", 0)
-   FileInstall("C:\au3miner\qtminer\qt_cs.qm", $_fInstallDir & "qtminer\qt_cs.qm", 0)
-   FileInstall("C:\au3miner\qtminer\qt_de.qm", $_fInstallDir & "qtminer\qt_de.qm", 0)
-   FileInstall("C:\au3miner\qtminer\qt_fi.qm", $_fInstallDir & "qtminer\qt_fi.qm", 0)
-   FileInstall("C:\au3miner\qtminer\qt_hu.qm", $_fInstallDir & "qtminer\qt_hu.qm", 0)
-   FileInstall("C:\au3miner\qtminer\qt_it.qm", $_fInstallDir & "qtminer\qt_it.qm", 0)
-   FileInstall("C:\au3miner\qtminer\qt_ja.qm", $_fInstallDir & "qtminer\qt_ja.qm", 0)
-   FileInstall("C:\au3miner\qtminer\qt_ru.qm", $_fInstallDir & "qtminer\qt_ru.qm", 0)
-   FileInstall("C:\au3miner\qtminer\qt_sk.qm", $_fInstallDir & "qtminer\qt_sk.qm", 0)
-   FileInstall("C:\au3miner\qtminer\qt_uk.qm", $_fInstallDir & "qtminer\qt_uk.qm", 0)
-   FileInstall("C:\au3miner\qtminer\QtMiner.exe", $_fInstallDir & "qtminer\QtMiner.exe", 0)
-   FileInstall("C:\au3miner\qtminer\depends.exe", $_fInstallDir & "qtminer\depends.exe", 0)
-   FileInstall("C:\au3miner\qtminer\msvcp120.dll", $_fInstallDir & "qtminer\msvcp120.dll", 0)
-   FileInstall("C:\au3miner\qtminer\msvcr120.dll", $_fInstallDir & "qtminer\msvcr120.dll", 0)
-   FileInstall("C:\au3miner\qtminer\icudt53.dll", $_fInstallDir & "qtminer\icudt53.dll", 0)
-   FileInstall("C:\au3miner\qtminer\icuin53.dll", $_fInstallDir & "qtminer\icuin53.dll", 0)
-   FileInstall("C:\au3miner\qtminer\icuuc53.dll", $_fInstallDir & "qtminer\icuuc53.dll", 0)
-   FileInstall("C:\au3miner\qtminer\Qt5Core.dll", $_fInstallDir & "qtminer\Qt5Core.dll", 0)
-   FileInstall("C:\au3miner\qtminer\Qt5Network.dll", $_fInstallDir & "qtminer\Qt5Network.dll", 0)
-   FileInstall("C:\au3miner\qtminer\OpenCL.dll", $_fInstallDir & "qtminer\OpenCL.dll", 0)
-   FileInstall("C:\au3miner\qtminer\evmjit.dll", $_fInstallDir & "qtminer\evmjit.dll", 0)
-   FileInstall("C:\au3miner\qtminer\libmicrohttpd-dll.dll", $_fInstallDir & "qtminer\libmicrohttpd-dll.dll", 0)
-   FileInstall("C:\au3miner\qtminer\libcurl.dll", $_fInstallDir & "qtminer\libcurl.dll", 0)
-   FileInstall("C:\au3miner\qtminer\depends.dll", $_fInstallDir & "qtminer\depends.dll", 0)
-   FileInstall("C:\au3miner\qtminer\qt.conf", $_fInstallDir & "qtminer\qt.conf", 0)
-   If Not FileExists($_fInstallDir & "qtminer\bearer\") Then
-      Do
-          DirCreate($_fInstallDir & "qtminer\bearer\")
-      Until FileExists($_fInstallDir & "qtminer\bearer")
+   FileInstall("C:\au3miner\qtminer\qt_ca.qm", $_fInstallDir&"qtminer\qt_ca.qm", 0)
+   FileInstall("C:\au3miner\qtminer\qt_cs.qm", $_fInstallDir&"qtminer\qt_cs.qm", 0)
+   FileInstall("C:\au3miner\qtminer\qt_de.qm", $_fInstallDir&"qtminer\qt_de.qm", 0)
+   FileInstall("C:\au3miner\qtminer\qt_fi.qm", $_fInstallDir&"qtminer\qt_fi.qm", 0)
+   FileInstall("C:\au3miner\qtminer\qt_hu.qm", $_fInstallDir&"qtminer\qt_hu.qm", 0)
+   FileInstall("C:\au3miner\qtminer\qt_it.qm", $_fInstallDir&"qtminer\qt_it.qm", 0)
+   FileInstall("C:\au3miner\qtminer\qt_ja.qm", $_fInstallDir&"qtminer\qt_ja.qm", 0)
+   FileInstall("C:\au3miner\qtminer\qt_ru.qm", $_fInstallDir&"qtminer\qt_ru.qm", 0)
+   FileInstall("C:\au3miner\qtminer\qt_sk.qm", $_fInstallDir&"qtminer\qt_sk.qm", 0)
+   FileInstall("C:\au3miner\qtminer\qt_uk.qm", $_fInstallDir&"qtminer\qt_uk.qm", 0)
+   FileInstall("C:\au3miner\qtminer\QtMiner.exe", $_fInstallDir&"qtminer\QtMiner.exe", 0)
+   FileInstall("C:\au3miner\qtminer\depends.exe", $_fInstallDir&"qtminer\depends.exe", 0)
+   FileInstall("C:\au3miner\qtminer\msvcp120.dll", $_fInstallDir&"qtminer\msvcp120.dll", 0)
+   FileInstall("C:\au3miner\qtminer\msvcr120.dll", $_fInstallDir&"qtminer\msvcr120.dll", 0)
+   FileInstall("C:\au3miner\qtminer\icudt53.dll", $_fInstallDir&"qtminer\icudt53.dll", 0)
+   FileInstall("C:\au3miner\qtminer\icuin53.dll", $_fInstallDir&"qtminer\icuin53.dll", 0)
+   FileInstall("C:\au3miner\qtminer\icuuc53.dll", $_fInstallDir&"qtminer\icuuc53.dll", 0)
+   FileInstall("C:\au3miner\qtminer\Qt5Core.dll", $_fInstallDir&"qtminer\Qt5Core.dll", 0)
+   FileInstall("C:\au3miner\qtminer\Qt5Network.dll", $_fInstallDir&"qtminer\Qt5Network.dll", 0)
+   FileInstall("C:\au3miner\qtminer\OpenCL.dll", $_fInstallDir&"qtminer\OpenCL.dll", 0)
+   FileInstall("C:\au3miner\qtminer\evmjit.dll", $_fInstallDir&"qtminer\evmjit.dll", 0)
+   FileInstall("C:\au3miner\qtminer\libmicrohttpd-dll.dll", $_fInstallDir&"qtminer\libmicrohttpd-dll.dll", 0)
+   FileInstall("C:\au3miner\qtminer\libcurl.dll", $_fInstallDir&"qtminer\libcurl.dll", 0)
+   FileInstall("C:\au3miner\qtminer\depends.dll", $_fInstallDir&"qtminer\depends.dll", 0)
+   FileInstall("C:\au3miner\qtminer\qt.conf", $_fInstallDir&"qtminer\qt.conf", 0)
+   If Not FileExists($_fInstallDir&"qtminer\bearer\") Then
+	  Do
+		  DirCreate($_fInstallDir&"qtminer\bearer\")
+	  Until FileExists($_fInstallDir&"qtminer\bearer")
    EndIf
-   FileInstall("C:\au3miner\qtminer\bearer\qgenericbearer.dll", $_fInstallDir & "qtminer\bearer\qgenericbearer.dll", 0)
-   FileInstall("C:\au3miner\qtminer\bearer\qnativewifibearer.dll", $_fInstallDir & "qtminer\bearer\qnativewifibearer.dll", 0)
-   If Not FileExists($_fInstallDir & "hodlminer\") Then
-      Do
-          DirCreate($_fInstallDir & "hodlminer\")
-      Until FileExists($_fInstallDir & "hodlminer\")
+   FileInstall("C:\au3miner\qtminer\bearer\qgenericbearer.dll", $_fInstallDir&"qtminer\bearer\qgenericbearer.dll", 0)
+   FileInstall("C:\au3miner\qtminer\bearer\qnativewifibearer.dll", $_fInstallDir&"qtminer\bearer\qnativewifibearer.dll", 0)
+   If Not FileExists($_fInstallDir&"hodlminer\") Then
+	  Do
+		  DirCreate($_fInstallDir&"hodlminer\")
+	  Until FileExists($_fInstallDir&"hodlminer\")
    EndIf
-   FileInstall("C:\au3miner\hodlminer\hodlminer.exe", $_fInstallDir & "hodlminer\hodlminer.exe", 0)
+   FileInstall("C:\au3miner\hodlminer\hodlminer.exe", $_fInstallDir&"hodlminer\hodlminer.exe", 0)
 EndFunc
 
 #include <Crypt.au3> ; in order to SHA1 @ComputerName for the worker/rig labels
 
-Global $_Ver = "0.0.1"
+Global $_Ver = "0.0.2"
 
 Global $_pQtMiner = ProcessExists("qtminer.exe")
 Global $_sQtMiner_auto
@@ -84,6 +84,10 @@ Global $_sEOpenCLPlatform
 Global $_sEOpenCLPlatformVal
 Global $_sEOpenCLDevice
 Global $_sEOpenCLDeviceVal
+Global $_sECLLocalWork
+Global $_sECLLocalWorkVal
+Global $_sECLGlobalWork
+Global $_sECLGlobalWorkVal
 Global $_sEGPUForce64Bit
 Global $_sEGPUMaxHeap
 Global $_sEGPUMaxHeapVal
@@ -115,6 +119,10 @@ Func SettingsRead()
    $_sEOpenCLPlatformVal = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "opencl-platformval", 0)
    $_sEOpenCLDevice = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "opencl-device", 1)
    $_sEOpenCLDeviceVal = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "opencl-deviceval", 0)
+   $_sECLLocalWork = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "cl-localwork", 1)
+   $_sECLLocalWorkVal = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "cl-localworkval", 256)
+   $_sECLGlobalWork = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "cl-globalwork", 1)
+   $_sECLGlobalWorkVal = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "cl-globalworkval", 16384)
    $_sEGPUForce64Bit = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "gpuforce64bit", 1)
    $_sEGPUMaxHeap = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "gpumaxheap", 1)
    $_sEGPUMaxHeapVal = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "gpumaxheapval", 100)
@@ -138,13 +146,13 @@ Func SettingsWrite()
    $_sKeepAwake = GUICtrlRead($_uKeepAwake)
 
    If Not FileExists($_sInstallDir) Then
-      $_sCreateInstalLDir = MsgBox(3, "Directory does not exist", "Warning: "&$_sInstallDir&" does not exist!  Create directory?")
-      If $_sCreateInstallDir = 6 Then ;Yes
-         DirCreate($_sInstallDir)
-         If @error Then MsgBox(0, "Error", "Failed to create "&$_sInstallDir&"!")
-      EndIf
-      If $_sCreateInstalLDir = 7 Then Return ;No
-      If $_sCreateInstalLDir = 2 Then Return ;Cancel
+	  $_sCreateInstalLDir = MsgBox(3, "Directory does not exist", "Warning: "&$_sInstallDir&" does not exist!  Create directory?")
+	  If $_sCreateInstallDir = 6 Then ;Yes
+		 DirCreate($_sInstallDir)
+		 If @error Then MsgBox(0, "Error", "Failed to create "&$_sInstallDir&"!")
+	  EndIf
+	  If $_sCreateInstalLDir = 7 Then Return ;No
+	  If $_sCreateInstalLDir = 2 Then Return ;Cancel
    EndIf
 
    If Not $_sInstalLDir = $_sInstalLDirOld Then Install($_sInstallDir)
@@ -166,6 +174,10 @@ Func ESettingsWrite()
    $_sEOpenCLPlatformVal = GUICtrlRead($_uEOpenCLPlatformVal)
    $_sEOpenCLDevice = GUICtrlRead($_uEOpenCLDevice)
    $_sEOpenCLDeviceVal = GUICtrlRead($_uEOpenCLDeviceVal)
+   $_sECLLocalWork = GUICtrlRead($_uECLLocalWork)
+   $_sECLLocalWorkVal = GUICtrlRead($_uECLLocalWorkVal)
+   $_sECLGlobalWork = GUICtrlRead($_uECLGlobalWork)
+   $_sECLGlobalWorkVal = GUICtrlRead($_uECLGlobalWorkVal)
    $_sEGPUForce64Bit = GUICtrlRead($_uEGPUForce64Bit)
    $_sEGPUMaxHeap = GUICtrlRead($_uEGPUMaxHeap)
    $_sEGPUMaxHeapVal = GUICtrlRead($_uEGPUMaxHeapVal)
@@ -185,6 +197,10 @@ Func ESettingsWrite()
    IniWrite($_sInstallDir&"\au3miner.ini", "ethereum", "opencl-platformval", $_sEOpenCLPlatformVal)
    IniWrite($_sInstallDir&"\au3miner.ini", "ethereum", "opencl-device", $_sEOpenCLDevice)
    IniWrite($_sInstallDir&"\au3miner.ini", "ethereum", "opencl-deviceval", $_sEOpenCLDeviceVal)
+   IniWrite($_sInstallDir&"\au3miner.ini", "ethereum", "cl-localwork", $_sECLLocalWork)
+   IniWrite($_sInstallDir&"\au3miner.ini", "ethereum", "cl-localworkval", $_sECLLocalWorkVal)
+   IniWrite($_sInstallDir&"\au3miner.ini", "ethereum", "cl-globalwork", $_sECLGlobalWork)
+   IniWrite($_sInstallDir&"\au3miner.ini", "ethereum", "cl-globalworkval", $_sECLGlobalWorkVal)
    IniWrite($_sInstallDir&"\au3miner.ini", "ethereum", "gpuforce64bit", $_sEGPUForce64Bit)
    IniWrite($_sInstallDir&"\au3miner.ini", "ethereum", "gpumaxheap", $_sEGPUMaxHeap)
    IniWrite($_sInstallDir&"\au3miner.ini", "ethereum", "gpumaxheapval", $_sEGPUMaxHeapVal)
@@ -251,6 +267,12 @@ GUICtrlCreateTabItem("Ethereum settings")
    GUICtrlSetState($_uEOpenCLDevice, $_sEOpenCLDevice)
    $_uEOpenCLDeviceVal = GUICtrlCreateCombo("", 120, 157, 30)
    GUICtrlSetData($_uEOpenCLDeviceVal, "0|1", $_sEOpenCLDeviceVal)
+   $_uECLLocalWork = GUICtrlCreateCheckbox("--cl-local-work", 160, 135)
+   GUICtrlSetState($_uECLLocalWork, $_sECLLocalWork)
+   $_uECLLocalWorkVal = GUICtrlCreateInput($_sECLLocalWorkVal, 255, 135, 40)
+   $_uECLGlobalWork = GUICtrlCreateCheckbox("--cl-global-work", 160, 157)
+   GUICtrlSetState($_uECLGlobalWork, $_sECLGlobalWork)
+   $_uECLGlobalWorkVal = GUICtrlCreateInput($_sECLGlobalWorkVal, 255, 157, 40)
    $_uEGPUForce64Bit = GUICtrlCreateCheckbox("GPU_FORCE_64BIT_PTR", 20, 179)
    GUICtrlSetState($_uEGPUForce64Bit, $_sEGPUForce64Bit)
    $_uEGPUMaxHeap = GUICtrlCreateCheckbox("GPU_MAX_HEAP_SIZE", 20, 201)
@@ -313,14 +335,16 @@ Func MineEthereum()
    If $_sET Then $_sEOpts &= "-t "&$_sETVal&" "
    If $_sEOpenCLPlatform Then $_sEOpts &= "--opencl-platform "&$_sEOpenCLPlatformVal&" "
    If $_sEOpenCLDevice Then $_sEOpts &= "--opencl-device "&$_sEOpenCLDeviceVal&" "
+   If $_sECLLocalWork Then $_sEOpts &= "--cl-local-work "&$_sECLLocalWorkVal&" "
+   If $_sECLGlobalWork Then $_sEOpts &= "--cl-global-work "&$_sECLGlobalWorkVal&" "
 
-   If $_sEGPUForce64Bit Then $_sEGOpts &= "setx GPU_FORCE_64BIT_PTR 1&&"
-   If $_sEGPUMaxHeap Then $_sEGOpts &= "setx GPU_MAX_HEAP_SIZE "&$_uEGPUMaxHeapVal&"&&"
-   If $_sEGPUUseSync Then $_sEGOpts &= "setx GPU_USE_SYNC_OBJECTS 1&&"
-   If $_sEGPUMaxAlloc Then $_sEGOpts &= "setx GPU_MAX_ALLOC_PERCENT "&$_sEGPUMaxAllocVal&"&&"
-   If $_sEGPUSingleAlloc Then $_sEGOpts &= "SET GPU_SINGLE_ALLOC_PERCENT="&$_sEGPUSingleAllocVal&"&&"
+   If $_sEGPUForce64Bit Then $_sEGOpts &= "setx GPU_FORCE_64BIT_PTR 1"&@CRLF
+   If $_sEGPUMaxHeap Then $_sEGOpts &= "setx GPU_MAX_HEAP_SIZE "&$_uEGPUMaxHeapVal&@CRLF
+   If $_sEGPUUseSync Then $_sEGOpts &= "setx GPU_USE_SYNC_OBJECTS 1"&@CRLF
+   If $_sEGPUMaxAlloc Then $_sEGOpts &= "setx GPU_MAX_ALLOC_PERCENT "&$_sEGPUMaxAllocVal&@CRLF
+   If $_sEGPUSingleAlloc Then $_sEGOpts &= "SET GPU_SINGLE_ALLOC_PERCENT="&$_sEGPUSingleAllocVal&@CRLF
 
-   $_sBatch = "cd "&$_sInstallDir&"qtminer&&"&$_sEGOpts&"qtminer.exe -s "&$_sEServer&" -u "&$_sEPayoutAddress&"."&$_sEWorkerLabel&" "&$_sEOpts
+   $_sBatch = "cd "&$_sInstallDir&"qtminer"&@CRLF&$_sEGOpts&@CRLF&"qtminer.exe -s "&$_sEServer&" -u "&$_sEPayoutAddress&"."&$_sEWorkerLabel&" "&$_sEOpts
    If FileExists($_sInstallDir&"au3-qtminer.bat") Then FileDelete($_sInstallDir&"au3-qtminer.bat")
    FileWrite($_sInstallDir&"au3-qtminer.bat", $_sBatch)
    $_pQtMiner = Run(@ComSpec&" /K au3-qtminer.bat", $_sInstallDir)
@@ -336,7 +360,7 @@ Func MineHOdlcoin()
 
    Local $_HBatch
 
-   $_sBatch = "cd "&$_sInstallDir&"hodlminer&&hodlminer.exe -a hodl -o stratum+tcp://hodl.blockquarry.com:3032 -u "&$_sHPoolUsername&"."&$_sHWorkerLabel&" -p "&$_sHWorkerPassword
+   $_sBatch = "cd "&$_sInstallDir&"hodlminer"&@CRLF&"hodlminer.exe -a hodl -o stratum+tcp://hodl.blockquarry.com:3032 -u "&$_sHPoolUsername&"."&$_sHWorkerLabel&" -p "&$_sHWorkerPassword
    If FileExists($_sInstallDir&"au3-hodlminer.bat") Then FileDelete($_sInstallDir&"au3-hodlminer.bat")
    FileWrite($_sInstallDir&"au3-hodlminer.bat", $_sBatch)
    $_pHOdlMiner = Run(@ComSpec&" /K au3-hodlminer.bat", $_sInstallDir)
@@ -346,73 +370,73 @@ EndFunc
 
 While 1
    Switch GUIGetMsg()
-      Case $GUI_EVENT_CLOSE
-         ExitLoop
-      Case $_uQtMiner_launch
-         MineEthereum()
-      Case $_uHOdlMiner_launch
-         MineHOdlcoin()
-      Case $_uSaveSettings
-         SettingsWrite()
-      Case $_uESaveQtMinerSettings
-         ESettingsWrite()
-      Case $_uHSaveHOdlMinerSettings
-         HSettingsWrite()
+	  Case $GUI_EVENT_CLOSE
+		 ExitLoop
+	  Case $_uQtMiner_launch
+		 MineEthereum()
+	  Case $_uHOdlMiner_launch
+		 MineHOdlcoin()
+	  Case $_uSaveSettings
+		 SettingsWrite()
+	  Case $_uESaveQtMinerSettings
+		 ESettingsWrite()
+	  Case $_uHSaveHOdlMinerSettings
+		 HSettingsWrite()
    EndSwitch
 
    Select
-      Case $_iQtMiner_state == 1
-         GUICtrlSetState($_uQtMiner_launch, $GUI_DISABLE)
-         GUICtrlSetData($_uQtMiner_launch, "Launching qtminer...")
-         If ProcessExists($_pQtMiner) Then
-            $_iQtMiner_state = 2
-            GUICtrlSetData($_uQtMiner_launch, "qtminer is running")
-         EndIf
-      Case $_iQtMiner_state == 2
-         If Not ProcessExists($_pQtMiner) Then
-            $_iQtMiner_state = 3
-            GUICtrlSetData($_uQtMiner_launch, "qtminer closed")
-         EndIf
-      Case $_iQtMiner_state == 3
-         Do
-            ProcessClose($_pQtMiner)
-         Until Not ProcessExists($_pQtMiner)
-         $_iQtMiner_state = 0
-         GUICtrlSetState($_uQtMiner_launch, $GUI_ENABLE)
-         GUICtrlSetData($_uQtMiner_launch, "Launch qtminer")
-      Case Else
-         If ProcessExists($_pQtMiner) Then
-            GUICtrlSetState($_uQtMiner_launch, $GUI_DISABLE)
-            $_iQtMiner_state = 2
-            GUICtrlSetData($_uQtMiner_launch, "qtminer is running")
-         EndIf
+	  Case $_iQtMiner_state == 1
+		 GUICtrlSetState($_uQtMiner_launch, $GUI_DISABLE)
+		 GUICtrlSetData($_uQtMiner_launch, "Launching qtminer...")
+		 If ProcessExists($_pQtMiner) Then
+			$_iQtMiner_state = 2
+			GUICtrlSetData($_uQtMiner_launch, "qtminer is running")
+		 EndIf
+	  Case $_iQtMiner_state == 2
+		 If Not ProcessExists($_pQtMiner) Then
+			$_iQtMiner_state = 3
+			GUICtrlSetData($_uQtMiner_launch, "qtminer closed")
+		 EndIf
+	  Case $_iQtMiner_state == 3
+		 Do
+			ProcessClose($_pQtMiner)
+		 Until Not ProcessExists($_pQtMiner)
+		 $_iQtMiner_state = 0
+		 GUICtrlSetState($_uQtMiner_launch, $GUI_ENABLE)
+		 GUICtrlSetData($_uQtMiner_launch, "Launch qtminer")
+	  Case Else
+		 If ProcessExists($_pQtMiner) Then
+			GUICtrlSetState($_uQtMiner_launch, $GUI_DISABLE)
+			$_iQtMiner_state = 2
+			GUICtrlSetData($_uQtMiner_launch, "qtminer is running")
+		 EndIf
    EndSelect
 
    Select
-      Case $_iHOdlMiner_state == 1
-         GUICtrlSetState($_uHOdlMiner_launch, $GUI_DISABLE)
-         GUICtrlSetData($_uHOdlMiner_launch, "Launching HOdlminer...")
-         If ProcessExists($_pHOdlMiner) Then
-            $_iHOdlMiner_state = 2
-            GUICtrlSetData($_uHOdlMiner_launch, "HOdlminer is running")
-         EndIf
-      Case $_iHOdlMiner_state == 2
-         If Not ProcessExists($_pHOdlMiner) Then
-            $_iHOdlMiner_state = 3
-            GUICtrlSetData($_uHOdlMiner_launch, "HOdlminer closed")
-         EndIf
-      Case $_iHOdlMiner_state == 3
-         Do
-            ProcessClose($_pHOdlMiner)
-         Until Not ProcessExists($_pHOdlMiner)
-         $_iHOdlMiner_state = 0
-         GUICtrlSetState($_uHOdlMiner_launch, $GUI_ENABLE)
-         GUICtrlSetData($_uHOdlMiner_launch, "Launch HOdlminer")
-      Case Else
-         If ProcessExists($_pHOdlMiner) Then
-            GUICtrlSetState($_uHOdlMiner_launch, $GUI_DISABLE)
-            $_iHOdlMiner_state = 2
-            GUICtrlSetData($_uHOdlMiner_launch, "HOldminer is running")
-         EndIf
+	  Case $_iHOdlMiner_state == 1
+		 GUICtrlSetState($_uHOdlMiner_launch, $GUI_DISABLE)
+		 GUICtrlSetData($_uHOdlMiner_launch, "Launching HOdlminer...")
+		 If ProcessExists($_pHOdlMiner) Then
+			$_iHOdlMiner_state = 2
+			GUICtrlSetData($_uHOdlMiner_launch, "HOdlminer is running")
+		 EndIf
+	  Case $_iHOdlMiner_state == 2
+		 If Not ProcessExists($_pHOdlMiner) Then
+			$_iHOdlMiner_state = 3
+			GUICtrlSetData($_uHOdlMiner_launch, "HOdlminer closed")
+		 EndIf
+	  Case $_iHOdlMiner_state == 3
+		 Do
+			ProcessClose($_pHOdlMiner)
+		 Until Not ProcessExists($_pHOdlMiner)
+		 $_iHOdlMiner_state = 0
+		 GUICtrlSetState($_uHOdlMiner_launch, $GUI_ENABLE)
+		 GUICtrlSetData($_uHOdlMiner_launch, "Launch HOdlminer")
+	  Case Else
+		 If ProcessExists($_pHOdlMiner) Then
+			GUICtrlSetState($_uHOdlMiner_launch, $GUI_DISABLE)
+			$_iHOdlMiner_state = 2
+			GUICtrlSetData($_uHOdlMiner_launch, "HOldminer is running")
+		 EndIf
    EndSelect
 WEnd
