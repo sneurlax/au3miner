@@ -448,7 +448,6 @@ While 1
    EndSelect
 WEnd
 
-#include-once
 ; ===============================================================================================================================
 ; Functions to prevent/disable sleep/power-savings modes
 ;
@@ -469,8 +468,6 @@ WEnd
 ;    Success: @error=0 & previous state as # (typically 0x80000000 [-2147483648])
 ;    Failure: @error set (returns 0x80000000, but thats just the normal state)
 ;        @error = 2 = DLLCall error. @extended = DLLCall error code (see AutoIt Help)
-;
-; Author: Ascend4nt
 ; ==========================================================================================================================
 
 Func _PowerKeepAlive()
@@ -495,8 +492,6 @@ EndFunc
 ;    Success: @error=0 & previous state as #
 ;    Failure: @error set (returns 0x80000000, but thats just the normal state)
 ;        @error = 2 = DLLCall error. @extended = DLLCall error code (see AutoIt Help)
-;
-; Author: Ascend4nt
 ; ==========================================================================================================================
 
 Func _PowerResetState()
