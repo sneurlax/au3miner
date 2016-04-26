@@ -22,44 +22,44 @@ Func Install($_fInstallDir)
 		  DirCreate($_fInstallDir&"qtminer\")
 	  Until FileExists($_fInstallDir&"qtminer\")
    EndIf
-   FileInstall("C:\github\au3miner\qtminer\qt_ca.qm", $_fInstallDir&"qtminer\qt_ca.qm", 0)
-   FileInstall("C:\github\au3miner\qtminer\qt_cs.qm", $_fInstallDir&"qtminer\qt_cs.qm", 0)
-   FileInstall("C:\github\au3miner\qtminer\qt_de.qm", $_fInstallDir&"qtminer\qt_de.qm", 0)
-   FileInstall("C:\github\au3miner\qtminer\qt_fi.qm", $_fInstallDir&"qtminer\qt_fi.qm", 0)
-   FileInstall("C:\github\au3miner\qtminer\qt_hu.qm", $_fInstallDir&"qtminer\qt_hu.qm", 0)
-   FileInstall("C:\github\au3miner\qtminer\qt_it.qm", $_fInstallDir&"qtminer\qt_it.qm", 0)
-   FileInstall("C:\github\au3miner\qtminer\qt_ja.qm", $_fInstallDir&"qtminer\qt_ja.qm", 0)
-   FileInstall("C:\github\au3miner\qtminer\qt_ru.qm", $_fInstallDir&"qtminer\qt_ru.qm", 0)
-   FileInstall("C:\github\au3miner\qtminer\qt_sk.qm", $_fInstallDir&"qtminer\qt_sk.qm", 0)
-   FileInstall("C:\github\au3miner\qtminer\qt_uk.qm", $_fInstallDir&"qtminer\qt_uk.qm", 0)
-   FileInstall("C:\github\au3miner\qtminer\QtMiner.exe", $_fInstallDir&"qtminer\QtMiner.exe", 0)
-   FileInstall("C:\github\au3miner\qtminer\depends.exe", $_fInstallDir&"qtminer\depends.exe", 0)
-   FileInstall("C:\github\au3miner\qtminer\msvcp120.dll", $_fInstallDir&"qtminer\msvcp120.dll", 0)
-   FileInstall("C:\github\au3miner\qtminer\msvcr120.dll", $_fInstallDir&"qtminer\msvcr120.dll", 0)
-   FileInstall("C:\github\au3miner\qtminer\icudt53.dll", $_fInstallDir&"qtminer\icudt53.dll", 0)
-   FileInstall("C:\github\au3miner\qtminer\icuin53.dll", $_fInstallDir&"qtminer\icuin53.dll", 0)
-   FileInstall("C:\github\au3miner\qtminer\icuuc53.dll", $_fInstallDir&"qtminer\icuuc53.dll", 0)
-   FileInstall("C:\github\au3miner\qtminer\Qt5Core.dll", $_fInstallDir&"qtminer\Qt5Core.dll", 0)
-   FileInstall("C:\github\au3miner\qtminer\Qt5Network.dll", $_fInstallDir&"qtminer\Qt5Network.dll", 0)
-   FileInstall("C:\github\au3miner\qtminer\OpenCL.dll", $_fInstallDir&"qtminer\OpenCL.dll", 0)
-   FileInstall("C:\github\au3miner\qtminer\evmjit.dll", $_fInstallDir&"qtminer\evmjit.dll", 0)
-   FileInstall("C:\github\au3miner\qtminer\libmicrohttpd-dll.dll", $_fInstallDir&"qtminer\libmicrohttpd-dll.dll", 0)
-   FileInstall("C:\github\au3miner\qtminer\libcurl.dll", $_fInstallDir&"qtminer\libcurl.dll", 0)
-   FileInstall("C:\github\au3miner\qtminer\depends.dll", $_fInstallDir&"qtminer\depends.dll", 0)
-   FileInstall("C:\github\au3miner\qtminer\qt.conf", $_fInstallDir&"qtminer\qt.conf", 0)
+   FileInstall("C:\au3miner\qtminer\qt_ca.qm", $_fInstallDir&"qtminer\qt_ca.qm", 0)
+   FileInstall("C:\au3miner\qtminer\qt_cs.qm", $_fInstallDir&"qtminer\qt_cs.qm", 0)
+   FileInstall("C:\au3miner\qtminer\qt_de.qm", $_fInstallDir&"qtminer\qt_de.qm", 0)
+   FileInstall("C:\au3miner\qtminer\qt_fi.qm", $_fInstallDir&"qtminer\qt_fi.qm", 0)
+   FileInstall("C:\au3miner\qtminer\qt_hu.qm", $_fInstallDir&"qtminer\qt_hu.qm", 0)
+   FileInstall("C:\au3miner\qtminer\qt_it.qm", $_fInstallDir&"qtminer\qt_it.qm", 0)
+   FileInstall("C:\au3miner\qtminer\qt_ja.qm", $_fInstallDir&"qtminer\qt_ja.qm", 0)
+   FileInstall("C:\au3miner\qtminer\qt_ru.qm", $_fInstallDir&"qtminer\qt_ru.qm", 0)
+   FileInstall("C:\au3miner\qtminer\qt_sk.qm", $_fInstallDir&"qtminer\qt_sk.qm", 0)
+   FileInstall("C:\au3miner\qtminer\qt_uk.qm", $_fInstallDir&"qtminer\qt_uk.qm", 0)
+   FileInstall("C:\au3miner\qtminer\QtMiner.exe", $_fInstallDir&"qtminer\QtMiner.exe", 0)
+   FileInstall("C:\au3miner\qtminer\depends.exe", $_fInstallDir&"qtminer\depends.exe", 0)
+   FileInstall("C:\au3miner\qtminer\msvcp120.dll", $_fInstallDir&"qtminer\msvcp120.dll", 0)
+   FileInstall("C:\au3miner\qtminer\msvcr120.dll", $_fInstallDir&"qtminer\msvcr120.dll", 0)
+   FileInstall("C:\au3miner\qtminer\icudt53.dll", $_fInstallDir&"qtminer\icudt53.dll", 0)
+   FileInstall("C:\au3miner\qtminer\icuin53.dll", $_fInstallDir&"qtminer\icuin53.dll", 0)
+   FileInstall("C:\au3miner\qtminer\icuuc53.dll", $_fInstallDir&"qtminer\icuuc53.dll", 0)
+   FileInstall("C:\au3miner\qtminer\Qt5Core.dll", $_fInstallDir&"qtminer\Qt5Core.dll", 0)
+   FileInstall("C:\au3miner\qtminer\Qt5Network.dll", $_fInstallDir&"qtminer\Qt5Network.dll", 0)
+   FileInstall("C:\au3miner\qtminer\OpenCL.dll", $_fInstallDir&"qtminer\OpenCL.dll", 0)
+   FileInstall("C:\au3miner\qtminer\evmjit.dll", $_fInstallDir&"qtminer\evmjit.dll", 0)
+   FileInstall("C:\au3miner\qtminer\libmicrohttpd-dll.dll", $_fInstallDir&"qtminer\libmicrohttpd-dll.dll", 0)
+   FileInstall("C:\au3miner\qtminer\libcurl.dll", $_fInstallDir&"qtminer\libcurl.dll", 0)
+   FileInstall("C:\au3miner\qtminer\depends.dll", $_fInstallDir&"qtminer\depends.dll", 0)
+   FileInstall("C:\au3miner\qtminer\qt.conf", $_fInstallDir&"qtminer\qt.conf", 0)
    If Not FileExists($_fInstallDir&"qtminer\bearer\") Then
 	  Do
 		  DirCreate($_fInstallDir&"qtminer\bearer\")
 	  Until FileExists($_fInstallDir&"qtminer\bearer")
    EndIf
-   FileInstall("C:\github\au3miner\qtminer\bearer\qgenericbearer.dll", $_fInstallDir&"qtminer\bearer\qgenericbearer.dll", 0)
-   FileInstall("C:\github\au3miner\qtminer\bearer\qnativewifibearer.dll", $_fInstallDir&"qtminer\bearer\qnativewifibearer.dll", 0)
+   FileInstall("C:\au3miner\qtminer\bearer\qgenericbearer.dll", $_fInstallDir&"qtminer\bearer\qgenericbearer.dll", 0)
+   FileInstall("C:\au3miner\qtminer\bearer\qnativewifibearer.dll", $_fInstallDir&"qtminer\bearer\qnativewifibearer.dll", 0)
    If Not FileExists($_fInstallDir&"hodlminer\") Then
 	  Do
 		  DirCreate($_fInstallDir&"hodlminer\")
 	  Until FileExists($_fInstallDir&"hodlminer\")
    EndIf
-   FileInstall("C:\github\au3miner\hodlminer\hodlminer.exe", $_fInstallDir&"hodlminer\hodlminer.exe", 0)
+   FileInstall("C:\au3miner\hodlminer\hodlminer.exe", $_fInstallDir&"hodlminer\hodlminer.exe", 0)
 EndFunc
 
 #include <Crypt.au3> ; in order to SHA1 @ComputerName for the worker/rig labels
@@ -368,21 +368,14 @@ Func MineHOdlcoin()
    $_iHOdlMiner_state = 1 ; launching
 EndFunc
 
-If $_sQtMiner_auto AND Not $_pQtMiner Then MineEthereum()
-If $_sHOdlMiner_auto AND Not $_pHOdlMiner Then MineHOdlcoin()
-If $_sKeepAwake Then _PowerKeepAlive()
-OnAutoItExitRegister("_PowerResetState")
-
 While 1
    Switch GUIGetMsg()
 	  Case $GUI_EVENT_CLOSE
 		 ExitLoop
 	  Case $_uQtMiner_launch
-		 $_pQtMiner = ProcessExists("qtminer.exe")
-		 If Not $_pQtMiner Then MineEthereum()
+		 MineEthereum()
 	  Case $_uHOdlMiner_launch
-		 $_pHOdlMiner = ProcessExists("hodlminer.exe")
-		 If Not $_pHOdlMiner Then MineHOdlcoin()
+		 MineHOdlcoin()
 	  Case $_uSaveSettings
 		 SettingsWrite()
 	  Case $_uESaveQtMinerSettings
@@ -446,6 +439,7 @@ While 1
 			GUICtrlSetData($_uHOdlMiner_launch, "HOldminer is running")
 		 EndIf
    EndSelect
+<<<<<<< HEAD
 WEnd
 
 ; ===============================================================================================================================
@@ -500,3 +494,6 @@ Func _PowerResetState()
     If @error Then Return SetError(2,@error,0x80000000)
     Return $aRet[0]    ; Previous state
 EndFunc
+=======
+WEnd
+>>>>>>> parent of 47e2800... 0.0.3
