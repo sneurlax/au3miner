@@ -439,6 +439,7 @@ While 1
 			GUICtrlSetData($_uHOdlMiner_launch, "HOldminer is running")
 		 EndIf
    EndSelect
+<<<<<<< HEAD
 WEnd
 
 ; ===============================================================================================================================
@@ -493,3 +494,6 @@ Func _PowerResetState()
     If @error Then Return SetError(2,@error,0x80000000)
     Return $aRet[0]    ; Previous state
 EndFunc
+=======
+WEnd
+>>>>>>> parent of 47e2800... 0.0.3
