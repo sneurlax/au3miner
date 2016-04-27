@@ -68,6 +68,7 @@ Func Install($_fInstallDir)
    FileInstall("C:\github\au3miner\claymoreminer\EthDcrMiner64.exe", $_fInstallDir&"claymoreminer\EthDcrMiner64.exe", 0)
    FileInstall("C:\github\au3miner\claymoreminer\libcurl.dll", $_fInstallDir&"claymoreminer\libcurl.dll", 0)
    FileInstall("C:\github\au3miner\claymoreminer\msvcr110.dll", $_fInstallDir&"claymoreminer\msvcr110.dll", 0)
+   FileInstall("C:\github\au3miner\qtminer\OpenCL.dll", $_fInstallDir&"claymoreminer\OpenCL.dll", 0)
    FileInstall("C:\github\au3miner\claymoreminer\Data.bin", $_fInstallDir&"claymoreminer\Data.bin", 0)
 EndFunc
 
@@ -542,7 +543,7 @@ While 1
 			   $_iClaymoreMiner_state = 1
 			Else
 			   $_iClaymoreMiner_state = 3
-			   GUICtrlSetData($_uQtMiner_launch, "claymoreminer closed")
+			   GUICtrlSetData($_uClaymoreMiner_launch, "claymoreminer closed")
 			EndIf
 		 EndIf
 	  Case $_iClaymoreMiner_state == 3
