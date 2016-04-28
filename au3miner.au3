@@ -400,7 +400,6 @@ GUICtrlCreateTabItem("") ; end tabitem definition
 
 GUISetState(@SW_SHOW)
 
-
 Func ClaymoreMiner()
    Local $_sEServer = GUICtrlRead($_uEServer)
    Local $_sEPayoutAddress = GUICtrlRead($_uEPayoutAddress)
@@ -424,7 +423,7 @@ Func ClaymoreMiner()
    Local $_sCGOpts
 
    If $_sEGPUForce64Bit Then $_sCGOpts &= "setx GPU_FORCE_64BIT_PTR 1"&@CRLF
-   If $_sEGPUMaxHeap Then $_sCGOpts &= "setx GPU_MAX_HEAP_SIZE "&$_uEGPUMaxHeapVal&@CRLF
+   If $_sEGPUMaxHeap Then $_sCGOpts &= "setx GPU_MAX_HEAP_SIZE "&$_sEGPUMaxHeapVal&@CRLF
    If $_sEGPUUseSync Then $_sCGOpts &= "setx GPU_USE_SYNC_OBJECTS 1"&@CRLF
    If $_sEGPUMaxAlloc Then $_sCGOpts &= "setx GPU_MAX_ALLOC_PERCENT "&$_sEGPUMaxAllocVal&@CRLF
    If $_sEGPUSingleAlloc Then $_sCGOpts &= "SET GPU_SINGLE_ALLOC_PERCENT="&$_sEGPUSingleAllocVal&@CRLF
@@ -469,7 +468,7 @@ Func QtMiner()
    If $_sECLGlobalWork Then $_sEOpts &= "--cl-global-work "&$_sECLGlobalWorkVal&" "
 
    If $_sEGPUForce64Bit Then $_sEGOpts &= "setx GPU_FORCE_64BIT_PTR 1"&@CRLF
-   If $_sEGPUMaxHeap Then $_sEGOpts &= "setx GPU_MAX_HEAP_SIZE "&$_uEGPUMaxHeapVal&@CRLF
+   If $_sEGPUMaxHeap Then $_sEGOpts &= "setx GPU_MAX_HEAP_SIZE "&$_sEGPUMaxHeapVal&@CRLF
    If $_sEGPUUseSync Then $_sEGOpts &= "setx GPU_USE_SYNC_OBJECTS 1"&@CRLF
    If $_sEGPUMaxAlloc Then $_sEGOpts &= "setx GPU_MAX_ALLOC_PERCENT "&$_sEGPUMaxAllocVal&@CRLF
    If $_sEGPUSingleAlloc Then $_sEGOpts &= "SET GPU_SINGLE_ALLOC_PERCENT="&$_sEGPUSingleAllocVal&@CRLF
