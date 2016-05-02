@@ -45,3 +45,7 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# au3miner development-related items that shouldn't be synced up
+utility
+drivers

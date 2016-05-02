@@ -193,7 +193,7 @@ EndFunc
 
 #include <Crypt.au3> ; in order to SHA1 @ComputerName for the worker/rig labels
 
-Global $_Ver = "0.0.5"
+Global $_Ver = "0.0.6"
 
 Global $_sInstallDirToReg
 Global $_pClaymoreMiner = ProcessExists("EthDcrMiner64.exe")
@@ -500,6 +500,7 @@ EndFunc
 
 #include <AutoItConstants.au3>
 #include <GUIConstantsEx.au3>
+#include <EditConstants.au3>
 #include <WindowsConstants.au3>
 
 $_GUI = GUICreate("au3miner", 380, 333)
@@ -574,7 +575,7 @@ GUICtrlCreateTabItem("Ethereum")
    $_uECUDABlockSize = GUICtrlCreateCheckbox("--cuda-blocksize", 190, 179)
    GUICtrlSetState($_uECUDABlockSize, $_sECUDABlockSize)
    $_uECUDABlockSizeVal = GUICtrlCreateInput($_sECUDABlockSizeVal, 290, 179, 40)
-   $_uECUDAGridSize = GUICtrlCreateCheckbox("--cl-cuda-gridsize", 190, 201)
+   $_uECUDAGridSize = GUICtrlCreateCheckbox("--cuda-gridsize", 190, 201)
    GUICtrlSetState($_uECUDAGridSize, $_sECUDAGridSize)
    $_uECUDAGridSizeVal = GUICtrlCreateInput($_sECUDAGridSizeVal, 290, 201, 40)
    $_uECUDASchedule = GUICtrlCreateCheckbox("--cuda-schedule", 190, 223)
@@ -600,9 +601,9 @@ GUICtrlCreateTabItem("Decred")
    GUICtrlCreateLabel("Server", 285, 45)
    $_uDPoolUsername = GUICtrlCreateInput($_sDPoolUsername, 20, 65, 110)
    GUICtrlCreateLabel("Pool username", 135, 70)
-   $_uDWorkerLabel = GUICtrlCreateInput($_sDWorkerLabel, 20, 90, 110)
+   $_uDWorkerLabel = GUICtrlCreateInput($_sDWorkerLabel, 20, 90, 110, 21)
    GUICtrlCreateLabel("Worker label", 135, 95)
-   $_uDWorkerPassword = GUICtrlCreateInput($_sDWorkerPassword, 20, 115, 110)
+   $_uDWorkerPassword = GUICtrlCreateInput($_sDWorkerPassword, 20, 115, 110, 21, $ES_PASSWORD)
    GUICtrlCreateLabel("Worker password", 135, 120)
    $_uDSaveClaymoreMinerSettings = GUICtrlCreateButton("Save Decred settings", 164, 293, 200)
 
@@ -611,9 +612,9 @@ GUICtrlCreateTabItem("HOdlcoin")
    GUICtrlCreateLabel("Server", 285, 45)
    $_uHPoolUsername = GUICtrlCreateInput($_sHPoolUsername, 20, 65, 110)
    GUICtrlCreateLabel("Pool username", 135, 70)
-   $_uHWorkerLabel = GUICtrlCreateInput($_sHWorkerLabel, 20, 90, 110)
+   $_uHWorkerLabel = GUICtrlCreateInput($_sHWorkerLabel, 20, 90, 110, 21)
    GUICtrlCreateLabel("Worker label", 135, 95)
-   $_uHWorkerPassword = GUICtrlCreateInput($_sHWorkerPassword, 20, 115, 110)
+   $_uHWorkerPassword = GUICtrlCreateInput($_sHWorkerPassword, 20, 115, 110, 21, $ES_PASSWORD)
    GUICtrlCreateLabel("Worker password", 135, 120)
    $_uHSaveHOdlMinerSettings = GUICtrlCreateButton("Save HOdlcoin settings", 164, 293, 200)
 
@@ -660,7 +661,7 @@ Func ClaymoreMiner()
    If $_sEGPUMaxHeap Then $_sCGOpts &= "setx GPU_MAX_HEAP_SIZE "&$_sEGPUMaxHeapVal&@CRLF
    If $_sEGPUUseSync Then $_sCGOpts &= "setx GPU_USE_SYNC_OBJECTS 1"&@CRLF
    If $_sEGPUMaxAlloc Then $_sCGOpts &= "setx GPU_MAX_ALLOC_PERCENT "&$_sEGPUMaxAllocVal&@CRLF
-   If $_sEGPUSingleAlloc Then $_sCGOpts &= "SET GPU_SINGLE_ALLOC_PERCENT="&$_sEGPUSingleAllocVal&@CRLF
+   If $_sEGPUSingleAlloc Then $_sCGOpts &= "setx GPU_SINGLE_ALLOC_PERCENT "&$_sEGPUSingleAllocVal&@CRLF
 
    $_sDBatch = "cd "&$_sInstallDir&"claymoreminer"&@CRLF&$_sCGOpts&@CRLF&"EthDcrMiner64.exe -epool "&$_sEServer&" -ewal "&$_sEPayoutAddress&"."&$_sEWorkerLabel&" -epsw "&$_sEWorkerLabel&" -dpool "&$_sDServer&" -dwal "&$_sDPoolUsername&"."&$_sDWorkerLabel&" -dpsw "&$_sHWorkerPassword
    If FileExists($_sInstallDir&"au3-claymoreminer.bat") Then FileDelete($_sInstallDir&"au3-claymoreminer.bat")
