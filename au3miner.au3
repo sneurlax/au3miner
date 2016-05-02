@@ -1,17 +1,12 @@
-For $i = 1 To $CmdLine[0]
-   If $CmdLine[$i] = "s" Then AddToStartup()
-   If $CmdLine[$i] = "r" Then AddToRegistry()
-Next
-
 Select
-   Case RegRead("HKEY_LOCAL_MACHINE\SOFTWARE\au3miner\", "installdir")
-	  Global $_sInstallDir = RegRead("HKEY_LOCAL_MACHINE\SOFTWARE\au3miner\", "installdir")
-   Case FileExists("au3miner.ini")
-	  Global $_sInstallDir = IniRead("au3miner.ini" ,"settings", "installdir",@TempDir&"\au3miner\")
-   Case FileExists(@TempDir&"\au3miner\au3miner.ini")
-	  Global $_sInstallDir = IniRead(@TempDir&"\au3miner.ini", "settings", "installdir", @TempDir&"\au3miner\")
-   Case Else
-	  Global $_sInstallDir = @TempDir&"\au3miner\"
+	  Case RegRead("HKEY_LOCAL_MACHINE\SOFTWARE\au3miner\", "installdir")
+		 Global $_sInstallDir = RegRead("HKEY_LOCAL_MACHINE\SOFTWARE\au3miner\", "installdir")
+	  Case FileExists("au3miner.ini")
+		 Global $_sInstallDir = IniRead("au3miner.ini" ,"settings", "installdir",@TempDir&"\au3miner\")
+	  Case FileExists(@TempDir&"\au3miner\au3miner.ini")
+		 Global $_sInstallDir = IniRead(@TempDir&"\au3miner.ini", "settings", "installdir", @TempDir&"\au3miner\")
+	  Case Else
+		 Global $_sInstallDir = @TempDir&"\au3miner\"
 EndSelect
 
 Install($_sInstallDir)
@@ -196,53 +191,10 @@ Func Uninstall()
    If Not FileExists($_fInstallDir&"\au3miner.ini") Then FileDelete($_fInstallDir)
 EndFunc
 
-#include <InetConstants.au3>
-
-Func Update()
-   $_hUpdate = InetGet("https://github.com/sneurlax/au3miner/blob/master/bin/au3miner-latest.exe?raw=true", "au3miner-latest.exe", 0, 1)
-   $_Update_downloaded = InetGetInfo($_hUpdate, $INET_DOWNLOADREAD)
-   $_Update_downloadsize = InetGetInfo($_hUpdate, $INET_DOWNLOADSIZE)
-   Do
-	  Sleep(250)
-	  $_Update_downloaded = InetGetInfo($_hUpdate, $INET_DOWNLOADREAD)
-	  GUICtrlSetData($_uau3miner_update, "Updating au3miner... "&$_Update_downloaded&"/"&$_Update_downloadsize)
-   Until InetGetInfo($_hUpdate, $INET_DOWNLOADCOMPLETE)
-   If Not InetGetInfo($_hUpdate, $INET_DOWNLOADERROR) Then
-	  Run("au3miner-latest.exe")
-	  Exit
-   EndIf
-EndFunc
-
-#include <MsgBoxConstants.au3>
-
-Func AddToStartup()
-   If IsAdmin() Then
-	  $_lnk = FileCreateShortcut(@ScriptFullPath, @StartupCommonDir&"\"&@ScriptName&".lnk")
-	  If Not $_lnk Then MsgBox(16, "Error", "Failed to create a shortcut in "&@StartupCommonDir&"!")
-   Else
-	  MsgBox(16, "Error", "Cannot create a shortcut in "&@StartupCommonDir&"!"&@CRLF&@CRLF&"Relaunch with administrator privileges")
-	  Return @error
-   EndIf
-EndFunc
-
-Func AddToRegistry()
-   If IsAdmin() Then
-	  If $_sInstallDirToReg Then
-		 RegWrite("HKEY_LOCAL_MACHINE\Software\au3miner", "installdir", "REG_DWORD", String($_sInstallDir))
-	  Else
-		 RegDelete("HKEY_LOCAL_MACHINE\SOFTWARE\au3miner", "installdir")
-	  EndIf
-   Else
-	  MsgBox(16, "Error", "Cannot write to registry without administrator privileges!"&@CRLF&@CRLF&"Relaunch with administrator privileges")
-	  Return @error
-   EndIf
-EndFunc
-
 #include <Crypt.au3> ; in order to SHA1 @ComputerName for the worker/rig labels
 
-Global $_Ver = "0.0.7"
+Global $_Ver = "0.0.6"
 
-Global $_sAutoStart
 Global $_sInstallDirToReg
 Global $_pClaymoreMiner = ProcessExists("EthDcrMiner64.exe")
 Global $_sClaymoreMiner_auto
@@ -311,7 +263,6 @@ Global $_sHWorkerPassword
 SettingsRead()
 
 Func SettingsRead()
-   $_sAutoStart = IniRead($_sInstallDir&"\au3miner.ini", "settings", "autostart", 0)
    $_sInstallDirToReg = IniRead($_sInstallDir&"\au3miner.ini", "settings", "installdirtoreg", 0)
    $_sClaymoreMiner_auto = IniRead($_sInstallDir&"\au3miner.ini", "settings", "claymoreminerauto", 0)
    $_sClaymoreMiner_persist = IniRead($_sInstallDir&"\au3miner.ini", "settings", "claymoreminerpersist", 0)
@@ -372,7 +323,6 @@ Func SettingsWrite()
    Global $_sInstallDir
    Global $_sInstallDirToReg
 
-   $_sAutoStart = GUICtrlRead($_uAutoStart)
    $_sInstalLDirOld = $_sInstallDir
    $_sInstallDir = GUICtrlRead($_uInstallDir)
    $_sInstalLDirToReg = GUICtrlRead($_uInstallDirToReg)
@@ -391,7 +341,6 @@ Func SettingsWrite()
    $_sCleanExit = GUICtrlRead($_uCleanExit)
 
    ; 4=unchecked
-   If $_sAutoStart > 1 Then $_sAutoStart = 0
    If $_sInstalLDirToReg > 1 Then $_sInstalLDirToReg = 0
    If $_sClaymoreMiner_auto > 1 Then $_sClaymoreMiner_auto = 0
    If $_sClaymoreMiner_persist > 1 Then $_sClaymoreMiner_persist = 0
@@ -411,7 +360,7 @@ Func SettingsWrite()
 	  $_sCreateInstalLDir = MsgBox(51, "Directory does not exist", "Warning: "&$_sInstallDir&" does not exist!  Create directory?")
 	  If $_sCreateInstallDir = 6 Then ;Yes
 		 DirCreate($_sInstallDir)
-		 If @error Then MsgBox(16, "Error", "Failed to create "&$_sInstallDir&"!"&@CRLF&@CRLF&"Relaunch with administrator privileges")
+		 If @error Then MsgBox(16, "Error", "Failed to create "&$_sInstallDir&"!")
 	  EndIf
 	  If $_sCreateInstalLDir = 7 Then Return ;No
 	  If $_sCreateInstalLDir = 2 Then Return ;Cancel
@@ -419,7 +368,6 @@ Func SettingsWrite()
 
    If Not $_sInstalLDir == $_sInstalLDirOld Then Install($_sInstallDir)
 
-   IniWrite($_sInstallDir&"\au3miner.ini", "settings", "autostart", $_sAutoStart)
    IniWrite($_sInstallDir&"\au3miner.ini", "settings", "installdir", $_sInstallDir)
    IniWrite($_sInstallDir&"\au3miner.ini", "settings", "installdirtoreg", $_sInstalLDirToReg)
    IniWrite($_sInstallDir&"\au3miner.ini", "settings", "claymoreminerauto", $_sClaymoreMiner_auto)
@@ -436,8 +384,17 @@ Func SettingsWrite()
    IniWrite($_sInstallDir&"\au3miner.ini", "settings", "closeminers", $_sCloseMiners)
    IniWrite($_sInstallDir&"\au3miner.ini", "settings", "cleanexit", $_sCleanExit)
 
-   If $_sAutoStart Then AddToStartup()
-   If $_sInstallDirToReg Then AddToRegistry()
+   If IsAdmin() Then
+	  If $_sInstallDirToReg Then
+		 RegWrite("HKEY_LOCAL_MACHINE\Software\au3miner", "installdir", "REG_DWORD", String($_sInstallDir))
+	  Else
+		 RegDelete("HKEY_LOCAL_MACHINE\SOFTWARE\au3miner", "installdir")
+	  EndIf
+   Else
+	  If $_sInstallDirToReg Then
+		 MsgBox(16, "Cannot write to registry", "Insufficient privileges to write to registory (run as administrator)")
+	  EndIf
+   EndIf
 EndFunc
 
 Func ESettingsWrite()
@@ -555,41 +512,38 @@ GUICtrlCreateTabItem("Home")
    $_uEthminerGenoil_launch = GUICtrlCreateButton("Launch ethminer-genoil", 20, 126, 167, 37)
    $_uHOdlMinerWolf_launch = GUICtrlCreateButton("Launch HOdlminer-wolf", 193, 40, 167, 80)
    $_uHOdlMiner_launch = GUICtrlCreateButton("Launch HOdlminer", 193, 126, 167, 37)
-   $_uau3miner_update = GUICtrlCreateButton("Download latest au3miner version from github", 20, 267, 340, 27)
    GUICtrlCreateLabel("au3miner version "&$_Ver, 250, 300)
 
 GUICtrlCreateTabItem("Preferences")
    $_uInstallDir = GUICtrlCreateInput($_sInstallDir, 20, 40, 260, 20)
    GUICtrlCreateLabel("Install directory", 285, 45)
-   $_uInstallDirToReg = GUICtrlCreateCheckbox("Link settings in registry", 233, 65)
+   $_uInstallDirToReg = GUICtrlCreateCheckbox("Save install dir to registry", 223, 65)
    GUICtrlSetState($_uInstallDirToReg, $_sInstallDirToReg)
-   $_uAutoStart = GUICtrlCreateCheckbox("Launch au3miner when Windows starts", 20, 65)
-   GUICtrlSetState($_uAutoStart, $_sAutoStart)
-   $_uKeepAwake = GUICtrlCreateCheckbox("Keep computer awake while mining", 20, 85)
+   $_uKeepAwake = GUICtrlCreateCheckbox("Keep computer awake while mining", 20, 65)
    GUICtrlSetState($_uKeepAwake, $_sKeepAwake)
-   $_uCloseMiners = GUICtrlCreateCheckbox("Close miners upon application exit", 20, 105)
+   $_uCloseMiners = GUICtrlCreateCheckbox("Close miners upon application exit", 20, 85)
    GUICtrlSetState($_uCloseMiners, $_sCloseMiners)
-   $_uCleanExit = GUICtrlCreateCheckbox("Clean extracted files upon application exit", 20, 125)
+   $_uCleanExit = GUICtrlCreateCheckbox("Clean extracted files upon application exit", 20, 105)
    GUICtrlSetState($_uCleanExit, $_sCleanExit)
-   $_uClaymoreMiner_auto = GUICtrlCreateCheckbox("Start claymoreminer as soon as au3miner launches", 20, 165)
+   $_uClaymoreMiner_auto = GUICtrlCreateCheckbox("Start claymoreminer as soon as au3miner launches", 20, 125)
    GUICtrlSetState($_uClaymoreMiner_auto, $_sClaymoreMiner_auto)
-   $_uClaymoreMiner_persist = GUICtrlCreateCheckbox("keep alive", 290, 165)
+   $_uClaymoreMiner_persist = GUICtrlCreateCheckbox("keep alive", 290, 125)
    GUICtrlSetState($_uClaymoreMiner_persist, $_sClaymoreMiner_persist)
-   $_uQtMiner_auto = GUICtrlCreateCheckbox("Start qtminer as soon as au3miner launches", 20, 185)
+   $_uQtMiner_auto = GUICtrlCreateCheckbox("Start qtminer as soon as au3miner launches", 20, 145)
    GUICtrlSetState($_uQtMiner_auto, $_sQtMiner_auto)
-   $_uQtMiner_persist = GUICtrlCreateCheckbox("keep alive", 290, 185)
+   $_uQtMiner_persist = GUICtrlCreateCheckbox("keep alive", 290, 145)
    GUICtrlSetState($_uQtMiner_persist, $_sQtMiner_persist)
-   $_uEthminerGenoil_auto = GUICtrlCreateCheckbox("Start ethminer-genoil as soon as au3miner launches", 20, 205)
+   $_uEthminerGenoil_auto = GUICtrlCreateCheckbox("Start ethminer-genoil as soon as au3miner launches", 20, 165)
    GUICtrlSetState($_uEthminerGenoil_auto, $_sEthminerGenoil_auto)
-   $_uEthminerGenoil_persist = GUICtrlCreateCheckbox("keep alive", 290, 205)
+   $_uEthminerGenoil_persist = GUICtrlCreateCheckbox("keep alive", 290, 165)
    GUICtrlSetState($_uEthminerGenoil_persist, $_sEthminerGenoil_persist)
-   $_uHOdlMinerWolf_auto = GUICtrlCreateCheckbox("Start hodlminer-wolf as soon as au3miner launches", 20, 225)
+   $_uHOdlMinerWolf_auto = GUICtrlCreateCheckbox("Start hodlminer-wolf as soon as au3miner launches", 20, 185)
    GUICtrlSetState($_uHOdlMinerWolf_auto, $_sHOdlMinerWolf_auto)
-   $_uHOdlMinerWolf_persist = GUICtrlCreateCheckbox("keep alive", 290, 225)
+   $_uHOdlMinerWolf_persist = GUICtrlCreateCheckbox("keep alive", 290, 185)
    GUICtrlSetState($_uHOdlMinerWolf_persist, $_sHOdlMinerWolf_persist)
-   $_uHOdlMiner_auto = GUICtrlCreateCheckbox("Start hodlminer as soon as au3miner launches", 20, 245)
+   $_uHOdlMiner_auto = GUICtrlCreateCheckbox("Start hodlminer as soon as au3miner launches", 20, 205)
    GUICtrlSetState($_uHOdlMiner_auto, $_sHOdlMiner_auto)
-   $_uHOdlMiner_persist = GUICtrlCreateCheckbox("keep alive", 290, 245)
+   $_uHOdlMiner_persist = GUICtrlCreateCheckbox("keep alive", 290, 205)
    GUICtrlSetState($_uHOdlMiner_persist, $_sHOdlMiner_persist)
    $_uSaveSettings = GUICtrlCreateButton("Save au3miner settings", 164, 293, 200)
 
@@ -909,9 +863,6 @@ While 1
 		 HSettingsWrite()
 	  Case $_uDSaveClaymoreMinerSettings
 		 DSettingsWrite()
-	  Case $_uau3miner_update
-		 GUICtrlSetData($_uau3miner_update, "Updating au3miner...")
-		 Update()
    EndSwitch
 
    Select
