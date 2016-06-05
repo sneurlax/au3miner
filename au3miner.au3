@@ -1,13 +1,12 @@
-For $i = 1 To $CmdLine[0]
-   If $CmdLine[$i] = "s" Then AddToStartup()
-   If $CmdLine[$i] = "r" Then AddToRegistry()
-Next
+Global $_Ver = "0.0.8"
 
 Select
    Case RegRead("HKEY_LOCAL_MACHINE\SOFTWARE\au3miner\", "installdir")
 	  Global $_sInstallDir = RegRead("HKEY_LOCAL_MACHINE\SOFTWARE\au3miner\", "installdir")
    Case FileExists("au3miner.ini")
 	  Global $_sInstallDir = IniRead("au3miner.ini" ,"settings", "installdir",@TempDir&"\au3miner\")
+   Case FileExists(@WorkingDir&"au3miner.ini")
+	  Global $_sInstallDir = IniRead(@WorkingDir&"au3miner.ini" ,"settings", "installdir",@TempDir&"\au3miner\")
    Case FileExists(@TempDir&"\au3miner\au3miner.ini")
 	  Global $_sInstallDir = IniRead(@TempDir&"\au3miner.ini", "settings", "installdir", @TempDir&"\au3miner\")
    Case Else
@@ -240,8 +239,6 @@ EndFunc
 
 #include <Crypt.au3> ; in order to SHA1 @ComputerName for the worker/rig labels
 
-Global $_Ver = "0.0.7"
-
 Global $_sAutoStart
 Global $_sInstallDirToReg
 Global $_pClaymoreMiner = ProcessExists("EthDcrMiner64.exe")
@@ -265,7 +262,10 @@ Global $_sHOdlMiner_auto
 Global $_sHOdlMiner_persist
 Global $_iHOdlMiner_state ; 0 default/not running, 1 launching, 2 running, 3 closing
 Global $_sKeepAwake
+Global $_sMonitorInternet
+Global $_sInternetState ; 0 default/connect, >1::failed pings, <0 miners closed due to disconnection (Claymore 1, Qt 2, Ethminer 4, HodlWolf 8, HodlCore 16)
 Global $_sCloseMiners
+Global $_pMinersClosed
 Global $_sCleanExit
 
 Global $_sEServer
@@ -324,6 +324,7 @@ Func SettingsRead()
    $_sHOdlMiner_auto = IniRead($_sInstallDir&"\au3miner.ini", "settings", "hodlminerauto", 0)
    $_sHOdlMiner_persist = IniRead($_sInstallDir&"\au3miner.ini", "settings", "hodlminerpersist", 0)
    $_sKeepAwake = IniRead($_sInstallDir&"\au3miner.ini", "settings", "keepawake", 0)
+   $_sMonitorInternet = IniRead($_sInstallDir&"\au3miner.ini", "settings", "monitorinternet", 0)
    $_sCloseMiners = IniRead($_sInstallDir&"\au3miner.ini", "settings", "closeminers", 0)
    $_sCleanExit = IniRead($_sInstallDir&"\au3miner.ini", "settings", "cleanexit", 0)
 
@@ -338,18 +339,18 @@ Func SettingsRead()
    $_sEOpenCLPlatformVal = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "opencl-platformval", 0)
    $_sEOpenCLDevice = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "opencl-device", 1)
    $_sEOpenCLDeviceVal = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "opencl-deviceval", 0)
-   $_sECLLocalWork = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "cl-localwork", 1)
+   $_sECLLocalWork = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "cl-localwork", 0)
    $_sECLLocalWorkVal = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "cl-localworkval", 256)
-   $_sECLGlobalWork = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "cl-globalwork", 1)
+   $_sECLGlobalWork = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "cl-globalwork", 0)
    $_sECLGlobalWorkVal = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "cl-globalworkval", 16384)
-   $_sEGPUForce64Bit = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "gpuforce64bit", 1)
+   $_sEGPUForce64Bit = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "gpuforce64bit", 0)
    $_sEGPUMaxHeap = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "gpumaxheap", 1)
-   $_sEGPUMaxHeapVal = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "gpumaxheapval", 100)
+   $_sEGPUMaxHeapVal = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "gpumaxheapval", 99)
    $_sEGPUUseSync = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "gpuusesync", 1)
    $_sEGPUMaxAlloc = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "gpumaxalloc", 1)
-   $_sEGPUMaxAllocVal = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "gpumaxallocval", 100)
+   $_sEGPUMaxAllocVal = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "gpumaxallocval", 99)
    $_sEGPUSingleAlloc = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "gpusinglealloc", 1)
-   $_sEGPUSingleAllocVal = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "gpusingleallocval", 100)
+   $_sEGPUSingleAllocVal = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "gpusingleallocval", 99)
    $_sECUDAGridSize = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "cudagridsize", 1)
    $_sECUDAGridSizeVal = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "cudagridsizeval", 8192)
    $_sECUDABlockSize = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "cudablocksize", 1)
@@ -388,24 +389,26 @@ Func SettingsWrite()
    $_sHOdlMiner_persist = GUICtrlRead($_uHOdlMiner_persist)
    $_sKeepAwake = GUICtrlRead($_uKeepAwake)
    $_sCloseMiners = GUICtrlRead($_uCloseMiners)
+   $_sMonitorInternet = GUICtrlRead($_uMonitorInternet)
    $_sCleanExit = GUICtrlRead($_uCleanExit)
 
    ; 4=unchecked
-   If $_sAutoStart > 1 Then $_sAutoStart = 0
-   If $_sInstalLDirToReg > 1 Then $_sInstalLDirToReg = 0
-   If $_sClaymoreMiner_auto > 1 Then $_sClaymoreMiner_auto = 0
-   If $_sClaymoreMiner_persist > 1 Then $_sClaymoreMiner_persist = 0
-   If $_sQtMiner_auto > 1 Then $_sQtMiner_auto = 0
-   If $_sQtMiner_persist > 1 Then $_sQtMiner_persist = 0
-   If $_sEthminerGenoil_auto > 1 Then $_sEthminerGenoil_auto = 0
-   If $_sEthminerGenoil_persist > 1 Then $_sEthminerGenoil_persist = 0
-   If $_sHOdlMinerWolf_auto > 1 Then $_sHOdlMinerWolf_auto = 0
-   If $_uHOdlMinerWolf_persist > 1 Then $_uHOdlMinerWolf_persist = 0
-   If $_sHOdlMiner_auto > 1 Then $_sHOdlMiner_auto = 0
-   If $_uHOdlMiner_persist > 1 Then $_uHOdlMiner_persist = 0
-   If $_sKeepAwake > 1 Then $_sKeepAwake = 0
-   If $_sCloseMiners > 1 Then $_sCloseMiners = 0
-   If $_sCleanExit > 1 Then $_sCleanExit = 0
+   If $_sAutoStart <> $GUI_CHECKED Then $_sAutoStart = False
+   If $_sInstalLDirToReg <> $GUI_CHECKED Then $_sInstalLDirToReg = False
+   If $_sClaymoreMiner_auto <> $GUI_CHECKED Then $_sClaymoreMiner_auto = False
+   If $_sClaymoreMiner_persist <> $GUI_CHECKED Then $_sClaymoreMiner_persist = False
+   If $_sQtMiner_auto <> $GUI_CHECKED Then $_sQtMiner_auto = False
+   If $_sQtMiner_persist <> $GUI_CHECKED Then $_sQtMiner_persist = False
+   If $_sEthminerGenoil_auto <> $GUI_CHECKED Then $_sEthminerGenoil_auto = False
+   If $_sEthminerGenoil_persist <> $GUI_CHECKED Then $_sEthminerGenoil_persist = False
+   If $_sHOdlMinerWolf_auto <> $GUI_CHECKED Then $_sHOdlMinerWolf_auto = False
+   If $_uHOdlMinerWolf_persist <> $GUI_CHECKED Then $_uHOdlMinerWolf_persist = False
+   If $_sHOdlMiner_auto <> $GUI_CHECKED Then $_sHOdlMiner_auto = False
+   If $_uHOdlMiner_persist <> $GUI_CHECKED Then $_uHOdlMiner_persist = False
+   If $_sKeepAwake <> $GUI_CHECKED Then $_sKeepAwake = False
+   If $_sCloseMiners <> $GUI_CHECKED Then $_sCloseMiners = False
+   If $_sMonitorInternet <> $GUI_CHECKED Then $_sMonitorInternet = False
+   If $_sCleanExit <> $GUI_CHECKED Then $_sCleanExit = False
 
    If Not FileExists($_sInstallDir) Then
 	  $_sCreateInstalLDir = MsgBox(51, "Directory does not exist", "Warning: "&$_sInstallDir&" does not exist!  Create directory?")
@@ -434,6 +437,7 @@ Func SettingsWrite()
    IniWrite($_sInstallDir&"\au3miner.ini", "settings", "hodlminerpersist", $_uHOdlMiner_persist)
    IniWrite($_sInstallDir&"\au3miner.ini", "settings", "keepawake", $_sKeepAwake)
    IniWrite($_sInstallDir&"\au3miner.ini", "settings", "closeminers", $_sCloseMiners)
+   IniWrite($_sInstallDir&"\au3miner.ini", "settings", "monitorinternet", $_sMonitorInternet)
    IniWrite($_sInstallDir&"\au3miner.ini", "settings", "cleanexit", $_sCleanExit)
 
    If $_sAutoStart Then AddToStartup()
@@ -471,20 +475,20 @@ Func ESettingsWrite()
    $_sECUDAScheduleVal = GUICtrlRead($_uECUDAScheduleVal)
 
    ; 4=unchecked
-   If $_sEG > 1 Then $_sEG = 0
-   If $_sET > 1 Then $_sET = 0
-   If $_sEOpenCLPlatform > 1 Then $_sEOpenCLPlatform = 0
-   If $_sEOpenCLDevice > 1 Then $_sEOpenCLDevice = 0
-   If $_sECLLocalWork > 1 Then $_sECLLocalWork = 0
-   If $_sECLGlobalWork > 1 Then $_sECLGlobalWork = 0
-   If $_sEGPUForce64Bit > 1 Then $_sEGPUForce64Bit = 0
-   If $_sEGPUMaxHeap > 1 Then $_sEGPUMaxHeap = 0
-   If $_sEGPUUseSync > 1 Then $_sEGPUUseSync = 0
-   If $_sEGPUMaxAlloc > 1 Then $_sEGPUMaxAlloc = 0
-   If $_sEGPUSingleAlloc > 1 Then $_sEGPUSingleAlloc = 0
-   If $_sECUDAGridSize > 1 Then $_sECUDAGridSize = 0
-   If $_sECUDABlockSize > 1 Then $_sECUDABlockSize = 0
-   If $_sECUDASchedule > 1 Then $_sECUDASchedule = 0
+  If $_sEG <> $GUI_CHECKED Then $_sEG = False
+  If $_sET <> $GUI_CHECKED Then $_sET = False
+  If $_sEOpenCLPlatform <> $GUI_CHECKED Then $_sEOpenCLPlatform = False
+  If $_sEOpenCLDevice <> $GUI_CHECKED Then $_sEOpenCLDevice = False
+  If $_sECLLocalWork <> $GUI_CHECKED Then $_sECLLocalWork = False
+  If $_sECLGlobalWork <> $GUI_CHECKED Then $_sECLGlobalWork = False
+  If $_sEGPUForce64Bit <> $GUI_CHECKED Then $_sEGPUForce64Bit = False
+  If $_sEGPUMaxHeap <> $GUI_CHECKED Then $_sEGPUMaxHeap = False
+  If $_sEGPUUseSync <> $GUI_CHECKED Then $_sEGPUUseSync = False
+  If $_sEGPUMaxAlloc <> $GUI_CHECKED Then $_sEGPUMaxAlloc = False
+  If $_sEGPUSingleAlloc <> $GUI_CHECKED Then $_sEGPUSingleAlloc = False
+  If $_sECUDAGridSize <> $GUI_CHECKED Then $_sECUDAGridSize = False
+  If $_sECUDABlockSize <> $GUI_CHECKED Then $_sECUDABlockSize = False
+  If $_sECUDASchedule <> $GUI_CHECKED Then $_sECUDASchedule = False
 
    IniWrite($_sInstallDir&"\au3miner.ini", "ethereum", "server", $_sEServer)
    IniWrite($_sInstallDir&"\au3miner.ini", "ethereum", "payoutaddress", $_sEPayoutAddress)
@@ -538,7 +542,6 @@ Func HSettingsWrite()
    IniWrite($_sInstallDir&"\au3miner.ini", "hodlcoin", "poolusername", $_sHPoolUsername)
    IniWrite($_sInstallDir&"\au3miner.ini", "hodlcoin", "workerlabel", $_sHWorkerLabel)
    IniWrite($_sInstallDir&"\au3miner.ini", "hodlcoin", "workerpassword", $_sHWorkerPassword)
-   ;hodlminer.exe -a hodl -o stratum+tcp://hodl.blockquarry.com:3032 -u yourworker.1 -p password
 EndFunc
 
 #include <AutoItConstants.au3>
@@ -546,7 +549,7 @@ EndFunc
 #include <EditConstants.au3>
 #include <WindowsConstants.au3>
 
-$_GUI = GUICreate("au3miner", 380, 333)
+$_GUI = GUICreate("au3miner "&$_Ver, 380, 333)
 
 GUICtrlCreateTab(10, 10, 360, 313)
 GUICtrlCreateTabItem("Home")
@@ -558,6 +561,8 @@ GUICtrlCreateTabItem("Home")
    $_uau3miner_update = GUICtrlCreateButton("Download latest au3miner version from github", 20, 267, 340, 27)
    GUICtrlCreateLabel("au3miner version "&$_Ver, 250, 300)
 
+   ;$_uTestButton = GUICtrlCreateButton("Test", 20, 237, 340, 27)
+
 GUICtrlCreateTabItem("Preferences")
    $_uInstallDir = GUICtrlCreateInput($_sInstallDir, 20, 40, 260, 20)
    GUICtrlCreateLabel("Install directory", 285, 45)
@@ -567,29 +572,31 @@ GUICtrlCreateTabItem("Preferences")
    GUICtrlSetState($_uAutoStart, $_sAutoStart)
    $_uKeepAwake = GUICtrlCreateCheckbox("Keep computer awake while mining", 20, 85)
    GUICtrlSetState($_uKeepAwake, $_sKeepAwake)
-   $_uCloseMiners = GUICtrlCreateCheckbox("Close miners upon application exit", 20, 105)
+   $_uMonitorInternet = GUICtrlCreateCheckbox("Pause mining if internet connection drops", 20, 105)
+   GUICtrlSetState($_uMonitorInternet, $_sMonitorInternet)
+   $_uCloseMiners = GUICtrlCreateCheckbox("Close miners upon application exit", 20, 125)
    GUICtrlSetState($_uCloseMiners, $_sCloseMiners)
-   $_uCleanExit = GUICtrlCreateCheckbox("Clean extracted files upon application exit", 20, 125)
+   $_uCleanExit = GUICtrlCreateCheckbox("Clean extracted files upon application exit", 20, 145)
    GUICtrlSetState($_uCleanExit, $_sCleanExit)
-   $_uClaymoreMiner_auto = GUICtrlCreateCheckbox("Start claymoreminer as soon as au3miner launches", 20, 165)
+   $_uClaymoreMiner_auto = GUICtrlCreateCheckbox("Start claymoreminer as soon as au3miner launches", 20, 185)
    GUICtrlSetState($_uClaymoreMiner_auto, $_sClaymoreMiner_auto)
-   $_uClaymoreMiner_persist = GUICtrlCreateCheckbox("keep alive", 290, 165)
+   $_uClaymoreMiner_persist = GUICtrlCreateCheckbox("keep alive", 290, 185)
    GUICtrlSetState($_uClaymoreMiner_persist, $_sClaymoreMiner_persist)
-   $_uQtMiner_auto = GUICtrlCreateCheckbox("Start qtminer as soon as au3miner launches", 20, 185)
+   $_uQtMiner_auto = GUICtrlCreateCheckbox("Start qtminer as soon as au3miner launches", 20, 205)
    GUICtrlSetState($_uQtMiner_auto, $_sQtMiner_auto)
-   $_uQtMiner_persist = GUICtrlCreateCheckbox("keep alive", 290, 185)
+   $_uQtMiner_persist = GUICtrlCreateCheckbox("keep alive", 290, 205)
    GUICtrlSetState($_uQtMiner_persist, $_sQtMiner_persist)
-   $_uEthminerGenoil_auto = GUICtrlCreateCheckbox("Start ethminer-genoil as soon as au3miner launches", 20, 205)
+   $_uEthminerGenoil_auto = GUICtrlCreateCheckbox("Start ethminer-genoil as soon as au3miner launches", 20, 225)
    GUICtrlSetState($_uEthminerGenoil_auto, $_sEthminerGenoil_auto)
-   $_uEthminerGenoil_persist = GUICtrlCreateCheckbox("keep alive", 290, 205)
+   $_uEthminerGenoil_persist = GUICtrlCreateCheckbox("keep alive", 290, 225)
    GUICtrlSetState($_uEthminerGenoil_persist, $_sEthminerGenoil_persist)
-   $_uHOdlMinerWolf_auto = GUICtrlCreateCheckbox("Start hodlminer-wolf as soon as au3miner launches", 20, 225)
+   $_uHOdlMinerWolf_auto = GUICtrlCreateCheckbox("Start hodlminer-wolf as soon as au3miner launches", 20, 245)
    GUICtrlSetState($_uHOdlMinerWolf_auto, $_sHOdlMinerWolf_auto)
-   $_uHOdlMinerWolf_persist = GUICtrlCreateCheckbox("keep alive", 290, 225)
+   $_uHOdlMinerWolf_persist = GUICtrlCreateCheckbox("keep alive", 290, 245)
    GUICtrlSetState($_uHOdlMinerWolf_persist, $_sHOdlMinerWolf_persist)
-   $_uHOdlMiner_auto = GUICtrlCreateCheckbox("Start hodlminer as soon as au3miner launches", 20, 245)
+   $_uHOdlMiner_auto = GUICtrlCreateCheckbox("Start hodlminer as soon as au3miner launches", 20, 265)
    GUICtrlSetState($_uHOdlMiner_auto, $_sHOdlMiner_auto)
-   $_uHOdlMiner_persist = GUICtrlCreateCheckbox("keep alive", 290, 245)
+   $_uHOdlMiner_persist = GUICtrlCreateCheckbox("keep alive", 290, 265)
    GUICtrlSetState($_uHOdlMiner_persist, $_sHOdlMiner_persist)
    $_uSaveSettings = GUICtrlCreateButton("Save au3miner settings", 164, 293, 200)
 
@@ -694,11 +701,11 @@ Func ClaymoreMiner()
    Local $_sEGPUSingleAllocVal = GUICtrlRead($_uEGPUSingleAllocVal)
 
    ; 4=unchecked
-   If $_sEGPUForce64Bit > 1 Then $_sEGPUForce64Bit = 0
-   If $_sEGPUMaxHeap > 1 Then $_sEGPUMaxHeap = 0
-   If $_sEGPUUseSync > 1 Then $_sEGPUUseSync = 0
-   If $_sEGPUMaxAlloc > 1 Then $_sEGPUMaxAlloc = 0
-   If $_sEGPUSingleAlloc > 1 Then $_sEGPUSingleAlloc = 0
+   If $_sEGPUForce64Bit <> $GUI_CHECKED Then $_sEGPUForce64Bit = False
+   If $_sEGPUMaxHeap <> $GUI_CHECKED Then $_sEGPUMaxHeap = False
+   If $_sEGPUUseSync <> $GUI_CHECKED Then $_sEGPUUseSync = False
+   If $_sEGPUMaxAlloc <> $GUI_CHECKED Then $_sEGPUMaxAlloc = False
+   If $_sEGPUSingleAlloc <> $GUI_CHECKED Then $_sEGPUSingleAlloc = False
 
    Local $_sDBatch
    Local $_sCGOpts
@@ -740,15 +747,15 @@ Func QtMiner()
    Local $_sEGPUSingleAllocVal = GUICtrlRead($_uEGPUSingleAllocVal)
 
    ; 4=unchecked
-   If $_sEG > 1 Then $_sEGPUForce64Bit = 0
-   If $_sET > 1 Then $_sEGPUForce64Bit = 0
-   If $_sEOpenCLPlatform > 1 Then $_sEGPUForce64Bit = 0
-   If $_sEOpenCLDevice > 1 Then $_sEGPUForce64Bit = 0
-   If $_sEGPUForce64Bit > 1 Then $_sEGPUForce64Bit = 0
-   If $_sEGPUMaxHeap > 1 Then $_sEGPUMaxHeap = 0
-   If $_sEGPUUseSync > 1 Then $_sEGPUUseSync = 0
-   If $_sEGPUMaxAlloc > 1 Then $_sEGPUMaxAlloc = 0
-   If $_sEGPUSingleAlloc > 1 Then $_sEGPUSingleAlloc = 0
+   If $_sEG <> $GUI_CHECKED Then $_sEGPUForce64Bit = False
+   If $_sET <> $GUI_CHECKED Then $_sEGPUForce64Bit = False
+   If $_sEOpenCLPlatform <> $GUI_CHECKED Then $_sEGPUForce64Bit = False
+   If $_sEOpenCLDevice <> $GUI_CHECKED Then $_sEGPUForce64Bit = False
+   If $_sEGPUForce64Bit <> $GUI_CHECKED Then $_sEGPUForce64Bit = False
+   If $_sEGPUMaxHeap <> $GUI_CHECKED Then $_sEGPUMaxHeap = False
+   If $_sEGPUUseSync <> $GUI_CHECKED Then $_sEGPUUseSync = False
+   If $_sEGPUMaxAlloc <> $GUI_CHECKED Then $_sEGPUMaxAlloc = False
+   If $_sEGPUSingleAlloc <> $GUI_CHECKED Then $_sEGPUSingleAlloc = False
 
    Local $_sEOpts
    Local $_sEGOpts
@@ -785,11 +792,11 @@ Func EthminerGenoil()
    Local $_sETVal = GUICtrlRead($_uETVal)
 
    ; 4=unchecked
-   If $_sEG > 1 Then $_sEGPUForce64Bit = 0
-   If $_sET > 1 Then $_sEGPUForce64Bit = 0
-   If $_sECUDAGridSize > 1 Then $_sECUDAGridSize = 0
-   If $_sECUDABlockSize > 1 Then $_sECUDABlockSize = 0
-   If $_sECUDASchedule > 1 Then $_sECUDASchedule = 0
+   If $_sEGe <> $GUI_CHECKED Then $_sEGPUForce64Bit = False
+   If $_sETe <> $GUI_CHECKED Then $_sEGPUForce64Bit = False
+   If $_sECUDAGridSizee <> $GUI_CHECKED Then $_sECUDAGridSize = False
+   If $_sECUDABlockSizee <> $GUI_CHECKED Then $_sECUDABlockSize = False
+   If $_sECUDASchedulee <> $GUI_CHECKED Then $_sECUDASchedule = False
 
    Local $_sEOpts
    Local $_sBatch
@@ -800,7 +807,7 @@ Func EthminerGenoil()
    If $_sECUDASchedule Then $_sEOpts &= "--cuda-schedule "&$_sECUDAScheduleVal&" "
 
    $_sBatch = "cd "&$_sInstallDir&"ethminer-genoil"&@CRLF&"ethminer-genoil.exe -U -F "&$_sEServer&" -O "&$_sEPayoutAddress&"."&$_sEWorkerLabel&" "&$_sEOpts
-   If FileExists($_sInstallDir&"au3-EthminerGenoil.bat") Then FileDelete($_sInstallDir&"au3-ethminer-genoil.bat")
+   If FileExists($_sInstallDir&"au3-ethminer-genoil.bat") Then FileDelete($_sInstallDir&"au3-ethminer-genoil.bat")
    FileWrite($_sInstallDir&"au3-ethminer-genoil.bat", $_sBatch)
    $_pEthminerGenoil = Run(@ComSpec&" /K au3-ethminer-genoil.bat", $_sInstallDir)
 
@@ -843,6 +850,18 @@ Func HOdlMinerWolf()
    $_iHOdlMinerWolf_state = 1 ; launching
 EndFunc
 
+Func CheckInternet()
+   Global $_sInternetState
+
+   $ping = Ping("www.google.com")
+   If @error Then
+	  $_sInternetState++
+   Else
+	  $_sInternetState = 0
+   EndIf
+   Return $_sInternetState
+EndFunc
+
 Func CloseMiners()
    Global $_pClaymoreMiner
    Global $_pQtMiner
@@ -855,17 +874,6 @@ Func CloseMiners()
    $_iEthminerGenoil_state = 3
    $_iHOdlMiner_state = 3
    $_iHOdlMinerWolf_state = 3
-
-   ProcessClose($_pClaymoreMiner)
-   ProcessClose("EthDcrMiner64.exe")
-   ProcessClose($_pQtMiner)
-   ProcessClose("qtminer.exe")
-   ProcessClose($_pEthMinerGenoil)
-   ProcessClose("ethminer-genoil.exe")
-   ProcessClose($_pHOdlMiner)
-   ProcessClose("hodlminer.exe")
-   ProcessClose($_pHOdlMinerWolf)
-   ProcessClose("hodlminer-wolf.exe")
 EndFunc
 
 Func PreExit()
@@ -912,6 +920,12 @@ While 1
 	  Case $_uau3miner_update
 		 GUICtrlSetData($_uau3miner_update, "Updating au3miner...")
 		 Update()
+	  ;Case $_uTestButton
+	  ;	If Not $_sInternetState Or $_sInternetState == 0 Then
+	  ;		$_sInternetState = 1
+	  ;	ElseIf $_sInternetState == 1 Then
+	  ;		$_sInternetState = 0
+	  ;	EndIf
    EndSwitch
 
    Select
@@ -923,7 +937,6 @@ While 1
 			GUICtrlSetData($_uClaymoreMiner_launch, "claymoreminer is running")
 		 EndIf
 	  Case $_iClaymoreMiner_state == 2
-
 		 If Not ProcessExists($_pClaymoreMiner) Then
 			If $_sClaymoreMiner_persist == 1 Then
 			   ClaymoreMiner()
@@ -990,7 +1003,6 @@ While 1
 			GUICtrlSetData($_uEthminerGenoil_launch, "EthminerGenoil is running")
 		 EndIf
 	  Case $_iEthminerGenoil_state == 2
-
 		 If Not ProcessExists($_pEthminerGenoil) Then
 			If $_sEthminerGenoil_persist == 1 Then
 			   EthminerGenoil()
@@ -1080,6 +1092,50 @@ While 1
 			GUICtrlSetData($_uHOdlMinerWolf_launch, "HOldminer is running")
 		 EndIf
    EndSelect
+
+   If $_sMonitorInternet == 1 Then
+	  CheckInternet()
+	  If $_sInternetState > 0 Then
+		 $_sInternetState = 0
+		 If $_iClaymoreMiner_state > 0 Then
+			$_iClaymoreMiner_state = 3
+			$_sInternetState = $_sInternetState-1
+		 EndIf
+		 If $_iQtMiner_state > 0 Then
+			$_iQtMiner_state = 3
+			$_sInternetState = $_sInternetState-2
+		 EndIf
+		 If $_iEthminerGenoil_state > 0 Then
+			$_iEthminerGenoil_state = 3
+			$_sInternetState = $_sInternetState-4
+		 EndIf
+		 If $_iHOdlMinerWolf_state > 0 Then
+			$_iHOdlMinerWolf_state = 3
+			$_sInternetState = $_sInternetState-8
+		 EndIf
+		 If $_iHOdlMiner_state > 0 Then
+			$_iHOdlMiner_state = 3
+			$_sInternetState = $_sInternetState-16
+		 EndIf
+		 $_sInternetState = -1;
+	  ElseIf $_sInternetState < 0 Then
+		 If $_sInternetState >= 16 Then
+			$_iHOdlMiner_state = 1
+		 EndIf
+		 If $_sInternetState >= 8 Then
+			$_iHOdlMinerWolf_state = 1
+		 EndIf
+		 If $_sInternetState >= 4 Then
+			$_iEthminerGenoil_state = 1
+		 EndIf
+		 If $_sInternetState >= 2 Then
+			$_iQtMiner_state = 1
+		 EndIf
+		 If $_sInternetState >= 1 Then
+			$_iClaymoreMiner_state = 1
+		 EndIf
+	  EndIf
+   EndIf
 WEnd
 
 ; ===============================================================================================================================
