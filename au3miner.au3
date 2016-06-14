@@ -792,8 +792,8 @@ Func EthminerGenoil()
    Local $_sETVal = GUICtrlRead($_uETVal)
 
    ; 4=unchecked
-   If $_sEGe <> $GUI_CHECKED Then $_sEGPUForce64Bit = False
-   If $_sETe <> $GUI_CHECKED Then $_sEGPUForce64Bit = False
+   If $_sEG <> $GUI_CHECKED Then $_sEG = False
+   If $_sET <> $GUI_CHECKED Then $_sET = False
    If $_sECUDAGridSize <> $GUI_CHECKED Then $_sECUDAGridSize = False
    If $_sECUDABlockSize <> $GUI_CHECKED Then $_sECUDABlockSize = False
    If $_sECUDASchedule <> $GUI_CHECKED Then $_sECUDASchedule = False
