@@ -1,4 +1,4 @@
-Global $_Ver = "0.0.8"
+Global $_Ver = "0.0.9"
 
 Select
    Case RegRead("HKEY_LOCAL_MACHINE\SOFTWARE\au3miner\", "installdir")
