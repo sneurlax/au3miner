@@ -747,10 +747,10 @@ Func QtMiner()
    Local $_sEGPUSingleAllocVal = GUICtrlRead($_uEGPUSingleAllocVal)
 
    ; 4=unchecked
-   If $_sEG <> $GUI_CHECKED Then $_sEGPUForce64Bit = False
-   If $_sET <> $GUI_CHECKED Then $_sEGPUForce64Bit = False
-   If $_sEOpenCLPlatform <> $GUI_CHECKED Then $_sEGPUForce64Bit = False
-   If $_sEOpenCLDevice <> $GUI_CHECKED Then $_sEGPUForce64Bit = False
+   If $_sEG <> $GUI_CHECKED Then $_sEG = False
+   If $_sET <> $GUI_CHECKED Then $_sET = False
+   If $_sEOpenCLPlatform <> $GUI_CHECKED Then $_sEOpenCLPlatform = False
+   If $_sEOpenCLDevice <> $GUI_CHECKED Then $_sEOpenCLDevice = False
    If $_sEGPUForce64Bit <> $GUI_CHECKED Then $_sEGPUForce64Bit = False
    If $_sEGPUMaxHeap <> $GUI_CHECKED Then $_sEGPUMaxHeap = False
    If $_sEGPUUseSync <> $GUI_CHECKED Then $_sEGPUUseSync = False
