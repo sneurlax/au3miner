@@ -794,9 +794,9 @@ Func EthminerGenoil()
    ; 4=unchecked
    If $_sEGe <> $GUI_CHECKED Then $_sEGPUForce64Bit = False
    If $_sETe <> $GUI_CHECKED Then $_sEGPUForce64Bit = False
-   If $_sECUDAGridSizee <> $GUI_CHECKED Then $_sECUDAGridSize = False
-   If $_sECUDABlockSizee <> $GUI_CHECKED Then $_sECUDABlockSize = False
-   If $_sECUDASchedulee <> $GUI_CHECKED Then $_sECUDASchedule = False
+   If $_sECUDAGridSize <> $GUI_CHECKED Then $_sECUDAGridSize = False
+   If $_sECUDABlockSize <> $GUI_CHECKED Then $_sECUDABlockSize = False
+   If $_sECUDASchedule <> $GUI_CHECKED Then $_sECUDASchedule = False
 
    Local $_sEOpts
    Local $_sBatch
