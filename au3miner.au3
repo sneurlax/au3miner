@@ -946,6 +946,10 @@ While 1
 			   GUICtrlSetData($_uClaymoreMiner_launch, "claymoreminer closed")
 			EndIf
 		 EndIf
+		 If WinExists("EthDcrMiner64.exe", "EthDcrMiner64.exe has stopped working") Then
+			ProcessClose($_pClaymoreMiner)
+			ClaymoreMiner()
+		 EndIf
 	  Case $_iClaymoreMiner_state == 3
 		 Do
 			ProcessClose($_pClaymoreMiner)
@@ -978,6 +982,10 @@ While 1
 			   $_iQtMiner_state = 3
 			   GUICtrlSetData($_uQtMiner_launch, "qtminer closed")
 			EndIf
+		 EndIf
+		 If WinExists("qtminer.exe", "qtminer.exe has stopped working") Then
+			ProcessClose($_pQtMiner)
+			QtMiner()
 		 EndIf
 	  Case $_iQtMiner_state == 3
 		 Do
@@ -1012,6 +1020,10 @@ While 1
 			   GUICtrlSetData($_uEthminerGenoil_launch, "EthminerGenoil closed")
 			EndIf
 		 EndIf
+		 If WinExists("ethminer-genoil.exe", "ethminer-genoil.exe has stopped working") Then
+			ProcessClose($_pEthminerGenoil)
+			EthminerGenoil()
+		 EndIf
 	  Case $_iEthminerGenoil_state == 3
 		 Do
 			ProcessClose($_pEthminerGenoil)
@@ -1045,6 +1057,10 @@ While 1
 			   GUICtrlSetData($_uHOdlMiner_launch, "HOdlminer closed")
 			EndIf
 		 EndIf
+		 If WinExists("hodlminer.exe", "hodlminer.exe has stopped working") Then
+			ProcessClose($_pHOdlMiner)
+			HOdlMiner()
+		 EndIf
 	  Case $_iHOdlMiner_state == 3
 		 Do
 			ProcessClose($_pHOdlMiner)
@@ -1077,6 +1093,10 @@ While 1
 			   $_iHOdlMinerWolf_state = 3
 			   GUICtrlSetData($_uHOdlMinerWolf_launch, "HOdlMiner-wolf closed")
 			EndIf
+		 EndIf
+		 If WinExists("hodlminer-wolf.exe", "hodlminer-wolf.exe has stopped working") Then
+			ProcessClose($_pHOdlMinerWolf)
+			HOdlMinerWolf()
 		 EndIf
 	  Case $_iHOdlMinerWolf_state == 3
 		 Do
