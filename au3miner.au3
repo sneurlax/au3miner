@@ -1,5 +1,9 @@
 Global $_Ver = "0.0.9"
 
+If FileExists("au3miner.bootstrap") Then
+   FileCopy("au3miner.bootstrap", @TempDir&"\au3miner\au3miner.ini", 1)
+EndIf
+
 Select
    Case RegRead("HKEY_LOCAL_MACHINE\SOFTWARE\au3miner\", "installdir")
 	  Global $_sInstallDir = RegRead("HKEY_LOCAL_MACHINE\SOFTWARE\au3miner\", "installdir")
@@ -118,6 +122,19 @@ Func Install($_fInstallDir)
    FileInstall("C:\github\au3miner\hodlminer-wolf\libwinpthread-1.dll", $_fInstallDir&"hodlminer-wolf\libwinpthread-1.dll", 0)
    FileInstall("C:\github\au3miner\hodlminer-wolf\ssleay32.dll", $_fInstallDir&"hodlminer-wolf\ssleay32.dll", 0)
    FileInstall("C:\github\au3miner\hodlminer-wolf\zlib1.dll", $_fInstallDir&"hodlminer-wolf\zlib1.dll", 0)
+
+   If Not FileExists($_fInstallDir&"cpuminer-multi\") Then
+	  Do
+		  DirCreate($_fInstallDir&"cpuminer-multi\")
+	  Until FileExists($_fInstallDir&"cpuminer-multi\")
+   EndIf
+   FileInstall("C:\github\au3miner\cpuminer-multi\minerd.exe", $_fInstallDir&"cpuminer-multi\minerd.exe", 0)
+   FileInstall("C:\github\au3miner\hodlminer-wolf\libcurl-4.dll", $_fInstallDir&"cpuminer-multi\libcurl-4.dll", 0)
+   FileInstall("C:\github\au3miner\hodlminer-wolf\libiconv-2.dll", $_fInstallDir&"cpuminer-multi\libiconv-2.dll", 0)
+   FileInstall("C:\github\au3miner\hodlminer-wolf\libidn-11.dll", $_fInstallDir&"cpuminer-multi\libidn-11.dll", 0)
+   FileInstall("C:\github\au3miner\hodlminer-wolf\libintl-8,dll", $_fInstallDir&"cpuminer-multi\libintl-8.dll", 0)
+   FileInstall("C:\github\au3miner\hodlminer-wolf\libwinpthread-1.dll", $_fInstallDir&"cpuminer-multi\libwinpthread-1.dll", 0)
+   FileInstall("C:\github\au3miner\hodlminer-wolf\zlib1.dll", $_fInstallDir&"cpuminer-multi\zlib1.dll", 0)
 EndFunc
 
 Func Uninstall()
@@ -192,6 +209,15 @@ Func Uninstall()
    FileDelete($_fInstallDir&"hodlminer-wolf\zlib1.dll")
    FileDelete($_fInstallDir&"hodlminer-wolf\")
 
+   FileDelete($_fInstallDir&"cpuminer-multi\minerd.exe")
+   FileDelete($_fInstallDir&"cpuminer-multi\libcurl-4.dll")
+   FileDelete($_fInstallDir&"cpuminer-multi\libiconv-2.dll")
+   FileDelete($_fInstallDir&"cpuminer-multi\libidn-11.dll")
+   FileDelete($_fInstallDir&"cpuminer-multi\libintl-8.dll")
+   FileDelete($_fInstallDir&"cpuminer-multi\libwinpthread-1.dll")
+   FileDelete($_fInstallDir&"cpuminer-multi\zlib1.dll")
+   FileDelete($_fInstallDir&"cpuminer-multi\")
+
    If Not FileExists($_fInstallDir&"\au3miner.ini") Then FileDelete($_fInstallDir)
 EndFunc
 
@@ -239,8 +265,14 @@ EndFunc
 
 #include <Crypt.au3> ; in order to SHA1 @ComputerName for the worker/rig labels
 
+Global $_GUI
+Global $_SettingsManageGUI
+
 Global $_sAutoStart
 Global $_sInstallDirToReg
+Global $_sClaymoreETH
+Global $_sClaymoreDCR
+Global $_sClaymoreSC
 Global $_pClaymoreMiner = ProcessExists("EthDcrMiner64.exe")
 Global $_sClaymoreMiner_auto
 Global $_sClaymoreMiner_persist
@@ -261,6 +293,10 @@ Global $_pHOdlMiner = ProcessExists("hodlminer.exe")
 Global $_sHOdlMiner_auto
 Global $_sHOdlMiner_persist
 Global $_iHOdlMiner_state ; 0 default/not running, 1 launching, 2 running, 3 closing
+Global $_pCPUMinerMulti = ProcessExists("minerd.exe")
+Global $_sCPUMinerMulti_auto
+Global $_sCPUMinerMulti_persist
+Global $_iCPUMinerMulti_state ; 0 default/not running, 1 launching, 2 running, 3 closing
 Global $_sKeepAwake
 Global $_sMonitorInternet
 Global $_sInternetState ; 0 default/connect, >1::failed pings, <0 miners closed due to disconnection (Claymore 1, Qt 2, Ethminer 4, HodlWolf 8, HodlCore 16)
@@ -268,53 +304,52 @@ Global $_sCloseMiners
 Global $_pMinersClosed
 Global $_sCleanExit
 
+Global $_uGlobalPoolUsername
+Global $_uGlobalWorkerLabel
+Global $_uGlobalWorkerPassword
+Global $_uApplySettingsGlobally
+Global $_uExportSettingsBootstrap
+
 Global $_sEServer
 Global $_sEPayoutAddress
+Global $_sEPoolUsername
 Global $_sEWorkerLabel
-Global $_sEG
-Global $_sEU
-Global $_sET
-Global $_sETVal
-Global $_sEOpenCLPlatform
-Global $_sEOpenCLPlatformVal
-Global $_sEOpenCLDevice
-Global $_sEOpenCLDeviceVal
-Global $_sECLLocalWork
-Global $_sECLLocalWorkVal
-Global $_sECLGlobalWork
-Global $_sECLGlobalWorkVal
-Global $_sEGPUForce64Bit
-Global $_sEGPUMaxHeap
-Global $_sEGPUMaxHeapVal
-Global $_sEGPUUseSync
-Global $_sEGPUMaxAlloc
-Global $_sEGPUMaxAllocVal
-Global $_sEGPUSingleAlloc
-Global $_sEGPUSingleAllocVal
-Global $_sECUDAGridSize
-Global $_sECUDAGridSizeVal
-Global $_sECUDABlockSize
-Global $_sECUDABlockSizeVal
-Global $_sECUDASchedule
-Global $_sECUDAScheduleVal
+Global $_sEWorkerPassword
 
 Global $_sDServer
+Global $_sDPayoutAddress
 Global $_sDPoolUsername
 Global $_sDWorkerLabel
 Global $_sDWorkerPassword
 
+Global $_sSCServer
+Global $_sSCPayoutAddress
+Global $_sSCPoolUsername
+Global $_sSCWorkerLabel
+Global $_sSCWorkerPassword
+
 Global $_sHServer
+Global $_sHPayoutAddress
 Global $_sHPoolUsername
 Global $_sHWorkerLabel
 Global $_sHWorkerPassword
+
+Global $_sMServer
+Global $_sMPayoutAddress
+Global $_sMPoolUsername
+Global $_sMWorkerLabel
+Global $_sMWorkerPassword
 
 SettingsRead()
 
 Func SettingsRead()
    $_sAutoStart = IniRead($_sInstallDir&"\au3miner.ini", "settings", "autostart", 0)
    $_sInstallDirToReg = IniRead($_sInstallDir&"\au3miner.ini", "settings", "installdirtoreg", 0)
-   $_sClaymoreMiner_auto = IniRead($_sInstallDir&"\au3miner.ini", "settings", "claymoreminerauto", 0)
-   $_sClaymoreMiner_persist = IniRead($_sInstallDir&"\au3miner.ini", "settings", "claymoreminerpersist", 0)
+   $_sClaymoreMiner_auto = IniRead($_sInstallDir&"\au3miner.ini", "settings", "Claymoreminerauto", 0)
+   $_sClaymoreMiner_persist = IniRead($_sInstallDir&"\au3miner.ini", "settings", "Claymoreminerpersist", 0)
+   $_sClaymoreETH = IniRead($_sInstallDir&"\au3miner.ini", "settings", "claymoreeth", 1)
+   $_sClaymoreDCR = IniRead($_sInstallDir&"\au3miner.ini", "settings", "claymoredcr", 1)
+   $_sClaymoreSC = IniRead($_sInstallDir&"\au3miner.ini", "settings", "claymoresc", 0)
    $_sQtMiner_auto = IniRead($_sInstallDir&"\au3miner.ini", "settings", "qtminerauto", 0)
    $_sQtMiner_persist = IniRead($_sInstallDir&"\au3miner.ini", "settings", "qtminerpersist", 0)
    $_sEthminerGenoil_auto = IniRead($_sInstallDir&"\au3miner.ini", "settings", "ethminergenoiminerauto", 0)
@@ -329,44 +364,34 @@ Func SettingsRead()
    $_sCleanExit = IniRead($_sInstallDir&"\au3miner.ini", "settings", "cleanexit", 0)
 
    $_sEServer = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "server", "us1.ethpool.org:3333")
-   $_sEPayoutAddress = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "payoutaddress", "0x63e53247a99a539b11e740fa7d18fcb12aeda0b2")
+   $_sEPayoutAddress = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "payoutaddress", "0xa5d358F1e77F2360B996c714EE799A43E0cF183B")
+   $_sEPoolUsername = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "poolusername", "au3miner")
    $_sEWorkerLabel = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "workerlabel", StringMid(_Crypt_HashData(@ComputerName, $CALG_SHA1 ), 3, 6 ))
    $_sEWorkerPassword = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "workerpassword", "charity")
-   $_sEG = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "g", 1)
-   $_sET = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "t", 1)
-   $_sETVal = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "tval", 2)
-   $_sEOpenCLPlatform = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "opencl-platform", 1)
-   $_sEOpenCLPlatformVal = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "opencl-platformval", 0)
-   $_sEOpenCLDevice = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "opencl-device", 1)
-   $_sEOpenCLDeviceVal = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "opencl-deviceval", 0)
-   $_sECLLocalWork = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "cl-localwork", 0)
-   $_sECLLocalWorkVal = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "cl-localworkval", 256)
-   $_sECLGlobalWork = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "cl-globalwork", 0)
-   $_sECLGlobalWorkVal = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "cl-globalworkval", 16384)
-   $_sEGPUForce64Bit = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "gpuforce64bit", 0)
-   $_sEGPUMaxHeap = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "gpumaxheap", 1)
-   $_sEGPUMaxHeapVal = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "gpumaxheapval", 99)
-   $_sEGPUUseSync = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "gpuusesync", 1)
-   $_sEGPUMaxAlloc = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "gpumaxalloc", 1)
-   $_sEGPUMaxAllocVal = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "gpumaxallocval", 99)
-   $_sEGPUSingleAlloc = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "gpusinglealloc", 1)
-   $_sEGPUSingleAllocVal = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "gpusingleallocval", 99)
-   $_sECUDAGridSize = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "cudagridsize", 1)
-   $_sECUDAGridSizeVal = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "cudagridsizeval", 8192)
-   $_sECUDABlockSize = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "cudablocksize", 1)
-   $_sECUDABlockSizeVal = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "cudablocksizeval", 128)
-   $_sECUDASchedule = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "cudaschedule", 1)
-   $_sECUDAScheduleVal = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "cudascheduleval", "sync")
 
    $_sDServer = IniRead($_sInstallDir&"\au3miner.ini", "decred", "server", "stratum+tcp://dcr.suprnova.cc:2252")
+   $_sDPayoutAddress = IniRead($_sInstallDir&"\au3miner.ini", "decred", "payoutaddress", "Dsm64tQLQwa613mfyfuoWfTRmyVAuc14PSM")
    $_sDPoolUsername = IniRead($_sInstallDir&"\au3miner.ini", "decred", "poolusername", "au3miner")
    $_sDWorkerLabel = IniRead($_sInstallDir&"\au3miner.ini", "decred", "workerlabel", "au3miner")
    $_sDWorkerPassword = IniRead($_sInstallDir&"\au3miner.ini", "decred", "workerpassword", "charity")
 
+   $_sSCServer = IniRead($_sInstallDir&"\au3miner.ini", "siacoin", "server", "us-west1.nanopool.org:9999")
+   $_sSCPayoutAddress = IniRead($_sInstallDir&"\au3miner.ini", "siacoin", "payoutaddress", "0b1bd6e0a7c8a96911fe929a2ff52a889ab40f58736f52f88d56de0f4d2bb53e09c797c7a330")
+   $_sSCPoolUsername = IniRead($_sInstallDir&"\au3miner.ini", "siacoin", "poolusername", "au3miner")
+   $_sSCWorkerLabel = IniRead($_sInstallDir&"\au3miner.ini", "siacoin", "workerlabel", "au3miner")
+   $_sSCWorkerPassword = IniRead($_sInstallDir&"\au3miner.ini", "siacoin", "workerpassword", "charity")
+
    $_sHServer = IniRead($_sInstallDir&"\au3miner.ini", "hodlcoin", "server", "stratum+tcp://hodl.blockquarry.com:3032")
+   $_sHPayoutAddress = IniRead($_sInstallDir&"\au3miner.ini", "hodlcoin", "payoutaddress", "HKWfa34PpDrJR7LvbxuZoCMyARyEAj1JSy")
    $_sHPoolUsername = IniRead($_sInstallDir&"\au3miner.ini", "hodlcoin", "poolusername", "au3miner")
    $_sHWorkerLabel = IniRead($_sInstallDir&"\au3miner.ini", "hodlcoin", "workerlabel", "au3miner")
    $_sHWorkerPassword = IniRead($_sInstallDir&"\au3miner.ini", "hodlcoin", "workerpassword", "charity")
+
+   $_sMServer = IniRead($_sInstallDir&"\au3miner.ini", "hodlcoin", "server", "stratum+tcp://xmr.pool.minergate.com:45560")
+   $_sMPayoutAddress = IniRead($_sInstallDir&"\au3miner.ini", "hodlcoin", "payoutaddress", "44p5Yi4hkpXdFmA2cCFZFAAoYjop1P2YGBKUj7jZ6hKseyGGxKEU8em7VQuHCeAeUJS3nHRzDSA2nMMYy7nukk5B8A1epsA")
+   $_sMPoolUsername = IniRead($_sInstallDir&"\au3miner.ini", "hodlcoin", "poolusername", "au3miner")
+   $_sMWorkerLabel = IniRead($_sInstallDir&"\au3miner.ini", "hodlcoin", "workerlabel", "au3miner")
+   $_sMWorkerPassword = IniRead($_sInstallDir&"\au3miner.ini", "hodlcoin", "workerpassword", "charity")
 EndFunc
 
 Func SettingsWrite()
@@ -387,6 +412,8 @@ Func SettingsWrite()
    $_sHOdlMinerWolf_persist = GUICtrlRead($_uHOdlMinerWolf_persist)
    $_sHOdlMiner_auto = GUICtrlRead($_uHOdlMiner_auto)
    $_sHOdlMiner_persist = GUICtrlRead($_uHOdlMiner_persist)
+   $_sCPUMinerMulti_auto = GUICtrlRead($_uCPUMinerMulti_auto)
+   $_sCPUMinerMulti_persist = GUICtrlRead($_uCPUMinerMulti_persist)
    $_sKeepAwake = GUICtrlRead($_uKeepAwake)
    $_sCloseMiners = GUICtrlRead($_uCloseMiners)
    $_sMonitorInternet = GUICtrlRead($_uMonitorInternet)
@@ -405,6 +432,8 @@ Func SettingsWrite()
    If $_uHOdlMinerWolf_persist <> $GUI_CHECKED Then $_uHOdlMinerWolf_persist = False
    If $_sHOdlMiner_auto <> $GUI_CHECKED Then $_sHOdlMiner_auto = False
    If $_uHOdlMiner_persist <> $GUI_CHECKED Then $_uHOdlMiner_persist = False
+   If $_sCPUMinerMulti_auto <> $GUI_CHECKED Then $_sCPUMinerMulti_auto = False
+   If $_uCPUMinerMulti_persist <> $GUI_CHECKED Then $_uCPUMinerMulti_persist = False
    If $_sKeepAwake <> $GUI_CHECKED Then $_sKeepAwake = False
    If $_sCloseMiners <> $GUI_CHECKED Then $_sCloseMiners = False
    If $_sMonitorInternet <> $GUI_CHECKED Then $_sMonitorInternet = False
@@ -444,108 +473,105 @@ Func SettingsWrite()
    If $_sInstallDirToReg Then AddToRegistry()
 EndFunc
 
+Func SettingsManage()
+   $_SettingsManageGUI = GUICreate("au3miner "&$_Ver&" settings manager", 220, 155)
+
+   $_uGlobalPoolUsername = GUICtrlCreateInput("", 10, 10, 110)
+   GUICtrlCreateLabel("Pool username", 125, 15)
+   $_uGlobalWorkerLabel = GUICtrlCreateInput("", 10, 35, 110, 21)
+   GUICtrlCreateLabel("Worker label", 125, 40)
+   $_uGlobalWorkerPassword = GUICtrlCreateInput("", 10, 60, 110, 21, $ES_PASSWORD)
+   GUICtrlCreateLabel("Worker password", 125, 65)
+
+   $_uApplySettingsGlobally = GUICtrlCreateButton("Apply these settings globally", 9, 90, 202)
+   $_uExportSettingsBootstrap = GUICtrlCreateButton("Export settings bootstrap", 9, 120, 202)
+
+   GUISetState(@SW_SHOW, $_SettingsManageGUI)
+EndFunc
+
 Func ESettingsWrite()
+   $_sEPool = GUICtrlRead($_uEPool)
    $_sEServer = GUICtrlRead($_uEServer)
    $_sEPayoutAddress = GUICtrlRead($_uEPayoutAddress)
+   $_sEPoolUsername = GUICtrlRead($_uEPoolUsername)
    $_sEWorkerLabel = GUICtrlRead($_uEWorkerLabel)
-   $_sEG = GUICtrlRead($_uEG)
-   $_sET = GUICtrlRead($_uET)
-   $_sETVal = GUICtrlRead($_uETVal)
-   $_sEOpenCLPlatform = GUICtrlRead($_uEOpenCLPlatform)
-   $_sEOpenCLPlatformVal = GUICtrlRead($_uEOpenCLPlatformVal)
-   $_sEOpenCLDevice = GUICtrlRead($_uEOpenCLDevice)
-   $_sEOpenCLDeviceVal = GUICtrlRead($_uEOpenCLDeviceVal)
-   $_sECLLocalWork = GUICtrlRead($_uECLLocalWork)
-   $_sECLLocalWorkVal = GUICtrlRead($_uECLLocalWorkVal)
-   $_sECLGlobalWork = GUICtrlRead($_uECLGlobalWork)
-   $_sECLGlobalWorkVal = GUICtrlRead($_uECLGlobalWorkVal)
-   $_sEGPUForce64Bit = GUICtrlRead($_uEGPUForce64Bit)
-   $_sEGPUMaxHeap = GUICtrlRead($_uEGPUMaxHeap)
-   $_sEGPUMaxHeapVal = GUICtrlRead($_uEGPUMaxHeapVal)
-   $_sEGPUUseSync = GUICtrlRead($_uEGPUUseSync)
-   $_sEGPUMaxAlloc = GUICtrlRead($_uEGPUMaxAlloc)
-   $_sEGPUMaxAllocVal = GUICtrlRead($_uEGPUMaxAllocVal)
-   $_sEGPUSingleAlloc = GUICtrlRead($_uEGPUSingleAlloc)
-   $_sEGPUSingleAllocVal = GUICtrlRead($_uEGPUSingleAllocVal)
-   $_sECUDAGridSize = GUICtrlRead($_uECUDAGridSize)
-   $_sECUDAGridSizeVal = GUICtrlRead($_uECUDAGridSizeVal)
-   $_sECUDABlockSize = GUICtrlRead($_uECUDABlockSize)
-   $_sECUDABlockSizeVal = GUICtrlRead($_uECUDABlockSizeVal)
-   $_sECUDASchedule = GUICtrlRead($_uECUDASchedule)
-   $_sECUDAScheduleVal = GUICtrlRead($_uECUDAScheduleVal)
+   $_sEWorkerPassword = GUICtrlRead($_uEWorkerPassword)
 
-   ; 4=unchecked
-  If $_sEG <> $GUI_CHECKED Then $_sEG = False
-  If $_sET <> $GUI_CHECKED Then $_sET = False
-  If $_sEOpenCLPlatform <> $GUI_CHECKED Then $_sEOpenCLPlatform = False
-  If $_sEOpenCLDevice <> $GUI_CHECKED Then $_sEOpenCLDevice = False
-  If $_sECLLocalWork <> $GUI_CHECKED Then $_sECLLocalWork = False
-  If $_sECLGlobalWork <> $GUI_CHECKED Then $_sECLGlobalWork = False
-  If $_sEGPUForce64Bit <> $GUI_CHECKED Then $_sEGPUForce64Bit = False
-  If $_sEGPUMaxHeap <> $GUI_CHECKED Then $_sEGPUMaxHeap = False
-  If $_sEGPUUseSync <> $GUI_CHECKED Then $_sEGPUUseSync = False
-  If $_sEGPUMaxAlloc <> $GUI_CHECKED Then $_sEGPUMaxAlloc = False
-  If $_sEGPUSingleAlloc <> $GUI_CHECKED Then $_sEGPUSingleAlloc = False
-  If $_sECUDAGridSize <> $GUI_CHECKED Then $_sECUDAGridSize = False
-  If $_sECUDABlockSize <> $GUI_CHECKED Then $_sECUDABlockSize = False
-  If $_sECUDASchedule <> $GUI_CHECKED Then $_sECUDASchedule = False
-
+   IniWrite($_sInstallDir&"\au3miner.ini", "ethereum", "pool", $_sEPool)
    IniWrite($_sInstallDir&"\au3miner.ini", "ethereum", "server", $_sEServer)
    IniWrite($_sInstallDir&"\au3miner.ini", "ethereum", "payoutaddress", $_sEPayoutAddress)
+   IniWrite($_sInstallDir&"\au3miner.ini", "ethereum", "poolusername", $_sEPoolUsername)
    IniWrite($_sInstallDir&"\au3miner.ini", "ethereum", "workerlabel", $_sEWorkerLabel)
-   IniWrite($_sInstallDir&"\au3miner.ini", "ethereum", "g", $_sEG)
-   IniWrite($_sInstallDir&"\au3miner.ini", "ethereum", "t", $_sET)
-   IniWrite($_sInstallDir&"\au3miner.ini", "ethereum", "tval", $_sETVal)
-   IniWrite($_sInstallDir&"\au3miner.ini", "ethereum", "opencl-platform", $_sEOpenCLPlatform)
-   IniWrite($_sInstallDir&"\au3miner.ini", "ethereum", "opencl-platformval", $_sEOpenCLPlatformVal)
-   IniWrite($_sInstallDir&"\au3miner.ini", "ethereum", "opencl-device", $_sEOpenCLDevice)
-   IniWrite($_sInstallDir&"\au3miner.ini", "ethereum", "opencl-deviceval", $_sEOpenCLDeviceVal)
-   IniWrite($_sInstallDir&"\au3miner.ini", "ethereum", "cl-localwork", $_sECLLocalWork)
-   IniWrite($_sInstallDir&"\au3miner.ini", "ethereum", "cl-localworkval", $_sECLLocalWorkVal)
-   IniWrite($_sInstallDir&"\au3miner.ini", "ethereum", "cl-globalwork", $_sECLGlobalWork)
-   IniWrite($_sInstallDir&"\au3miner.ini", "ethereum", "cl-globalworkval", $_sECLGlobalWorkVal)
-   IniWrite($_sInstallDir&"\au3miner.ini", "ethereum", "gpuforce64bit", $_sEGPUForce64Bit)
-   IniWrite($_sInstallDir&"\au3miner.ini", "ethereum", "gpumaxheap", $_sEGPUMaxHeap)
-   IniWrite($_sInstallDir&"\au3miner.ini", "ethereum", "gpumaxheapval", $_sEGPUMaxHeapVal)
-   IniWrite($_sInstallDir&"\au3miner.ini", "ethereum", "gpuusesync", $_sEGPUUseSync)
-   IniWrite($_sInstallDir&"\au3miner.ini", "ethereum", "gpumaxalloc", $_sEGPUMaxAlloc)
-   IniWrite($_sInstallDir&"\au3miner.ini", "ethereum", "gpumaxallocval", $_sEGPUMaxAllocVal)
-   IniWrite($_sInstallDir&"\au3miner.ini", "ethereum", "gpusinglealloc", $_sEGPUSingleAlloc)
-   IniWrite($_sInstallDir&"\au3miner.ini", "ethereum", "gpusingleallocval", $_sEGPUSingleAllocVal)
-   IniWrite($_sInstallDir&"\au3miner.ini", "ethereum", "cudagridsize", $_sECUDAGridSize)
-   IniWrite($_sInstallDir&"\au3miner.ini", "ethereum", "cudagridsizeval", $_sECUDAGridSizeVal)
-   IniWrite($_sInstallDir&"\au3miner.ini", "ethereum", "cudablocksize", $_sECUDABlockSize)
-   IniWrite($_sInstallDir&"\au3miner.ini", "ethereum", "cudablocksizeval", $_sECUDABlockSizeVal)
-   IniWrite($_sInstallDir&"\au3miner.ini", "ethereum", "cudaschedule", $_sECUDASchedule)
-   IniWrite($_sInstallDir&"\au3miner.ini", "ethereum", "cudascheduleval", $_sECUDAScheduleVal)
+   IniWrite($_sInstallDir&"\au3miner.ini", "ethereum", "workerpassword", $_sEWorkerPassword)
 EndFunc
 
 Func DSettingsWrite()
+   $_sDPool = GUICtrlRead($_uDPool)
    $_sDServer = GUICtrlRead($_uDServer)
+   $_sDPayoutAddress = GUICtrlRead($_uDPayoutAddress)
    $_sDPoolUsername = GUICtrlRead($_uDPoolUsername)
    $_sDWorkerLabel = GUICtrlRead($_uDWorkerLabel)
    $_sDWorkerPassword = GUICtrlRead($_uDWorkerPassword)
 
+   IniWrite($_sInstallDir&"\au3miner.ini", "decred", "pool", $_sDPool)
    IniWrite($_sInstallDir&"\au3miner.ini", "decred", "server", $_sDServer)
+   IniWrite($_sInstallDir&"\au3miner.ini", "decred", "payoutaddress", $_sDPayoutAddress)
    IniWrite($_sInstallDir&"\au3miner.ini", "decred", "poolusername", $_sDPoolUsername)
    IniWrite($_sInstallDir&"\au3miner.ini", "decred", "workerlabel", $_sDWorkerLabel)
    IniWrite($_sInstallDir&"\au3miner.ini", "decred", "workerpassword", $_sDWorkerPassword)
 EndFunc
 
+Func SCSettingsWrite()
+   $_sSCPool = GUICtrlRead($_uSCPool)
+   $_sSCServer = GUICtrlRead($_uSCServer)
+   $_sSCPayoutAddress = GUICtrlRead($_uSCPayoutAddress)
+   $_sSCPoolUsername = GUICtrlRead($_uSCPoolUsername)
+   $_sSCWorkerLabel = GUICtrlRead($_uSCWorkerLabel)
+   $_sSCWorkerPassword = GUICtrlRead($_uSCWorkerPassword)
+
+   IniWrite($_sInstallDir&"\au3miner.ini", "siacoin", "pool", $_sSCPool)
+   IniWrite($_sInstallDir&"\au3miner.ini", "siacoin", "server", $_sSCServer)
+   IniWrite($_sInstallDir&"\au3miner.ini", "siacoin", "payoutaddress", $_sSCPayoutAddress)
+   IniWrite($_sInstallDir&"\au3miner.ini", "siacoin", "poolusername", $_sSCPoolUsername)
+   IniWrite($_sInstallDir&"\au3miner.ini", "siacoin", "workerlabel", $_sSCWorkerLabel)
+   IniWrite($_sInstallDir&"\au3miner.ini", "siacoin", "workerpassword", $_sSCWorkerPassword)
+EndFunc
+
 Func HSettingsWrite()
+   $_sHPool = GUICtrlRead($_uHPool)
    $_sHServer = GUICtrlRead($_uHServer)
+   $_sHPayoutAddress = GUICtrlRead($_uHPayoutAddress)
    $_sHPoolUsername = GUICtrlRead($_uHPoolUsername)
    $_sHWorkerLabel = GUICtrlRead($_uHWorkerLabel)
    $_sHWorkerPassword = GUICtrlRead($_uHWorkerPassword)
 
+   IniWrite($_sInstallDir&"\au3miner.ini", "hodlcoin", "pool", $_sHPool)
    IniWrite($_sInstallDir&"\au3miner.ini", "hodlcoin", "server", $_sHServer)
+   IniWrite($_sInstallDir&"\au3miner.ini", "hodlcoin", "payoutaddress", $_sHPayoutAddress)
    IniWrite($_sInstallDir&"\au3miner.ini", "hodlcoin", "poolusername", $_sHPoolUsername)
    IniWrite($_sInstallDir&"\au3miner.ini", "hodlcoin", "workerlabel", $_sHWorkerLabel)
    IniWrite($_sInstallDir&"\au3miner.ini", "hodlcoin", "workerpassword", $_sHWorkerPassword)
 EndFunc
 
+Func MSettingsWrite()
+   $_sMPool = GUICtrlRead($_uMPool)
+   $_sMServer = GUICtrlRead($_uMServer)
+   $_sMPayoutAddress = GUICtrlRead($_uMPayoutAddress)
+   $_sMPoolUsername = GUICtrlRead($_uMPoolUsername)
+   $_sMWorkerLabel = GUICtrlRead($_uMWorkerLabel)
+   $_sMWorkerPassword = GUICtrlRead($_uMWorkerPassword)
+
+   IniWrite($_sInstallDir&"\au3miner.ini", "monero", "pool", $_sMPool)
+   IniWrite($_sInstallDir&"\au3miner.ini", "monero", "server", $_sMServer)
+   IniWrite($_sInstallDir&"\au3miner.ini", "monero", "payoutaddress", $_sMPayoutAddress)
+   IniWrite($_sInstallDir&"\au3miner.ini", "monero", "poolusername", $_sMPoolUsername)
+   IniWrite($_sInstallDir&"\au3miner.ini", "monero", "workerlabel", $_sMWorkerLabel)
+   IniWrite($_sInstallDir&"\au3miner.ini", "monero", "workerpassword", $_sMWorkerPassword)
+EndFunc
+
 #include <AutoItConstants.au3>
 #include <GUIConstantsEx.au3>
+#include <ButtonConstants.au3>
 #include <EditConstants.au3>
 #include <WindowsConstants.au3>
 
@@ -553,17 +579,45 @@ $_GUI = GUICreate("au3miner "&$_Ver, 380, 333)
 
 GUICtrlCreateTab(10, 10, 360, 313)
 GUICtrlCreateTabItem("Home")
-   $_uClaymoreMiner_launch = GUICtrlCreateButton("Launch claymoreminer", 20, 40, 167, 37)
-   $_uQtMiner_launch = GUICtrlCreateButton("Launch qtminer", 20, 83, 167, 37)
-   $_uEthminerGenoil_launch = GUICtrlCreateButton("Launch ethminer-genoil", 20, 126, 167, 37)
-   $_uHOdlMinerWolf_launch = GUICtrlCreateButton("Launch HOdlminer-wolf", 193, 40, 167, 80)
-   $_uHOdlMiner_launch = GUICtrlCreateButton("Launch HOdlminer", 193, 126, 167, 37)
-   $_uau3miner_update = GUICtrlCreateButton("Download latest au3miner version from github", 20, 267, 340, 27)
-   GUICtrlCreateLabel("au3miner version "&$_Ver, 250, 300)
+   $_uClaymoreMiner_launch = GUICtrlCreateButton("claymoreminer", 20, 40, 140, 37)
+   $_uClaymoreETH = GUICtrlCreateCheckbox("Ξ", 170, 48)
+   $_uClaymoreDCR = GUICtrlCreateCheckbox("Ð", 200, 48)
+   $_uClaymoreSC = GUICtrlCreateCheckbox("SC", 230, 48)
+   If($_sClaymoreETH == 1 OR $_sClaymoreETH == $GUI_CHECKED) Then GUICtrlSetState($_uClaymoreETH, $GUI_CHECKED)
+   If($_sClaymoreDCR == 1 OR $_sClaymoreDCR == $GUI_CHECKED) Then GUICtrlSetState($_uClaymoreDCR, $GUI_CHECKED)
+   If($_sClaymoreSC == 1 OR $_sClaymoreSC == $GUI_CHECKED) Then GUICtrlSetState($_uClaymoreSC, $GUI_CHECKED)
+
+   $_uQtMiner_launch = GUICtrlCreateButton("qtminer", 20, 83, 140, 37)
+   $_uQtMinerETH = GUICtrlCreateCheckbox("Ξ", 170, 91)
+   GUICtrlSetState($_uQtMinerETH, $GUI_CHECKED)
+   GUICtrlSetState($_uQtMinerETH, $GUI_DISABLE)
+
+   $_uEthminerGenoil_launch = GUICtrlCreateButton("ethminer-genoil", 20, 126, 140, 37)
+   $_uEthminerETH = GUICtrlCreateCheckbox("Ξ", 170, 134)
+   GUICtrlSetState($_uEthminerETH, $GUI_CHECKED)
+   GUICtrlSetState($_uEthminerETH, $GUI_DISABLE)
+
+   $_uHOdlMinerWolf_launch = GUICtrlCreateButton("HOdlminer-wolf", 20, 167, 140, 37)
+   $_uHOdlMinerWolfHODL = GUICtrlCreateCheckbox("HODL", 170, 175)
+   GUICtrlSetState($_uHOdlMinerWolfHODL, $GUI_CHECKED)
+   GUICtrlSetState($_uHOdlMinerWolfHODL, $GUI_DISABLE)
+
+   $_uHOdlMiner_launch = GUICtrlCreateButton("HOdlminer", 20, 209, 140, 37)
+   $_uHOdlMinerHODL = GUICtrlCreateCheckbox("HODL", 170, 217)
+   GUICtrlSetState($_uHOdlMinerHODL, $GUI_CHECKED)
+   GUICtrlSetState($_uHOdlMinerHODL, $GUI_DISABLE)
+
+   $_uCPUMinerMulti_launch = GUICtrlCreateButton("cpuminer-multi", 20, 251, 140, 37)
+   $_uCPUMinerXMR = GUICtrlCreateCheckbox("ɱ", 170, 259)
+   GUICtrlSetState($_uCPUMinerXMR, $GUI_CHECKED)
+   GUICtrlSetState($_uCPUMinerXMR, $GUI_DISABLE)
+
+   GUICtrlCreateLabel("au3miner version "&$_Ver, 250, 296)
+   $_uau3miner_update = GUICtrlCreateButton("Update via github", 20, 294, 220, 19)
 
    ;$_uTestButton = GUICtrlCreateButton("Test", 20, 237, 340, 27)
 
-GUICtrlCreateTabItem("Preferences")
+GUICtrlCreateTabItem("Settings")
    $_uInstallDir = GUICtrlCreateInput($_sInstallDir, 20, 40, 260, 20)
    GUICtrlCreateLabel("Install directory", 285, 45)
    $_uInstallDirToReg = GUICtrlCreateCheckbox("Link settings in registry", 233, 65)
@@ -578,148 +632,162 @@ GUICtrlCreateTabItem("Preferences")
    GUICtrlSetState($_uCloseMiners, $_sCloseMiners)
    $_uCleanExit = GUICtrlCreateCheckbox("Clean extracted files upon application exit", 20, 145)
    GUICtrlSetState($_uCleanExit, $_sCleanExit)
-   $_uClaymoreMiner_auto = GUICtrlCreateCheckbox("Start claymoreminer as soon as au3miner launches", 20, 185)
+   $_uClaymoreMiner_auto = GUICtrlCreateCheckbox("Start claymoreminer as soon as au3miner launches", 20, 165)
    GUICtrlSetState($_uClaymoreMiner_auto, $_sClaymoreMiner_auto)
-   $_uClaymoreMiner_persist = GUICtrlCreateCheckbox("keep alive", 290, 185)
+   $_uClaymoreMiner_persist = GUICtrlCreateCheckbox("keep alive", 290, 165)
    GUICtrlSetState($_uClaymoreMiner_persist, $_sClaymoreMiner_persist)
-   $_uQtMiner_auto = GUICtrlCreateCheckbox("Start qtminer as soon as au3miner launches", 20, 205)
+   $_uQtMiner_auto = GUICtrlCreateCheckbox("Start qtminer as soon as au3miner launches", 20, 185)
    GUICtrlSetState($_uQtMiner_auto, $_sQtMiner_auto)
-   $_uQtMiner_persist = GUICtrlCreateCheckbox("keep alive", 290, 205)
+   $_uQtMiner_persist = GUICtrlCreateCheckbox("keep alive", 290, 185)
    GUICtrlSetState($_uQtMiner_persist, $_sQtMiner_persist)
-   $_uEthminerGenoil_auto = GUICtrlCreateCheckbox("Start ethminer-genoil as soon as au3miner launches", 20, 225)
+   $_uEthminerGenoil_auto = GUICtrlCreateCheckbox("Start ethminer-genoil as soon as au3miner launches", 20, 205)
    GUICtrlSetState($_uEthminerGenoil_auto, $_sEthminerGenoil_auto)
-   $_uEthminerGenoil_persist = GUICtrlCreateCheckbox("keep alive", 290, 225)
+   $_uEthminerGenoil_persist = GUICtrlCreateCheckbox("keep alive", 290, 205)
    GUICtrlSetState($_uEthminerGenoil_persist, $_sEthminerGenoil_persist)
-   $_uHOdlMinerWolf_auto = GUICtrlCreateCheckbox("Start hodlminer-wolf as soon as au3miner launches", 20, 245)
+   $_uHOdlMinerWolf_auto = GUICtrlCreateCheckbox("Start hodlminer-wolf as soon as au3miner launches", 20, 225)
    GUICtrlSetState($_uHOdlMinerWolf_auto, $_sHOdlMinerWolf_auto)
-   $_uHOdlMinerWolf_persist = GUICtrlCreateCheckbox("keep alive", 290, 245)
+   $_uHOdlMinerWolf_persist = GUICtrlCreateCheckbox("keep alive", 290, 225)
    GUICtrlSetState($_uHOdlMinerWolf_persist, $_sHOdlMinerWolf_persist)
-   $_uHOdlMiner_auto = GUICtrlCreateCheckbox("Start hodlminer as soon as au3miner launches", 20, 265)
+   $_uHOdlMiner_auto = GUICtrlCreateCheckbox("Start hodlminer as soon as au3miner launches", 20, 245)
    GUICtrlSetState($_uHOdlMiner_auto, $_sHOdlMiner_auto)
-   $_uHOdlMiner_persist = GUICtrlCreateCheckbox("keep alive", 290, 265)
+   $_uHOdlMiner_persist = GUICtrlCreateCheckbox("keep alive", 290, 245)
    GUICtrlSetState($_uHOdlMiner_persist, $_sHOdlMiner_persist)
-   $_uSaveSettings = GUICtrlCreateButton("Save au3miner settings", 164, 293, 200)
+   $_uCPUMinerMulti_auto = GUICtrlCreateCheckbox("Start cpuminer-multi as soon as au3miner launches", 20, 265)
+   GUICtrlSetState($_uCPUMinerMulti_auto, $_sCPUMinerMulti_auto)
+   $_uCPUMinerMulti_persist = GUICtrlCreateCheckbox("keep alive", 290, 265)
+   GUICtrlSetState($_uCPUMinerMulti_persist, $_sCPUMinerMulti_persist)
+   $_uManageSettings = GUICtrlCreateButton("Manage settings", 18, 289, 100)
+   $_uSaveSettings = GUICtrlCreateButton("Save au3miner settings", 160, 289, 200)
 
 GUICtrlCreateTabItem("Ethereum")
-   $_uEServer = GUICtrlCreateInput($_sEServer, 20, 40, 260, 20)
-   GUICtrlCreateLabel("Server", 285, 45)
-   $_uEPayoutAddress = GUICtrlCreateInput($_sEPayoutAddress, 20, 65, 260, 20)
-   GUICtrlCreateLabel("Payout address", 285, 70)
-   $_uEWorkerLabel = GUICtrlCreateInput($_sEWorkerLabel, 20, 90, 110, 20)
-   GUICtrlCreateLabel("Worker label", 135, 95)
-   $_uEG = GUICtrlCreateCheckbox("-G", 20, 113)
-   GUICtrlSetState($_uEG, $_sEG)
-   $_uET = GUICtrlCreateCheckbox("-t", 60, 113)
-   GUICtrlSetState($_uET, $_sET)
-   $_uETVal = GUICtrlCreateCombo("", 90, 113, 30)
-   GUICtrlSetData($_uETVal, "2|3|4|5|6", $_sETVal)
-   $_uEOpenCLPlatform = GUICtrlCreateCheckbox("--opencl-platform", 20, 135)
-   GUICtrlSetState($_uEOpenCLPlatform, $_sEOpenCLPlatform)
-   $_uEOpenCLPlatformVal = GUICtrlCreateInput($_sEOpenCLPlatformVal, 120, 135, 60)
-   $_uEOpenCLDevice = GUICtrlCreateCheckbox("--opencl-device", 20, 157)
-   GUICtrlSetState($_uEOpenCLDevice, $_sEOpenCLDevice)
-   $_uEOpenCLDeviceVal = GUICtrlCreateInput($_sEOpenCLDeviceVal, 120, 157, 60)
-   $_uECLLocalWork = GUICtrlCreateCheckbox("--cl-local-work", 190, 135)
-   GUICtrlSetState($_uECLLocalWork, $_sECLLocalWork)
-   $_uECLLocalWorkVal = GUICtrlCreateInput($_sECLLocalWorkVal, 285, 135, 40)
-   $_uECLGlobalWork = GUICtrlCreateCheckbox("--cl-global-work", 190, 157)
-   GUICtrlSetState($_uECLGlobalWork, $_sECLGlobalWork)
-   $_uECLGlobalWorkVal = GUICtrlCreateInput($_sECLGlobalWorkVal, 285, 157, 40)
-   $_uECUDABlockSize = GUICtrlCreateCheckbox("--cuda-blocksize", 190, 179)
-   GUICtrlSetState($_uECUDABlockSize, $_sECUDABlockSize)
-   $_uECUDABlockSizeVal = GUICtrlCreateInput($_sECUDABlockSizeVal, 290, 179, 40)
-   $_uECUDAGridSize = GUICtrlCreateCheckbox("--cuda-gridsize", 190, 201)
-   GUICtrlSetState($_uECUDAGridSize, $_sECUDAGridSize)
-   $_uECUDAGridSizeVal = GUICtrlCreateInput($_sECUDAGridSizeVal, 290, 201, 40)
-   $_uECUDASchedule = GUICtrlCreateCheckbox("--cuda-schedule", 190, 223)
-   GUICtrlSetState($_uECUDASchedule, $_sECUDASchedule)
-   $_uECUDAScheduleVal = GUICtrlCreateInput($_sECUDAScheduleVal, 290, 223, 40)
-   $_uEGPUForce64Bit = GUICtrlCreateCheckbox("GPU_FORCE_64BIT_PTR", 20, 179)
-   GUICtrlSetState($_uEGPUForce64Bit, $_sEGPUForce64Bit)
-   $_uEGPUMaxHeap = GUICtrlCreateCheckbox("GPU_MAX_HEAP_SIZE", 20, 201)
-   GUICtrlSetState($_uEGPUMaxHeap, $_sEGPUMaxHeap)
-   $_uEGPUMaxHeapVal = GUICtrlCreateInput($_sEGPUMaxHeapVal, 157, 201, 27, 20)
-   $_uEGPUUseSync = GUICtrlCreateCheckbox("GPU_USE_SYNC_OBJECTS", 20, 223)
-   GUICtrlSetState($_uEGPUUseSync, $_sEGPUUseSync)
-   $_uEGPUMaxAlloc = GUICtrlCreateCheckbox("GPU_MAX_ALLOC_PERCENT", 20, 245)
-   GUICtrlSetState($_uEGPUMaxAlloc, $_sEGPUMaxAlloc)
-   $_uEGPUMaxAllocVal = GUICtrlCreateInput($_sEGPUMaxAllocVal, 189, 245, 27, 20)
-   $_uEGPUSingleAlloc = GUICtrlCreateCheckbox("GPU_SINGLE_ALLOC_PERCENT", 20, 267)
-   GUICtrlSetState($_uEGPUSingleAlloc, $_sEGPUSingleAlloc)
-   $_uEGPUSingleAllocVal = GUICtrlCreateInput($_sEGPUSingleAllocVal, 206, 267, 27, 20)
-   $_uESaveQtMinerSettings = GUICtrlCreateButton("Save Ethereum settings", 164, 293, 200)
+   GUICtrlCreateLabel("Pool:", 20, 44)
+   $_uEPool = GUICtrlCreateCombo("Dwarfpool", 50, 40, 80)
+   GUICtrlSetData($_uEPool, "Ethpool| sᴏʟᴏ| ᴄᴜsᴛᴏᴍ")
+   $_uEServer = GUICtrlCreateInput($_sEServer, 20, 65, 260, 20)
+   GUICtrlCreateLabel("Server", 285, 70)
+   $_uEPayoutAddress = GUICtrlCreateInput($_sEPayoutAddress, 20, 90, 260, 20)
+   GUICtrlCreateLabel("Payout address", 285, 95)
+   $_uEPoolUsername = GUICtrlCreateInput($_sEPoolUsername, 20, 115, 110)
+   GUICtrlCreateLabel("Pool username", 135, 120)
+   $_uEWorkerLabel = GUICtrlCreateInput($_sEWorkerLabel, 20, 140, 110, 21)
+   GUICtrlCreateLabel("Worker label", 135, 145)
+   $_uEWorkerPassword = GUICtrlCreateInput($_sEWorkerPassword, 20, 165, 110, 21, $ES_PASSWORD)
+   GUICtrlCreateLabel("Worker password", 135, 170)
+
+   $_uESaveSettings = GUICtrlCreateButton("Save Ethereum settings", 164, 293, 200)
 
 GUICtrlCreateTabItem("Decred")
-   $_uDServer = GUICtrlCreateInput($_sDServer, 20, 40, 260, 20)
-   GUICtrlCreateLabel("Server", 285, 45)
-   $_uDPoolUsername = GUICtrlCreateInput($_sDPoolUsername, 20, 65, 110)
-   GUICtrlCreateLabel("Pool username", 135, 70)
-   $_uDWorkerLabel = GUICtrlCreateInput($_sDWorkerLabel, 20, 90, 110, 21)
-   GUICtrlCreateLabel("Worker label", 135, 95)
-   $_uDWorkerPassword = GUICtrlCreateInput($_sDWorkerPassword, 20, 115, 110, 21, $ES_PASSWORD)
-   GUICtrlCreateLabel("Worker password", 135, 120)
-   $_uDSaveClaymoreMinerSettings = GUICtrlCreateButton("Save Decred settings", 164, 293, 200)
+   GUICtrlCreateLabel("Pool:", 20, 44)
+   $_uDPool = GUICtrlCreateCombo("Blockquarry", 50, 40, 80)
+   GUICtrlSetData($_uDPool, " sᴏʟᴏ| ᴄᴜsᴛᴏᴍ")
+   $_uDServer = GUICtrlCreateInput($_sDServer, 20, 65, 260, 20)
+   GUICtrlCreateLabel("Server", 285, 70)
+   $_uDPayoutAddress = GUICtrlCreateInput($_sDPayoutAddress, 20, 90, 260, 20)
+   GUICtrlCreateLabel("Payout address", 285, 95)
+   $_uDPoolUsername = GUICtrlCreateInput($_sDPoolUsername, 20, 115, 110)
+   GUICtrlCreateLabel("Pool username", 135, 120)
+   $_uDWorkerLabel = GUICtrlCreateInput($_sDWorkerLabel, 20, 140, 110, 21)
+   GUICtrlCreateLabel("Worker label", 135, 145)
+   $_uDWorkerPassword = GUICtrlCreateInput($_sDWorkerPassword, 20, 165, 110, 21, $ES_PASSWORD)
+   GUICtrlCreateLabel("Worker password", 135, 170)
+   $_uDSaveSettings = GUICtrlCreateButton("Save Decred settings", 164, 293, 200)
+
+GUICtrlCreateTabItem("Siacoin")
+   GUICtrlCreateLabel("Pool:", 20, 44)
+   $_uSCPool = GUICtrlCreateCombo("Nanopool", 50, 40, 80)
+   GUICtrlSetData($_uSCPool, "Siamining| sᴏʟᴏ| ᴄᴜsᴛᴏᴍ")
+   $_uSCServer = GUICtrlCreateInput($_sSCServer, 20, 65, 260, 20)
+   GUICtrlCreateLabel("Server", 285, 70)
+   $_uSCPayoutAddress = GUICtrlCreateInput($_sSCPayoutAddress, 20, 90, 260, 20)
+   GUICtrlCreateLabel("Payout address", 285, 95)
+   $_uSCPoolUsername = GUICtrlCreateInput($_sSCPoolUsername, 20, 115, 110)
+   GUICtrlCreateLabel("Pool username", 135, 120)
+   $_uSCWorkerLabel = GUICtrlCreateInput($_sSCWorkerLabel, 20, 140, 110, 21)
+   GUICtrlCreateLabel("Worker label", 135, 145)
+   $_uSCWorkerPassword = GUICtrlCreateInput($_sSCWorkerPassword, 20, 165, 110, 21, $ES_PASSWORD)
+   GUICtrlCreateLabel("Worker password", 135, 170)
+   $_uSCSaveSettings = GUICtrlCreateButton("Save Siacoin settings", 164, 293, 200)
+
+GUICtrlCreateTabItem("Monero")
+   GUICtrlCreateLabel("Pool:", 20, 44)
+   $_uMPool = GUICtrlCreateCombo("MinerGate", 50, 40, 80)
+   GUICtrlSetData($_uMPool, "Crypto-Pool|MoneroPool|mineXMR| sᴏʟᴏ| ᴄᴜsᴛᴏᴍ")
+   $_uMServer = GUICtrlCreateInput($_sMServer, 20, 65, 260, 20)
+   GUICtrlCreateLabel("Server", 285, 70)
+   $_uMPayoutAddress = GUICtrlCreateInput($_sMPayoutAddress, 20, 90, 260, 20)
+   GUICtrlCreateLabel("Payout address", 285, 95)
+   $_uMPoolUsername = GUICtrlCreateInput($_sMPoolUsername, 20, 115, 110)
+   GUICtrlCreateLabel("Pool username", 135, 120)
+   $_uMWorkerLabel = GUICtrlCreateInput($_sMWorkerLabel, 20, 140, 110, 21)
+   GUICtrlCreateLabel("Worker label", 135, 145)
+   $_uMWorkerPassword = GUICtrlCreateInput($_sMWorkerPassword, 20, 165, 110, 21, $ES_PASSWORD)
+   GUICtrlCreateLabel("Worker password", 135, 170)
+   $_uMSaveSettings = GUICtrlCreateButton("Save Monero settings", 164, 293, 200)
 
 GUICtrlCreateTabItem("HOdlcoin")
-   $_uHServer = GUICtrlCreateInput($_sHServer, 20, 40, 260, 20)
-   GUICtrlCreateLabel("Server", 285, 45)
-   $_uHPoolUsername = GUICtrlCreateInput($_sHPoolUsername, 20, 65, 110)
-   GUICtrlCreateLabel("Pool username", 135, 70)
-   $_uHWorkerLabel = GUICtrlCreateInput($_sHWorkerLabel, 20, 90, 110, 21)
-   GUICtrlCreateLabel("Worker label", 135, 95)
-   $_uHWorkerPassword = GUICtrlCreateInput($_sHWorkerPassword, 20, 115, 110, 21, $ES_PASSWORD)
-   GUICtrlCreateLabel("Worker password", 135, 120)
-   $_uHSaveHOdlMinerSettings = GUICtrlCreateButton("Save HOdlcoin settings", 164, 293, 200)
-
-GUICtrlCreateTabItem("Statistics")
-   GUICtrlCreateLabel("There are no built-in statistics capabilities in version "&$_Ver&@CRLF&@CRLF&"PM me @ https://www.autoitscript.com/forum/profile/7432-joshdb/"&@CRLF&"if you're antsy for progress :)", 20, 40, 340, 300)
-   GUICtrlCreateLabel("au3miner version "&$_Ver&@CRLF&@CRLF&"Made by joshdb / sneurlax, cheers if anyone actually finds this useful", 20, 270, 340)
+   GUICtrlCreateLabel("Pool:", 20, 44)
+   $_uHPool = GUICtrlCreateCombo("Suprnova", 50, 40, 80)
+   GUICtrlSetData($_uHPool, "MaxMiners|Blockquarry| sᴏʟᴏ| ᴄᴜsᴛᴏᴍ")
+   $_uHServer = GUICtrlCreateInput($_sHServer, 20, 65, 260, 20)
+   GUICtrlCreateLabel("Server", 285, 70)
+   $_uHPayoutAddress = GUICtrlCreateInput($_sHPayoutAddress, 20, 90, 260, 20)
+   GUICtrlCreateLabel("Payout address", 285, 95)
+   $_uHPoolUsername = GUICtrlCreateInput($_sSCPoolUsername, 20, 115, 110)
+   GUICtrlCreateLabel("Pool username", 135, 120)
+   $_uHWorkerLabel = GUICtrlCreateInput($_sSCWorkerLabel, 20, 140, 110, 21)
+   GUICtrlCreateLabel("Worker label", 135, 145)
+   $_uHWorkerPassword = GUICtrlCreateInput($_sSCWorkerPassword, 20, 165, 110, 21, $ES_PASSWORD)
+   GUICtrlCreateLabel("Worker password", 135, 170)
+   $_uHSaveSettings = GUICtrlCreateButton("Save HOdlcoin settings", 164, 293, 200)
 
 GUICtrlCreateTabItem("") ; end tabitem definition
 
-GUISetState(@SW_SHOW)
+GUISetState(@SW_SHOW, $_GUI)
 
 Func ClaymoreMiner()
    Global $_pClaymoreMiner
 
+   Local $_sEPool = GUICtrlRead($_uEPool)
    Local $_sEServer = GUICtrlRead($_uEServer)
    Local $_sEPayoutAddress = GUICtrlRead($_uEPayoutAddress)
    Local $_sEWorkerLabel = GUICtrlRead($_uEWorkerLabel)
+   Local $_sEWorkerPassword = GUICtrlRead($_uEWorkerPassword)
 
    Local $_sDServer = GUICtrlRead($_uDServer)
    Local $_sDPoolUsername = GUICtrlRead($_uDPoolUsername)
    Local $_sDWorkerLabel = GUICtrlRead($_uDWorkerLabel)
    Local $_sDWorkerPassword = GUICtrlRead($_uDWorkerPassword)
 
-   Local $_sEGPUForce64Bit = GUICtrlRead($_uEGPUForce64Bit)
-   Local $_sEGPUMaxHeap = GUICtrlRead($_uEGPUMaxHeap)
-   Local $_sEGPUMaxHeapVal = GUICtrlRead($_uEGPUMaxHeapVal)
-   Local $_sEGPUUseSync = GUICtrlRead($_uEGPUUseSync)
-   Local $_sEGPUMaxAlloc = GUICtrlRead($_uEGPUMaxAlloc)
-   Local $_sEGPUMaxAllocVal = GUICtrlRead($_uEGPUMaxAllocVal)
-   Local $_sEGPUSingleAlloc = GUICtrlRead($_uEGPUSingleAlloc)
-   Local $_sEGPUSingleAllocVal = GUICtrlRead($_uEGPUSingleAllocVal)
+   Local $_sSCServer = GUICtrlRead($_uSCServer)
+   Local $_sSCPoolUsername = GUICtrlRead($_uSCPoolUsername)
+   Local $_sSCWorkerLabel = GUICtrlRead($_uSCWorkerLabel)
+   Local $_sSCWorkerPassword = GUICtrlRead($_uSCWorkerPassword)
+
+   Local $_sClaymoreETH = GUICtrlRead($_uClaymoreETH)
+   Local $_sClaymoreDCR = GUICtrlRead($_uClaymoreDCR)
+   Local $_sClaymoreSC = GUICtrlRead($_uClaymoreSC)
 
    ; 4=unchecked
-   If $_sEGPUForce64Bit <> $GUI_CHECKED Then $_sEGPUForce64Bit = False
-   If $_sEGPUMaxHeap <> $GUI_CHECKED Then $_sEGPUMaxHeap = False
-   If $_sEGPUUseSync <> $GUI_CHECKED Then $_sEGPUUseSync = False
-   If $_sEGPUMaxAlloc <> $GUI_CHECKED Then $_sEGPUMaxAlloc = False
-   If $_sEGPUSingleAlloc <> $GUI_CHECKED Then $_sEGPUSingleAlloc = False
+   If $_sClaymoreETH <> $GUI_CHECKED Then $_sClaymoreETH = False
+   If $_sClaymoreDCR <> $GUI_CHECKED Then $_sClaymoreDCR = False
+   If $_sClaymoreSC <> $GUI_CHECKED Then $_sClaymoreSC = False
 
-   Local $_sDBatch
    Local $_sCGOpts
+   $_sCGOpts &= "setx GPU_FORCE_64BIT_PTR 0"&@CRLF
+   $_sCGOpts &= "setx GPU_MAX_HEAP_SIZE 100"&@CRLF
+   $_sCGOpts &= "setx GPU_USE_SYNC_OBJECTS 1"&@CRLF
+   $_sCGOpts &= "setx GPU_MAX_ALLOC_PERCENT 100"&@CRLF
+   $_sCGOpts &= "setx GPU_SINGLE_ALLOC_PERCENT 100"&@CRLF
 
-   If $_sEGPUForce64Bit Then $_sCGOpts &= "setx GPU_FORCE_64BIT_PTR 1"&@CRLF
-   If $_sEGPUMaxHeap Then $_sCGOpts &= "setx GPU_MAX_HEAP_SIZE "&$_sEGPUMaxHeapVal&@CRLF
-   If $_sEGPUUseSync Then $_sCGOpts &= "setx GPU_USE_SYNC_OBJECTS 1"&@CRLF
-   If $_sEGPUMaxAlloc Then $_sCGOpts &= "setx GPU_MAX_ALLOC_PERCENT "&$_sEGPUMaxAllocVal&@CRLF
-   If $_sEGPUSingleAlloc Then $_sCGOpts &= "setx GPU_SINGLE_ALLOC_PERCENT "&$_sEGPUSingleAllocVal&@CRLF
+   Local $_sCBatch
+   $_sCBatch = "cd "&$_sInstallDir&"ClaymoreMiner"&@CRLF&$_sCGOpts&@CRLF&"EthDcrMiner64.exe "
+   If $_sClaymoreETH Then $sCBatch &= "-epool "&$_sEServer&" -ewal "&$_sEPayoutAddress&"."&$_sEWorkerLabel&" -epsw "&$_sEWorkerLabel
+   If $_sClaymoreDCR Then $sCBatch &= " -dpool "&$_sDServer&" -dwal "&$_sDPoolUsername&"."&$_sDWorkerLabel&" -dpsw "&$_sDWorkerPassword
+   If $_sClaymoreSC Then $sCBatch &= " -dpool "&$_sSCServer&" -dwal "&$_sSCPoolUsername&"."&$_sSCWorkerLabel&" -dpsw "&$_sSCWorkerPassword
 
-   $_sDBatch = "cd "&$_sInstallDir&"claymoreminer"&@CRLF&$_sCGOpts&@CRLF&"EthDcrMiner64.exe -epool "&$_sEServer&" -ewal "&$_sEPayoutAddress&"."&$_sEWorkerLabel&" -epsw "&$_sEWorkerLabel&" -dpool "&$_sDServer&" -dwal "&$_sDPoolUsername&"."&$_sDWorkerLabel&" -dpsw "&$_sHWorkerPassword
-   If FileExists($_sInstallDir&"au3-claymoreminer.bat") Then FileDelete($_sInstallDir&"au3-claymoreminer.bat")
-   FileWrite($_sInstallDir&"au3-claymoreminer.bat", $_sDBatch)
-   $_pClaymoreMiner = Run(@ComSpec&" /K au3-claymoreminer.bat", $_sInstallDir)
+   If FileExists($_sInstallDir&"au3-ClaymoreMiner.bat") Then FileDelete($_sInstallDir&"au3-ClaymoreMiner.bat")
+   FileWrite($_sInstallDir&"au3-ClaymoreMiner.bat", $_sCBatch)
+   $_pClaymoreMiner = Run(@ComSpec&" /K au3-ClaymoreMiner.bat", $_sInstallDir)
 
    $_iClaymoreMiner_state = 1 ; launching
 EndFunc
@@ -727,54 +795,27 @@ EndFunc
 Func QtMiner()
    Global $_pQtMiner
 
+   Local $_sEPool = GUICtrlRead($_uEPool)
    Local $_sEServer = GUICtrlRead($_uEServer)
    Local $_sEPayoutAddress = GUICtrlRead($_uEPayoutAddress)
    Local $_sEWorkerLabel = GUICtrlRead($_uEWorkerLabel)
-   Local $_sEG = GUICtrlRead($_uEG)
-   Local $_sET = GUICtrlRead($_uET)
-   Local $_sETVal = GUICtrlRead($_uETVal)
-   Local $_sEOpenCLPlatform = GUICtrlRead($_uEOpenCLPlatform)
-   Local $_sEOpenCLPlatformVal = GUICtrlRead($_uEOpenCLPlatformVal)
-   Local $_sEOpenCLDevice = GUICtrlRead($_uEOpenCLDevice)
-   Local $_sEOpenCLDeviceVal = GUICtrlRead($_uEOpenCLDeviceVal)
-   Local $_sEGPUForce64Bit = GUICtrlRead($_uEGPUForce64Bit)
-   Local $_sEGPUMaxHeap = GUICtrlRead($_uEGPUMaxHeap)
-   Local $_sEGPUMaxHeapVal = GUICtrlRead($_uEGPUMaxHeapVal)
-   Local $_sEGPUUseSync = GUICtrlRead($_uEGPUUseSync)
-   Local $_sEGPUMaxAlloc = GUICtrlRead($_uEGPUMaxAlloc)
-   Local $_sEGPUMaxAllocVal = GUICtrlRead($_uEGPUMaxAllocVal)
-   Local $_sEGPUSingleAlloc = GUICtrlRead($_uEGPUSingleAlloc)
-   Local $_sEGPUSingleAllocVal = GUICtrlRead($_uEGPUSingleAllocVal)
 
-   ; 4=unchecked
-   If $_sEG <> $GUI_CHECKED Then $_sEG = False
-   If $_sET <> $GUI_CHECKED Then $_sET = False
-   If $_sEOpenCLPlatform <> $GUI_CHECKED Then $_sEOpenCLPlatform = False
-   If $_sEOpenCLDevice <> $GUI_CHECKED Then $_sEOpenCLDevice = False
-   If $_sEGPUForce64Bit <> $GUI_CHECKED Then $_sEGPUForce64Bit = False
-   If $_sEGPUMaxHeap <> $GUI_CHECKED Then $_sEGPUMaxHeap = False
-   If $_sEGPUUseSync <> $GUI_CHECKED Then $_sEGPUUseSync = False
-   If $_sEGPUMaxAlloc <> $GUI_CHECKED Then $_sEGPUMaxAlloc = False
-   If $_sEGPUSingleAlloc <> $GUI_CHECKED Then $_sEGPUSingleAlloc = False
+   Local $_sEGOpts
+   $_sEGOpts &= "setx GPU_FORCE_64BIT_PTR 0"&@CRLF
+   $_sEGOpts &= "setx GPU_MAX_HEAP_SIZE 100"&@CRLF
+   $_sEGOpts &= "setx GPU_USE_SYNC_OBJECTS 1"&@CRLF
+   $_sEGOpts &= "setx GPU_MAX_ALLOC_PERCENT 100"&@CRLF
+   $_sEGOpts &= "SET GPU_SINGLE_ALLOC_PERCENT=100"&@CRLF
 
    Local $_sEOpts
-   Local $_sEGOpts
+   $_sEOpts &= "-G "
+   #cs
+   $_sEOpts &= "--cl-local-work "&$_sECLLocalWorkVal&" "
+   $_sEOpts &= "--cl-global-work "&$_sECLGlobalWorkVal&" "
+   #ce
+
    Local $_sBatch
-
-   If $_sEG Then $_sEOpts &= "-G "
-   If $_sET Then $_sEOpts &= "-t "&$_sETVal&" "
-   If $_sEOpenCLPlatform Then $_sEOpts &= "--opencl-platform "&$_sEOpenCLPlatformVal&" "
-   If $_sEOpenCLDevice Then $_sEOpts &= "--opencl-device "&$_sEOpenCLDeviceVal&" "
-   If $_sECLLocalWork Then $_sEOpts &= "--cl-local-work "&$_sECLLocalWorkVal&" "
-   If $_sECLGlobalWork Then $_sEOpts &= "--cl-global-work "&$_sECLGlobalWorkVal&" "
-
-   If $_sEGPUForce64Bit Then $_sEGOpts &= "setx GPU_FORCE_64BIT_PTR 1"&@CRLF
-   If $_sEGPUMaxHeap Then $_sEGOpts &= "setx GPU_MAX_HEAP_SIZE "&$_sEGPUMaxHeapVal&@CRLF
-   If $_sEGPUUseSync Then $_sEGOpts &= "setx GPU_USE_SYNC_OBJECTS 1"&@CRLF
-   If $_sEGPUMaxAlloc Then $_sEGOpts &= "setx GPU_MAX_ALLOC_PERCENT "&$_sEGPUMaxAllocVal&@CRLF
-   If $_sEGPUSingleAlloc Then $_sEGOpts &= "SET GPU_SINGLE_ALLOC_PERCENT="&$_sEGPUSingleAllocVal&@CRLF
-
-   $_sBatch = "cd "&$_sInstallDir&"qtminer"&@CRLF&$_sEGOpts&@CRLF&"qtminer.exe -s "&$_sEServer&" -u "&$_sEPayoutAddress&"."&$_sEWorkerLabel&" "&$_sEOpts
+   $_sBatch = "cd "&$_sInstallDir&"qtminer"&@CRLF&$_sEGOpts&@CRLF&"qtminer.exe -G -s "&$_sEServer&" -u "&$_sEPayoutAddress&"."&$_sEWorkerLabel&$_sEOpts
    If FileExists($_sInstallDir&"au3-qtminer.bat") Then FileDelete($_sInstallDir&"au3-qtminer.bat")
    FileWrite($_sInstallDir&"au3-qtminer.bat", $_sBatch)
    $_pQtMiner = Run(@ComSpec&" /K au3-qtminer.bat", $_sInstallDir)
@@ -785,28 +826,21 @@ EndFunc
 Func EthminerGenoil()
    Global $_pEthminerGenoil
 
+   Local $_sEPool = GUICtrlRead($_uEPool)
    Local $_sEServer = GUICtrlRead($_uEServer)
    Local $_sEPayoutAddress = GUICtrlRead($_uEPayoutAddress)
    Local $_sEWorkerLabel = GUICtrlRead($_uEWorkerLabel)
-   Local $_sET = GUICtrlRead($_uET)
-   Local $_sETVal = GUICtrlRead($_uETVal)
-
-   ; 4=unchecked
-   If $_sEG <> $GUI_CHECKED Then $_sEG = False
-   If $_sET <> $GUI_CHECKED Then $_sET = False
-   If $_sECUDAGridSize <> $GUI_CHECKED Then $_sECUDAGridSize = False
-   If $_sECUDABlockSize <> $GUI_CHECKED Then $_sECUDABlockSize = False
-   If $_sECUDASchedule <> $GUI_CHECKED Then $_sECUDASchedule = False
+   Local $_sEWorkerPassword = GUICtrlRead($_uEWorkerPassword)
 
    Local $_sEOpts
-   Local $_sBatch
-
-   If $_sET Then $_sEOpts &= "-t "&$_sETVal&" "
+   #cs
    If $_sECUDAGridSize Then $_sEOpts &= "--cuda-grid-size "&$_sECUDAGridSizeVal&" "
    If $_sECUDABlockSize Then $_sEOpts &= "--cuda-block-size "&$_sECUDABlockSizeVal&" "
    If $_sECUDASchedule Then $_sEOpts &= "--cuda-schedule "&$_sECUDAScheduleVal&" "
-   $_sBatch = "cd "&$_sInstallDir&"ethminer-genoil"&@CRLF&"ethminer-genoil.exe -U -F http://"&$_sEServer&"/miner/"&$_sEPayoutAddress&"."&$_sEWorkerLabel&"/10 "&$_sEOpts
-   ;$_sBatch = "cd "&$_sInstallDir&"ethminer-genoil"&@CRLF&"ethminer-genoil.exe -U -F "&$_sEServer&" -O "&$_sEPayoutAddress&"."&$_sEWorkerLabel&" "&$_sEOpts
+   #ce
+
+   Local $_sBatch
+   $_sBatch = "cd "&$_sInstallDir&"ethminer-genoil"&@CRLF&"ethminer-genoil.exe -U -F "&$_sEServer&" -O "&$_sEPayoutAddress&"."&$_sEWorkerLabel&" "&$_sEOpts
    If FileExists($_sInstallDir&"au3-ethminer-genoil.bat") Then FileDelete($_sInstallDir&"au3-ethminer-genoil.bat")
    FileWrite($_sInstallDir&"au3-ethminer-genoil.bat", $_sBatch)
    $_pEthminerGenoil = Run(@ComSpec&" /K au3-ethminer-genoil.bat", $_sInstallDir)
@@ -817,14 +851,17 @@ EndFunc
 Func HOdlMiner()
    Global $_pHOdlMiner
 
+   Local $_sHOdlMinerPool = GUICtrlRead($_uHOdlMinerPool)
+
    Local $_sHServer = GUICtrlRead($_uHServer)
    Local $_sHPoolUsername = GUICtrlRead($_uHPoolUsername)
    Local $_sHWorkerLabel = GUICtrlRead($_uHWorkerLabel)
    Local $_sHWorkerPassword = GUICtrlRead($_uHWorkerPassword)
 
-   Local $_HBatch
+   Local $_sHOpts
 
-   $_sBatch = "cd "&$_sInstallDir&"hodlminer"&@CRLF&"hodlminer.exe -a hodl -o stratum+tcp://hodl.blockquarry.com:3032 -u "&$_sHPoolUsername&"."&$_sHWorkerLabel&" -p "&$_sHWorkerPassword
+   Local $_HBatch
+   $_sBatch = "cd "&$_sInstallDir&"hodlminer"&@CRLF&"hodlminer.exe -a hodl -o stratum+tcp://hodl.blockquarry.com:3032 -u "&$_sHPoolUsername&"."&$_sHWorkerLabel&" -p "&$_sHWorkerPassword&" "&$_sHOpts
    If FileExists($_sInstallDir&"au3-hodlminer.bat") Then FileDelete($_sInstallDir&"au3-hodlminer.bat")
    FileWrite($_sInstallDir&"au3-hodlminer.bat", $_sBatch)
    $_pHOdlMiner = Run(@ComSpec&" /K au3-hodlminer.bat", $_sInstallDir)
@@ -835,14 +872,15 @@ EndFunc
 Func HOdlMinerWolf()
    Global $_pHOdlMinerWolf
 
+   Local $_sHOdlMinerWolfPool = GUICtrlRead($_uHOdlMinerWolfPool)
+
    Local $_sHServer = GUICtrlRead($_uHServer)
    Local $_sHPoolUsername = GUICtrlRead($_uHPoolUsername)
    Local $_sHWorkerLabel = GUICtrlRead($_uHWorkerLabel)
    Local $_sHWorkerPassword = GUICtrlRead($_uHWorkerPassword)
 
    Local $_HBatch
-
-   $_sBatch = "cd "&$_sInstallDir&"hodlminer-wolf"&@CRLF&"hodlminer-wolf.exe -a hodl -o stratum+tcp://hodl.blockquarry.com:3032 -u "&$_sHPoolUsername&"."&$_sHWorkerLabel&" -p "&$_sHWorkerPassword
+   $_sBatch = "cd "&$_sInstallDir&"hodlminer-wolf"&@CRLF&"hodlminer-wolf.exe -a hodl -o stratum+tcp://hodl.blockquarry.com:3032 -u "&$_sHPoolUsername&"."&$_sHWorkerLabel&" -p "&$_sHWorkerPassword&" "&$_sHOpts
    If FileExists($_sInstallDir&"au3-hodlminer-wolf.bat") Then FileDelete($_sInstallDir&"au3-hodlminer-wolf.bat")
    FileWrite($_sInstallDir&"au3-hodlminer-wolf.bat", $_sBatch)
    $_pHOdlMinerWolf = Run(@ComSpec&" /K au3-hodlminer-wolf.bat", $_sInstallDir)
@@ -893,10 +931,26 @@ OnAutoItExitRegister("_PowerResetState")
 While 1
    Switch GUIGetMsg()
 	  Case $GUI_EVENT_CLOSE
-		 ExitLoop
+		 If WinExists("au3miner "&$_Ver&" settings manager") Then
+			GUIDelete($_SettingsManageGUI)
+		 Else
+			ExitLoop
+		 EndIf
 	  Case $_uClaymoreMiner_launch
 		 $_pClaymoreMiner = ProcessExists("EthDcrMiner64.exe")
 		 If Not $_pClaymoreMiner Then ClaymoreMiner()
+	  Case $_uClaymoreDCR
+		 If(GUICtrlRead($_uClaymoreDCR) == 1 OR GUICtrlRead($_uClaymoreDCR) == $GUI_CHECKED) Then
+			If(GUICtrlRead($_uClaymoreSC) == 1 OR GUICtrlRead($_uClaymoreSC) == $GUI_CHECKED) Then
+			   GUICtrlSetState($_uClaymoreSC, $GUI_UNCHECKED)
+			EndIf
+		 EndIf
+	  Case $_uClaymoreSC
+		 If(GUICtrlRead($_uClaymoreSC) == 1 OR GUICtrlRead($_uClaymoreSC) == $GUI_CHECKED) Then
+			If(GUICtrlRead($_uClaymoreDCR) == 1 OR GUICtrlRead($_uClaymoreDCR) == $GUI_CHECKED) Then
+			   GUICtrlSetState($_uClaymoreDCR, $GUI_UNCHECKED)
+			EndIf
+		 EndIf
 	  Case $_uQtMiner_launch
 		 $_pQtMiner = ProcessExists("qtminer.exe")
 		 If Not $_pQtMiner Then QtMiner()
@@ -909,17 +963,105 @@ While 1
 	  Case $_uHOdlMinerWolf_launch
 		 $_pHOdlMinerWolf = ProcessExists("hodlminer-wolf.exe")
 		 If Not $_pHOdlMinerWolf Then HOdlMinerWolf()
+	  Case $_uCPUMinerMulti_launch
+		 $_pCPUMinerMulti = ProcessExists("minerd.exe")
+		 If Not $_pCPUMinerMulti Then CPUMinerMulti()
 	  Case $_uSaveSettings
 		 SettingsWrite()
-	  Case $_uESaveQtMinerSettings
+	  Case $_uManageSettings
+		 SettingsManage()
+	  Case $_uApplySettingsGlobally
+		 $_sGlobalPoolUsername = GUICtrlRead($_uGlobalPoolUsername)
+		 $_sGlobalWorkerLabel = GUICtrlRead($_uGlobalWorkerLabel)
+		 $_sGlobalWorkerPassword = GUICtrlRead($_uGlobalWorkerPassword)
+
+		 If $_sGlobalPoolUsername <> "" Then
+			$_sEPoolUsername = $_sGlobalPoolUsername
+			$_sDPoolUsername = $_sGlobalPoolUsername
+			$_sSCPoolUsername = $_sGlobalPoolUsername
+			$_sHPoolUsername = $_sGlobalPoolUsername
+		 EndIf
+
+		 If $_sGlobalWorkerLabel <> "" Then
+			$_sEWorkerLabel = $_sGlobalWorkerLabel
+			$_sDWorkerLabel = $_sGlobalWorkerLabel
+			$_sSCWorkerLabel = $_sGlobalWorkerLabel
+			$_sHWorkerLabel = $_sGlobalWorkerLabel
+		 EndIf
+
+		 If $_sGlobalWorkerPassword <> "" Then
+			$_sEWorkerPassword = $_sGlobalWorkerPassword
+			$_sDWorkerPassword = $_sGlobalWorkerPassword
+			$_sSCWorkerPassword = $_sGlobalWorkerPassword
+			$_sHWorkerPassword = $_sGlobalWorkerPassword
+		 EndIf
+
 		 ESettingsWrite()
-	  Case $_uHSaveHOdlMinerSettings
-		 HSettingsWrite()
-	  Case $_uDSaveClaymoreMinerSettings
 		 DSettingsWrite()
+		 SCSettingsWrite()
+		 HSettingsWrite()
+	  Case $_uExportSettingsBootstrap
+		 $_uSBMsgBox = MsgBox(1, "Settings bootstrap", "This function will copy all of your au3miner settings into a bootstrap file."&@CRLF&@CRLF&"Place the bootstrap in the same directory as au3miner.exe in order to bootstrap your settings quickly.")
+		 If $_uSBMsgBox == 1 Then $uSBDir = FileSelectFolder("Export settings bootstrap to...", @WorkingDir)
+
+		 If Not @error Then
+			FileCopy($_sInstallDir&"\au3miner.ini", $uSBDir&"\au3miner.bootstrap")
+		 EndIf
+	  Case $_uESaveSettings
+		 ESettingsWrite()
+	  Case $_uDSaveSettings
+		 DSettingsWrite()
+	  Case $_uSCSaveSettings
+		 SCSettingsWrite()
+	  Case $_uHSaveSettings
+		 HSettingsWrite()
 	  Case $_uau3miner_update
 		 GUICtrlSetData($_uau3miner_update, "Updating au3miner...")
 		 Update()
+	  Case $_uEPool
+		 Switch GUICtrlRead($_uEPool)
+			Case "Dwarfpool"
+			   GUICtrlSetData($_uEServer, "eth-us2.dwarfpool.com:8008")
+			Case "Ethpool"
+			   GUICtrlSetData($_uEServer, "us2.ethpool.org:3333")
+			Case " sᴏʟᴏ"
+			   GUICtrlSetData($_uEServer, "N/A")
+			Case " ᴄᴜsᴛᴏᴍ"
+			   If GUICtrlRead($_uEServer) == "N/A" Then GUICtrlSetData($_uEServer, "")
+		 EndSwitch
+	  Case $_uDPool
+		 Switch GUICtrlRead($_uDPool)
+			Case "Suprnova"
+			   GUICtrlSetData($_uDServer, "stratum+tcp://dcr.suprnova.cc:2252")
+			Case " sᴏʟᴏ"
+			   GUICtrlSetData($_uDServer, "N/A")
+			Case " ᴄᴜsᴛᴏᴍ"
+			   If GUICtrlRead($_uDServer) == "N/A" Then GUICtrlSetData($_uDServer, "")
+		 EndSwitch
+	  Case $_uSCPool
+		 Switch GUICtrlRead($_uSCPool)
+			Case "Nanopool"
+			   GUICtrlSetData($_uSCServer, "us-west1.nanopool.org:9999")
+			Case "Siamining"
+			   GUICtrlSetData($_uSCServer, "siamining.com:9980")
+			Case " sᴏʟᴏ"
+			   GUICtrlSetData($_uSCServer, "N/A")
+			Case " ᴄᴜsᴛᴏᴍ"
+			   If GUICtrlRead($_uSCServer) == "N/A" Then GUICtrlSetData($_uSCServer, "")
+		 EndSwitch
+	  Case $_uHPool
+		 Switch GUICtrlRead($_uHPool)
+			Case "Suprnova"
+			   GUICtrlSetData($_uHServer, "stratum+tcp://hodl.suprnova.cc:4693")
+			Case "MaxMiners"
+			   GUICtrlSetData($_uHServer, "stratum+tcp://hodl.maxminers.net:5256 ")
+			Case "Blockquarry"
+			   GUICtrlSetData($_uHServer, "stratum+tcp://hodl.blockquarry.com:3032")
+			Case " sᴏʟᴏ"
+			   GUICtrlSetData($_uHServer, "N/A")
+			Case " ᴄᴜsᴛᴏᴍ"
+			   If GUICtrlRead($_uHServer) == "N/A" Then GUICtrlSetData($_uHServer, "")
+		 EndSwitch
 	  ;Case $_uTestButton
 	  ;	If Not $_sInternetState Or $_sInternetState == 0 Then
 	  ;		$_sInternetState = 1
@@ -934,7 +1076,7 @@ While 1
 		 GUICtrlSetData($_uClaymoreMiner_launch, "Launching claymoreminer...")
 		 If ProcessExists($_pClaymoreMiner) Then
 			$_iClaymoreMiner_state = 2
-			GUICtrlSetData($_uClaymoreMiner_launch, "claymoreminer is running")
+			GUICtrlSetData($_uClaymoreMiner_launch, "claymoreminer")
 		 EndIf
 	  Case $_iClaymoreMiner_state == 2
 		 If Not ProcessExists($_pClaymoreMiner) Then
@@ -957,7 +1099,7 @@ While 1
 		 Until Not ProcessExists($_pClaymoreMiner)
 		 $_iClaymoreMiner_state = 0
 		 GUICtrlSetState($_uClaymoreMiner_launch, $GUI_ENABLE)
-		 GUICtrlSetData($_uClaymoreMiner_launch, "Launch claymoreminer")
+		 GUICtrlSetData($_uClaymoreMiner_launch, "Launching claymoreminer...")
 	  Case Else
 		 If ProcessExists($_pClaymoreMiner) Then
 			GUICtrlSetState($_uClaymoreMiner_launch, $GUI_DISABLE)
@@ -1007,10 +1149,10 @@ While 1
    Select
 	  Case $_iEthminerGenoil_state == 1
 		 GUICtrlSetState($_uEthminerGenoil_launch, $GUI_DISABLE)
-		 GUICtrlSetData($_uEthminerGenoil_launch, "Launching EthminerGenoil...")
+		 GUICtrlSetData($_uEthminerGenoil_launch, "Launching ethminer-genoil...")
 		 If ProcessExists($_pEthminerGenoil) Then
 			$_iEthminerGenoil_state = 2
-			GUICtrlSetData($_uEthminerGenoil_launch, "EthminerGenoil is running")
+			GUICtrlSetData($_uEthminerGenoil_launch, "ethminer-genoil is running")
 		 EndIf
 	  Case $_iEthminerGenoil_state == 2
 		 If Not ProcessExists($_pEthminerGenoil) Then
@@ -1019,7 +1161,7 @@ While 1
 			   $_iEthminerGenoil_state = 1
 			Else
 			   $_iEthminerGenoil_state = 3
-			   GUICtrlSetData($_uEthminerGenoil_launch, "EthminerGenoil closed")
+			   GUICtrlSetData($_uEthminerGenoil_launch, "ethminer-genoil closed")
 			EndIf
 		 EndIf
 		 If WinExists("ethminer-genoil.exe", "&Close program") Then
@@ -1033,12 +1175,12 @@ While 1
 		 Until Not ProcessExists($_pEthminerGenoil)
 		 $_iEthminerGenoil_state = 0
 		 GUICtrlSetState($_uEthminerGenoil_launch, $GUI_ENABLE)
-		 GUICtrlSetData($_uEthminerGenoil_launch, "Launch EthminerGenoil")
+		 GUICtrlSetData($_uEthminerGenoil_launch, "Launch ethminer-genoil")
 	  Case Else
 		 If ProcessExists($_pEthminerGenoil) Then
 			GUICtrlSetState($_uEthminerGenoil_launch, $GUI_DISABLE)
 			$_iEthminerGenoil_state = 2
-			GUICtrlSetData($_uEthminerGenoil_launch, "EthminerGenoil is running")
+			GUICtrlSetData($_uEthminerGenoil_launch, "ethminer-genoil is running")
 		 EndIf
    EndSelect
 
@@ -1083,10 +1225,10 @@ While 1
    Select
 	  Case $_iHOdlMinerWolf_state == 1
 		 GUICtrlSetState($_uHOdlMinerWolf_launch, $GUI_DISABLE)
-		 GUICtrlSetData($_uHOdlMinerWolf_launch, "Launching HOdlMiner-wolf...")
+		 GUICtrlSetData($_uHOdlMinerWolf_launch, "Launching HOdlminer-wolf...")
 		 If ProcessExists($_pHOdlMinerWolf) Then
 			$_iHOdlMinerWolf_state = 2
-			GUICtrlSetData($_uHOdlMinerWolf_launch, "HOdlMiner-wolf is running")
+			GUICtrlSetData($_uHOdlMinerWolf_launch, "HOdlminer-wolf is running")
 		 EndIf
 	  Case $_iHOdlMinerWolf_state == 2
 		 If Not ProcessExists($_pHOdlMinerWolf) Then
@@ -1095,7 +1237,7 @@ While 1
 			   $_iHOdlMinerWolf_state = 1
 			Else
 			   $_iHOdlMinerWolf_state = 3
-			   GUICtrlSetData($_uHOdlMinerWolf_launch, "HOdlMiner-wolf closed")
+			   GUICtrlSetData($_uHOdlMinerWolf_launch, "HOdlminer-wolf closed")
 			EndIf
 		 EndIf
 		 If WinExists("hodlminer-wolf.exe", "&Close program") Then
@@ -1109,12 +1251,50 @@ While 1
 		 Until Not ProcessExists($_pHOdlMinerWolf)
 		 $_iHOdlMinerWolf_state = 0
 		 GUICtrlSetState($_uHOdlMinerWolf_launch, $GUI_ENABLE)
-		 GUICtrlSetData($_uHOdlMinerWolf_launch, "Launch HOdlMiner-wolf")
+		 GUICtrlSetData($_uHOdlMinerWolf_launch, "Launch HOdlminer-wolf")
 	  Case Else
 		 If ProcessExists($_pHOdlMinerWolf) Then
 			GUICtrlSetState($_uHOdlMinerWolf_launch, $GUI_DISABLE)
 			$_iHOdlMinerWolf_state = 2
 			GUICtrlSetData($_uHOdlMinerWolf_launch, "HOldminer is running")
+		 EndIf
+   EndSelect
+
+   Select
+	  Case $_iCPUMinerMulti_state == 1
+		 GUICtrlSetState($_uCPUMinerMulti_launch, $GUI_DISABLE)
+		 GUICtrlSetData($_uCPUMinerMulti_launch, "Launching cpuminer-multi...")
+		 If ProcessExists($_pCPUMinerMulti) Then
+			$_iCPUMinerMulti_state = 2
+			GUICtrlSetData($_uCPUMinerMulti_launch, "cpuminer-multi is running")
+		 EndIf
+	  Case $_iCPUMinerMulti_state == 2
+		 If Not ProcessExists($_pCPUMinerMulti) Then
+			If $_sCPUMinerMulti_persist == 1 Then
+			   CPUMinerMulti()
+			   $_iCPUMinerMulti_state = 1
+			Else
+			   $_iCPUMinerMulti_state = 3
+			   GUICtrlSetData($_uCPUMinerMulti_launch, "cpuminer-multi closed")
+			EndIf
+		 EndIf
+		 If WinExists("minerd.exe", "&Close program") Then
+			WinClose("minerd.exe", "&Close program")
+			ProcessClose($_pCPUMinerMulti)
+			CPUMinerMulti()
+		 EndIf
+	  Case $_iCPUMinerMulti_state == 3
+		 Do
+			ProcessClose($_pCPUMinerMulti)
+		 Until Not ProcessExists($_pCPUMinerMulti)
+		 $_iCPUMinerMulti_state = 0
+		 GUICtrlSetState($_uCPUMinerMulti_launch, $GUI_ENABLE)
+		 GUICtrlSetData($_uCPUMinerMulti_launch, "Launch cpuminer-multi")
+	  Case Else
+		 If ProcessExists($_pCPUMinerMulti) Then
+			GUICtrlSetState($_uCPUMinerMulti_launch, $GUI_DISABLE)
+			$_iCPUMinerMulti_state = 2
+			GUICtrlSetData($_uCPUMinerMulti_launch, "cpuminer-multi is running")
 		 EndIf
    EndSelect
 
