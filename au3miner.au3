@@ -473,22 +473,6 @@ Func SettingsWrite()
    If $_sInstallDirToReg Then AddToRegistry()
 EndFunc
 
-Func SettingsManage()
-   $_SettingsManageGUI = GUICreate("au3miner "&$_Ver&" settings manager", 220, 155)
-
-   $_uGlobalPoolUsername = GUICtrlCreateInput("", 10, 10, 110)
-   GUICtrlCreateLabel("Pool username", 125, 15)
-   $_uGlobalWorkerLabel = GUICtrlCreateInput("", 10, 35, 110, 21)
-   GUICtrlCreateLabel("Worker label", 125, 40)
-   $_uGlobalWorkerPassword = GUICtrlCreateInput("", 10, 60, 110, 21, $ES_PASSWORD)
-   GUICtrlCreateLabel("Worker password", 125, 65)
-
-   $_uApplySettingsGlobally = GUICtrlCreateButton("Apply these settings globally", 9, 90, 202)
-   $_uExportSettingsBootstrap = GUICtrlCreateButton("Export settings bootstrap", 9, 120, 202)
-
-   GUISetState(@SW_SHOW, $_SettingsManageGUI)
-EndFunc
-
 Func ESettingsWrite()
    $_sEPool = GUICtrlRead($_uEPool)
    $_sEServer = GUICtrlRead($_uEServer)
@@ -575,7 +559,7 @@ EndFunc
 #include <EditConstants.au3>
 #include <WindowsConstants.au3>
 
-$_GUI = GUICreate("au3miner "&$_Ver, 380, 333)
+$_GUIMain = GUICreate("au3miner "&$_Ver, 380, 333)
 
 GUICtrlCreateTab(10, 10, 360, 313)
 GUICtrlCreateTabItem("Home")
@@ -678,7 +662,7 @@ GUICtrlCreateTabItem("Ethereum")
 
 GUICtrlCreateTabItem("Decred")
    GUICtrlCreateLabel("Pool:", 20, 44)
-   $_uDPool = GUICtrlCreateCombo("Blockquarry", 50, 40, 80)
+   $_uDPool = GUICtrlCreateCombo("Suprnova", 50, 40, 80)
    GUICtrlSetData($_uDPool, " sᴏʟᴏ| ᴄᴜsᴛᴏᴍ")
    $_uDServer = GUICtrlCreateInput($_sDServer, 20, 65, 260, 20)
    GUICtrlCreateLabel("Server", 285, 70)
@@ -742,7 +726,21 @@ GUICtrlCreateTabItem("HOdlcoin")
 
 GUICtrlCreateTabItem("") ; end tabitem definition
 
-GUISetState(@SW_SHOW, $_GUI)
+GUISetState(@SW_SHOW, $_GUIMain)
+
+$_GUISettingsManage = GUICreate("au3miner "&$_Ver&" settings manager", 220, 155)
+
+$_uGlobalPoolUsername = GUICtrlCreateInput("", 10, 10, 110)
+GUICtrlCreateLabel("Pool username", 125, 15)
+$_uGlobalWorkerLabel = GUICtrlCreateInput("", 10, 35, 110, 21)
+GUICtrlCreateLabel("Worker label", 125, 40)
+$_uGlobalWorkerPassword = GUICtrlCreateInput("", 10, 60, 110, 21, $ES_PASSWORD)
+GUICtrlCreateLabel("Worker password", 125, 65)
+
+$_uApplySettingsGlobally = GUICtrlCreateButton("Apply these settings globally", 9, 90, 202)
+$_uExportSettingsBootstrap = GUICtrlCreateButton("Export settings bootstrap", 9, 120, 202)
+
+GUISetState(@SW_DISABLE, $_GUISettingsManage)
 
 Func ClaymoreMiner()
    Global $_pClaymoreMiner
@@ -781,9 +779,32 @@ Func ClaymoreMiner()
 
    Local $_sCBatch
    $_sCBatch = "cd "&$_sInstallDir&"ClaymoreMiner"&@CRLF&$_sCGOpts&@CRLF&"EthDcrMiner64.exe "
-   If $_sClaymoreETH Then $sCBatch &= "-epool "&$_sEServer&" -ewal "&$_sEPayoutAddress&"."&$_sEWorkerLabel&" -epsw "&$_sEWorkerLabel
-   If $_sClaymoreDCR Then $sCBatch &= " -dpool "&$_sDServer&" -dwal "&$_sDPoolUsername&"."&$_sDWorkerLabel&" -dpsw "&$_sDWorkerPassword
-   If $_sClaymoreSC Then $sCBatch &= " -dpool "&$_sSCServer&" -dwal "&$_sSCPoolUsername&"."&$_sSCWorkerLabel&" -dpsw "&$_sSCWorkerPassword
+
+   If $_sClaymoreETH Then
+	  Switch $_sEPool
+		 Case "Dwarfpool"
+			$sCBatch &= "-epool "&$_sEServer&" -ewal "&$_sEPayoutAddress&"/"&$_sEWorkerLabel
+		 Case "Ethpool"
+			$sCBatch &= "-epool "&$_sEServer&" -ewal "&$_sEPayoutAddress&"."&$_sEWorkerLabel
+		 Case " sᴏʟᴏ"
+			$sCBatch &= "-epool "&$_sEServer&" -ewal "&$_sEPayoutAddress
+		 Case Else
+			$sCBatch &= "-epool "&$_sEServer&" -ewal "&$_sEPayoutAddress&"."&$_sEWorkerLabel
+	  EndSwitch
+   EndIf
+   If $_sClaymoreDCR Then
+	  $sCBatch &= " -dpool "&$_sDServer&" -dwal "&$_sDPoolUsername&"."&$_sDWorkerLabel&" -dpsw "&$_sDWorkerPassword
+   EndIf
+   If $_sClaymoreSC Then
+	  Switch $_sSCPool
+		 Case "Nanopool"
+			$sCBatch &= " -dpool """&$_sSCServer&"/miner/header?address="&$_sSCPayoutAddress&"&worker="&$_sSCWorkerLabel&" -dcoin sia"
+		 Case "Siamining"
+			$sCBatch &= " -dpool """&$_sSCServer&"/miner/header?address="&$_sSCPayoutAddress&"&worker="&$_sSCWorkerLabel&" -dcoin sia"
+		 Case Else
+			$sCBatch &= " -dpool """&$_sSCServer&" -dcoin sia"
+		 EndSwitch
+   EndIf
 
    If FileExists($_sInstallDir&"au3-ClaymoreMiner.bat") Then FileDelete($_sInstallDir&"au3-ClaymoreMiner.bat")
    FileWrite($_sInstallDir&"au3-ClaymoreMiner.bat", $_sCBatch)
@@ -932,7 +953,8 @@ While 1
    Switch GUIGetMsg()
 	  Case $GUI_EVENT_CLOSE
 		 If WinExists("au3miner "&$_Ver&" settings manager") Then
-			GUIDelete($_SettingsManageGUI)
+			GUISetState(@SW_HIDE, $_GUISettingsManage)
+			GUISetState(@SW_DISABLE, $_GUISettingsManage)
 		 Else
 			ExitLoop
 		 EndIf
@@ -969,7 +991,8 @@ While 1
 	  Case $_uSaveSettings
 		 SettingsWrite()
 	  Case $_uManageSettings
-		 SettingsManage()
+		 GUISetState(@SW_ENABLE, $_GUISettingsManage)
+		 GUISetState(@SW_SHOW, $_GUISettingsManage)
 	  Case $_uApplySettingsGlobally
 		 $_sGlobalPoolUsername = GUICtrlRead($_uGlobalPoolUsername)
 		 $_sGlobalWorkerLabel = GUICtrlRead($_uGlobalWorkerLabel)
@@ -1025,9 +1048,9 @@ While 1
 			Case "Ethpool"
 			   GUICtrlSetData($_uEServer, "us2.ethpool.org:3333")
 			Case " sᴏʟᴏ"
-			   GUICtrlSetData($_uEServer, "N/A")
+			   GUICtrlSetData($_uEServer, "http://192.168.0.1:8545")
 			Case " ᴄᴜsᴛᴏᴍ"
-			   If GUICtrlRead($_uEServer) == "N/A" Then GUICtrlSetData($_uEServer, "")
+			   If GUICtrlRead($_uEServer) == "http://192.168.0.1:8545" Then GUICtrlSetData($_uEServer, "")
 		 EndSwitch
 	  Case $_uDPool
 		 Switch GUICtrlRead($_uDPool)
