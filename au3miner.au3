@@ -977,8 +977,8 @@ OnAutoItExitRegister("_PowerResetState")
 
 While 1
    Switch GUIGetMsg()
-	  Case $GUI_EVENT_CLOSE
-		 If WinGetState("au3miner "&$_Ver&" settings manager") == 4 Then
+   Case $GUI_EVENT_CLOSE
+		 If WinGetState("au3miner "&$_Ver&" settings manager") == 2 OR WinGetState("au3miner "&$_Ver&" settings manager") == 4 OR WinGetState("au3miner "&$_Ver&" settings manager") == 15 Then
 			GUISetState(@SW_HIDE, $_GUISettingsManage)
 			GUISetState(@SW_DISABLE, $_GUISettingsManage)
 		 Else
@@ -1029,6 +1029,10 @@ While 1
 			$_sDPoolUsername = $_sGlobalPoolUsername
 			$_sSCPoolUsername = $_sGlobalPoolUsername
 			$_sHPoolUsername = $_sGlobalPoolUsername
+			GUICtrlSetData($_uEPoolUsername, $_sGlobalPoolUsername)
+			GUICtrlSetData($_uDPoolUsername, $_sGlobalPoolUsername)
+			GUICtrlSetData($_uSCPoolUsername, $_sGlobalPoolUsername)
+			GUICtrlSetData($_uHPoolUsername, $_sGlobalPoolUsername)
 		 EndIf
 
 		 If $_sGlobalWorkerLabel <> "" Then
@@ -1036,6 +1040,10 @@ While 1
 			$_sDWorkerLabel = $_sGlobalWorkerLabel
 			$_sSCWorkerLabel = $_sGlobalWorkerLabel
 			$_sHWorkerLabel = $_sGlobalWorkerLabel
+			GUICtrlSetData($_uEWorkerLabel, $_sGlobalWorkerLabel)
+			GUICtrlSetData($_uDWorkerLabel, $_sGlobalWorkerLabel)
+			GUICtrlSetData($_uSCWorkerLabel, $_sGlobalWorkerLabel)
+			GUICtrlSetData($_uHWorkerLabel, $_sGlobalWorkerLabel)
 		 EndIf
 
 		 If $_sGlobalWorkerPassword <> "" Then
@@ -1043,6 +1051,10 @@ While 1
 			$_sDWorkerPassword = $_sGlobalWorkerPassword
 			$_sSCWorkerPassword = $_sGlobalWorkerPassword
 			$_sHWorkerPassword = $_sGlobalWorkerPassword
+			GUICtrlSetData($_uEWorkerPassword, $_sGlobalWorkerPassword)
+			GUICtrlSetData($_uDWorkerPassword, $_sGlobalWorkerPassword)
+			GUICtrlSetData($_uSCWorkerPassword, $_sGlobalWorkerPassword)
+			GUICtrlSetData($_uHWorkerPassword, $_sGlobalWorkerPassworde)
 		 EndIf
 
 		 ESettingsWrite()
