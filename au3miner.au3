@@ -813,7 +813,7 @@ Func ClaymoreMiner()
    $_sCGOpts &= "setx GPU_SINGLE_ALLOC_PERCENT 100"&@CRLF
 
    Local $_sCBatch
-   $_sCBatch = "cd "&$_sInstallDir&"ClaymoreMiner"&@CRLF&$_sCGOpts&@CRLF&"EthDcrMiner64.exe "
+   $_sCBatch = "cd "&$_sInstallDir&"claymoreminer"&@CRLF&$_sCGOpts&@CRLF&"EthDcrMiner64.exe "
 
    If $_sClaymoreETH Then
 	  Switch $_sEPool
@@ -841,9 +841,9 @@ Func ClaymoreMiner()
 		 EndSwitch
    EndIf
 
-   If FileExists($_sInstallDir&"au3-ClaymoreMiner.bat") Then FileDelete($_sInstallDir&"au3-ClaymoreMiner.bat")
-   FileWrite($_sInstallDir&"au3-ClaymoreMiner.bat", $_sCBatch)
-   $_pClaymoreMiner = Run(@ComSpec&" /K au3-ClaymoreMiner.bat", $_sInstallDir)
+   If FileExists($_sInstallDir&"au3-claymoreminer.bat") Then FileDelete($_sInstallDir&"au3-claymoreminer.bat")
+   FileWrite($_sInstallDir&"au3-claymoreminer.bat", $_sCBatch)
+   $_pClaymoreMiner = Run(@ComSpec&" /K au3-claymoreminer.bat", $_sInstallDir)
 
    $_iClaymoreMiner_state = 1 ; launching
 EndFunc
