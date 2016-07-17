@@ -833,9 +833,9 @@ Func ClaymoreMiner()
    If $_sClaymoreSC Then
 	  Switch $_sSCPool
 		 Case "Nanopool"
-			$_sCBatch &= " -dpool """&$_sSCServer&"/miner/header?address="&$_sSCPayoutAddress&"&worker="&$_sSCWorkerLabel&" -dcoin sia"
+			$_sCBatch &= " -dpool """&$_sSCServer&"/miner/header?address="&$_sSCPayoutAddress&"&worker="&$_sSCWorkerLabel&""" -dcoin sia"
 		 Case "Siamining"
-			$_sCBatch &= " -dpool """&$_sSCServer&"/miner/header?address="&$_sSCPayoutAddress&"&worker="&$_sSCWorkerLabel&" -dcoin sia"
+			$_sCBatch &= " -dpool """&$_sSCServer&"/miner/header?address="&$_sSCPayoutAddress&"&worker="&$_sSCWorkerLabel&""" -dcoin sia"
 		 Case Else
 			$_sCBatch &= " -dpool """&$_sSCServer&" -dcoin sia"
 		 EndSwitch
