@@ -316,6 +316,7 @@ Global $_sEPayoutAddress
 Global $_sEPoolUsername
 Global $_sEWorkerLabel
 Global $_sEWorkerPassword
+Global $_sEOpts
 
 Global $_sDPool
 Global $_sDServer
@@ -323,6 +324,7 @@ Global $_sDPayoutAddress
 Global $_sDPoolUsername
 Global $_sDWorkerLabel
 Global $_sDWorkerPassword
+Global $_sDOpts
 
 Global $_sSCPool
 Global $_sSCServer
@@ -330,6 +332,7 @@ Global $_sSCPayoutAddress
 Global $_sSCPoolUsername
 Global $_sSCWorkerLabel
 Global $_sSCWorkerPassword
+Global $_sSCOpts
 
 Global $_sHPool
 Global $_sHServer
@@ -337,12 +340,14 @@ Global $_sHPayoutAddress
 Global $_sHPoolUsername
 Global $_sHWorkerLabel
 Global $_sHWorkerPassword
+Global $_sHOpts
 
 Global $_sMServer
 Global $_sMPayoutAddress
 Global $_sMPoolUsername
 Global $_sMWorkerLabel
 Global $_sMWorkerPassword
+Global $_sMOpts
 
 SettingsRead()
 
@@ -372,30 +377,35 @@ Func SettingsRead()
    $_sEPoolUsername = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "poolusername", "au3miner")
    $_sEWorkerLabel = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "workerlabel", StringMid(_Crypt_HashData(@ComputerName, $CALG_SHA1 ), 3, 6 ))
    $_sEWorkerPassword = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "workerpassword", "charity")
+   $_sEOpts = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "customoptions", "-mport 0")
 
    $_sDServer = IniRead($_sInstallDir&"\au3miner.ini", "decred", "server", "stratum+tcp://dcr.suprnova.cc:2252")
    $_sDPayoutAddress = IniRead($_sInstallDir&"\au3miner.ini", "decred", "payoutaddress", "Dsm64tQLQwa613mfyfuoWfTRmyVAuc14PSM")
    $_sDPoolUsername = IniRead($_sInstallDir&"\au3miner.ini", "decred", "poolusername", "au3miner")
    $_sDWorkerLabel = IniRead($_sInstallDir&"\au3miner.ini", "decred", "workerlabel", "au3miner")
    $_sDWorkerPassword = IniRead($_sInstallDir&"\au3miner.ini", "decred", "workerpassword", "charity")
+   $_sDOpts = IniRead($_sInstallDir&"\au3miner.ini", "decred", "customoptions", "")
 
    $_sSCServer = IniRead($_sInstallDir&"\au3miner.ini", "siacoin", "server", "us-west1.nanopool.org:9999")
    $_sSCPayoutAddress = IniRead($_sInstallDir&"\au3miner.ini", "siacoin", "payoutaddress", "0b1bd6e0a7c8a96911fe929a2ff52a889ab40f58736f52f88d56de0f4d2bb53e09c797c7a330")
    $_sSCPoolUsername = IniRead($_sInstallDir&"\au3miner.ini", "siacoin", "poolusername", "au3miner")
    $_sSCWorkerLabel = IniRead($_sInstallDir&"\au3miner.ini", "siacoin", "workerlabel", "au3miner")
    $_sSCWorkerPassword = IniRead($_sInstallDir&"\au3miner.ini", "siacoin", "workerpassword", "charity")
+   $_sSCOpts = IniRead($_sInstallDir&"\au3miner.ini", "siacoin", "customoptions", "")
 
    $_sHServer = IniRead($_sInstallDir&"\au3miner.ini", "hodlcoin", "server", "stratum+tcp://hodl.blockquarry.com:3032")
    $_sHPayoutAddress = IniRead($_sInstallDir&"\au3miner.ini", "hodlcoin", "payoutaddress", "HKWfa34PpDrJR7LvbxuZoCMyARyEAj1JSy")
    $_sHPoolUsername = IniRead($_sInstallDir&"\au3miner.ini", "hodlcoin", "poolusername", "au3miner")
    $_sHWorkerLabel = IniRead($_sInstallDir&"\au3miner.ini", "hodlcoin", "workerlabel", "au3miner")
    $_sHWorkerPassword = IniRead($_sInstallDir&"\au3miner.ini", "hodlcoin", "workerpassword", "charity")
+   $_sHOpts = IniRead($_sInstallDir&"\au3miner.ini", "hodlcoin", "customoptions", "")
 
-   $_sMServer = IniRead($_sInstallDir&"\au3miner.ini", "hodlcoin", "server", "stratum+tcp://xmr.pool.minergate.com:45560")
-   $_sMPayoutAddress = IniRead($_sInstallDir&"\au3miner.ini", "hodlcoin", "payoutaddress", "44p5Yi4hkpXdFmA2cCFZFAAoYjop1P2YGBKUj7jZ6hKseyGGxKEU8em7VQuHCeAeUJS3nHRzDSA2nMMYy7nukk5B8A1epsA")
-   $_sMPoolUsername = IniRead($_sInstallDir&"\au3miner.ini", "hodlcoin", "poolusername", "au3miner")
-   $_sMWorkerLabel = IniRead($_sInstallDir&"\au3miner.ini", "hodlcoin", "workerlabel", "au3miner")
-   $_sMWorkerPassword = IniRead($_sInstallDir&"\au3miner.ini", "hodlcoin", "workerpassword", "charity")
+   $_sMServer = IniRead($_sInstallDir&"\au3miner.ini", "monero", "server", "stratum+tcp://xmr.pool.minergate.com:45560")
+   $_sMPayoutAddress = IniRead($_sInstallDir&"\au3miner.ini", "monero", "payoutaddress", "44p5Yi4hkpXdFmA2cCFZFAAoYjop1P2YGBKUj7jZ6hKseyGGxKEU8em7VQuHCeAeUJS3nHRzDSA2nMMYy7nukk5B8A1epsA")
+   $_sMPoolUsername = IniRead($_sInstallDir&"\au3miner.ini", "monero", "poolusername", "au3miner")
+   $_sMWorkerLabel = IniRead($_sInstallDir&"\au3miner.ini", "monero", "workerlabel", "au3miner")
+   $_sMWorkerPassword = IniRead($_sInstallDir&"\au3miner.ini", "monero", "workerpassword", "charity")
+   $_sMOpts = IniRead($_sInstallDir&"\au3miner.ini", "monero", "customoptions", "")
 EndFunc
 
 Func SettingsWrite()
@@ -453,7 +463,7 @@ Func SettingsWrite()
 	  If $_sCreateInstalLDir = 2 Then Return ;Cancel
    EndIf
 
-   If Not $_sInstalLDir == $_sInstalLDirOld Then Install($_sInstallDir)
+   If Not $_sInstalLDir == $_sInstallDirOld Then Install($_sInstallDir)
 
    IniWrite($_sInstallDir&"\au3miner.ini", "settings", "autostart", $_sAutoStart)
    IniWrite($_sInstallDir&"\au3miner.ini", "settings", "installdir", $_sInstallDir)
@@ -484,6 +494,7 @@ Func ESettingsWrite()
    $_sEPoolUsername = GUICtrlRead($_uEPoolUsername)
    $_sEWorkerLabel = GUICtrlRead($_uEWorkerLabel)
    $_sEWorkerPassword = GUICtrlRead($_uEWorkerPassword)
+   $_sEOpts = GUICtrlRead($_uEOpts)
 
    IniWrite($_sInstallDir&"\au3miner.ini", "ethereum", "pool", $_sEPool)
    IniWrite($_sInstallDir&"\au3miner.ini", "ethereum", "server", $_sEServer)
@@ -491,6 +502,7 @@ Func ESettingsWrite()
    IniWrite($_sInstallDir&"\au3miner.ini", "ethereum", "poolusername", $_sEPoolUsername)
    IniWrite($_sInstallDir&"\au3miner.ini", "ethereum", "workerlabel", $_sEWorkerLabel)
    IniWrite($_sInstallDir&"\au3miner.ini", "ethereum", "workerpassword", $_sEWorkerPassword)
+   IniWrite($_sInstallDir&"\au3miner.ini", "ethereum", "customoptions", $_sEOpts)
 EndFunc
 
 Func DSettingsWrite()
@@ -500,6 +512,7 @@ Func DSettingsWrite()
    $_sDPoolUsername = GUICtrlRead($_uDPoolUsername)
    $_sDWorkerLabel = GUICtrlRead($_uDWorkerLabel)
    $_sDWorkerPassword = GUICtrlRead($_uDWorkerPassword)
+   $_sDOpts = GUICtrlRead($_uDOpts)
 
    IniWrite($_sInstallDir&"\au3miner.ini", "decred", "pool", $_sDPool)
    IniWrite($_sInstallDir&"\au3miner.ini", "decred", "server", $_sDServer)
@@ -507,6 +520,7 @@ Func DSettingsWrite()
    IniWrite($_sInstallDir&"\au3miner.ini", "decred", "poolusername", $_sDPoolUsername)
    IniWrite($_sInstallDir&"\au3miner.ini", "decred", "workerlabel", $_sDWorkerLabel)
    IniWrite($_sInstallDir&"\au3miner.ini", "decred", "workerpassword", $_sDWorkerPassword)
+   IniWrite($_sInstallDir&"\au3miner.ini", "decred", "customoptions", $_sDOpts)
 EndFunc
 
 Func SCSettingsWrite()
@@ -516,6 +530,7 @@ Func SCSettingsWrite()
    $_sSCPoolUsername = GUICtrlRead($_uSCPoolUsername)
    $_sSCWorkerLabel = GUICtrlRead($_uSCWorkerLabel)
    $_sSCWorkerPassword = GUICtrlRead($_uSCWorkerPassword)
+   $_sSCOpts = GUICtrlRead($_uSCEOpts)
 
    IniWrite($_sInstallDir&"\au3miner.ini", "siacoin", "pool", $_sSCPool)
    IniWrite($_sInstallDir&"\au3miner.ini", "siacoin", "server", $_sSCServer)
@@ -523,6 +538,7 @@ Func SCSettingsWrite()
    IniWrite($_sInstallDir&"\au3miner.ini", "siacoin", "poolusername", $_sSCPoolUsername)
    IniWrite($_sInstallDir&"\au3miner.ini", "siacoin", "workerlabel", $_sSCWorkerLabel)
    IniWrite($_sInstallDir&"\au3miner.ini", "siacoin", "workerpassword", $_sSCWorkerPassword)
+   IniWrite($_sInstallDir&"\au3miner.ini", "siacoin", "customoptions", $_sSCOpts)
 EndFunc
 
 Func HSettingsWrite()
@@ -532,6 +548,7 @@ Func HSettingsWrite()
    $_sHPoolUsername = GUICtrlRead($_uHPoolUsername)
    $_sHWorkerLabel = GUICtrlRead($_uHWorkerLabel)
    $_sHWorkerPassword = GUICtrlRead($_uHWorkerPassword)
+   $_sHOpts = GUICtrlRead($_uHOpts)
 
    IniWrite($_sInstallDir&"\au3miner.ini", "hodlcoin", "pool", $_sHPool)
    IniWrite($_sInstallDir&"\au3miner.ini", "hodlcoin", "server", $_sHServer)
@@ -539,6 +556,7 @@ Func HSettingsWrite()
    IniWrite($_sInstallDir&"\au3miner.ini", "hodlcoin", "poolusername", $_sHPoolUsername)
    IniWrite($_sInstallDir&"\au3miner.ini", "hodlcoin", "workerlabel", $_sHWorkerLabel)
    IniWrite($_sInstallDir&"\au3miner.ini", "hodlcoin", "workerpassword", $_sHWorkerPassword)
+   IniWrite($_sInstallDir&"\au3miner.ini", "hodlcoin", "customoptions", $_sHOpts)
 EndFunc
 
 Func MSettingsWrite()
@@ -548,6 +566,7 @@ Func MSettingsWrite()
    $_sMPoolUsername = GUICtrlRead($_uMPoolUsername)
    $_sMWorkerLabel = GUICtrlRead($_uMWorkerLabel)
    $_sMWorkerPassword = GUICtrlRead($_uMWorkerPassword)
+   $_sMOpts = GUICtrlRead($_uMOpts)
 
    IniWrite($_sInstallDir&"\au3miner.ini", "monero", "pool", $_sMPool)
    IniWrite($_sInstallDir&"\au3miner.ini", "monero", "server", $_sMServer)
@@ -555,6 +574,7 @@ Func MSettingsWrite()
    IniWrite($_sInstallDir&"\au3miner.ini", "monero", "poolusername", $_sMPoolUsername)
    IniWrite($_sInstallDir&"\au3miner.ini", "monero", "workerlabel", $_sMWorkerLabel)
    IniWrite($_sInstallDir&"\au3miner.ini", "monero", "workerpassword", $_sMWorkerPassword)
+   IniWrite($_sInstallDir&"\au3miner.ini", "monero", "customoptions", $_sMOpts)
 EndFunc
 
 #include <AutoItConstants.au3>
@@ -661,7 +681,8 @@ GUICtrlCreateTabItem("Ethereum")
    GUICtrlCreateLabel("Worker label", 135, 145)
    $_uEWorkerPassword = GUICtrlCreateInput($_sEWorkerPassword, 20, 165, 110, 21, $ES_PASSWORD)
    GUICtrlCreateLabel("Worker password", 135, 170)
-
+   $_uEOpts = GUICtrlCreateInput($_sEOpts, 20, 190, 260, 20)
+   GUICtrlCreateLabel("Custom options", 285, 195)
    $_uESaveSettings = GUICtrlCreateButton("Save Ethereum settings", 164, 293, 200)
 
 GUICtrlCreateTabItem("Decred")
@@ -678,6 +699,8 @@ GUICtrlCreateTabItem("Decred")
    GUICtrlCreateLabel("Worker label", 135, 145)
    $_uDWorkerPassword = GUICtrlCreateInput($_sDWorkerPassword, 20, 165, 110, 21, $ES_PASSWORD)
    GUICtrlCreateLabel("Worker password", 135, 170)
+   $_uDOpts = GUICtrlCreateInput($_sDOpts, 20, 190, 260, 20)
+   GUICtrlCreateLabel("Custom options", 285, 195)
    $_uDSaveSettings = GUICtrlCreateButton("Save Decred settings", 164, 293, 200)
 
 GUICtrlCreateTabItem("Siacoin")
@@ -694,6 +717,8 @@ GUICtrlCreateTabItem("Siacoin")
    GUICtrlCreateLabel("Worker label", 135, 145)
    $_uSCWorkerPassword = GUICtrlCreateInput($_sSCWorkerPassword, 20, 165, 110, 21, $ES_PASSWORD)
    GUICtrlCreateLabel("Worker password", 135, 170)
+   $_uSCOpts = GUICtrlCreateInput($_sSCOpts, 20, 190, 260, 20)
+   GUICtrlCreateLabel("Custom options", 285, 195)
    $_uSCSaveSettings = GUICtrlCreateButton("Save Siacoin settings", 164, 293, 200)
 
 GUICtrlCreateTabItem("Monero")
@@ -710,6 +735,8 @@ GUICtrlCreateTabItem("Monero")
    GUICtrlCreateLabel("Worker label", 135, 145)
    $_uMWorkerPassword = GUICtrlCreateInput($_sMWorkerPassword, 20, 165, 110, 21, $ES_PASSWORD)
    GUICtrlCreateLabel("Worker password", 135, 170)
+   $_uMOpts = GUICtrlCreateInput($_sMOpts, 20, 190, 260, 20)
+   GUICtrlCreateLabel("Custom options", 285, 195)
    $_uMSaveSettings = GUICtrlCreateButton("Save Monero settings", 164, 293, 200)
 
 GUICtrlCreateTabItem("HOdlcoin")
@@ -726,6 +753,8 @@ GUICtrlCreateTabItem("HOdlcoin")
    GUICtrlCreateLabel("Worker label", 135, 145)
    $_uHWorkerPassword = GUICtrlCreateInput($_sSCWorkerPassword, 20, 165, 110, 21, $ES_PASSWORD)
    GUICtrlCreateLabel("Worker password", 135, 170)
+   $_uHOpts = GUICtrlCreateInput($_sHOpts, 20, 190, 260, 20)
+   GUICtrlCreateLabel("Custom options", 285, 195)
    $_uHSaveSettings = GUICtrlCreateButton("Save HOdlcoin settings", 164, 293, 200)
 
 GUICtrlCreateTabItem("") ; end tabitem definition
