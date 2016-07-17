@@ -530,7 +530,7 @@ Func SCSettingsWrite()
    $_sSCPoolUsername = GUICtrlRead($_uSCPoolUsername)
    $_sSCWorkerLabel = GUICtrlRead($_uSCWorkerLabel)
    $_sSCWorkerPassword = GUICtrlRead($_uSCWorkerPassword)
-   $_sSCOpts = GUICtrlRead($_uSCEOpts)
+   $_sSCOpts = GUICtrlRead($_uSCOpts)
 
    IniWrite($_sInstallDir&"\au3miner.ini", "siacoin", "pool", $_sSCPool)
    IniWrite($_sInstallDir&"\au3miner.ini", "siacoin", "server", $_sSCServer)
@@ -833,9 +833,9 @@ Func ClaymoreMiner()
    If $_sClaymoreSC Then
 	  Switch $_sSCPool
 		 Case "Nanopool"
-			$_sCBatch &= " -dpool """&$_sSCServer&"/miner/header?address="&$_sSCPayoutAddress&"&worker="&$_sSCWorkerLabel&""" -dcoin sia"
+			$_sCBatch &= " -dpool """&$_sSCServer&"/miner/header?address="&$_sSCPayoutAddress&"&worker="&$_sSCWorkerLabel&""" -dcoin sc"
 		 Case "Siamining"
-			$_sCBatch &= " -dpool """&$_sSCServer&"/miner/header?address="&$_sSCPayoutAddress&"&worker="&$_sSCWorkerLabel&""" -dcoin sia"
+			$_sCBatch &= " -dpool """&$_sSCServer&"/miner/header?address="&$_sSCPayoutAddress&"&worker="&$_sSCWorkerLabel&""" -dcoin sc"
 		 Case Else
 			$_sCBatch &= " -dpool """&$_sSCServer&" -dcoin sia"
 		 EndSwitch
