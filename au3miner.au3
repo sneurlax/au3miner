@@ -132,7 +132,7 @@ Func Install($_fInstallDir)
    FileInstall("C:\github\au3miner\hodlminer-wolf\libcurl-4.dll", $_fInstallDir&"cpuminer-multi\libcurl-4.dll", 0)
    FileInstall("C:\github\au3miner\hodlminer-wolf\libiconv-2.dll", $_fInstallDir&"cpuminer-multi\libiconv-2.dll", 0)
    FileInstall("C:\github\au3miner\hodlminer-wolf\libidn-11.dll", $_fInstallDir&"cpuminer-multi\libidn-11.dll", 0)
-   FileInstall("C:\github\au3miner\hodlminer-wolf\libintl-8,dll", $_fInstallDir&"cpuminer-multi\libintl-8.dll", 0)
+   FileInstall("C:\github\au3miner\hodlminer-wolf\libintl-8.dll", $_fInstallDir&"cpuminer-multi\libintl-8.dll", 0)
    FileInstall("C:\github\au3miner\hodlminer-wolf\libwinpthread-1.dll", $_fInstallDir&"cpuminer-multi\libwinpthread-1.dll", 0)
    FileInstall("C:\github\au3miner\hodlminer-wolf\zlib1.dll", $_fInstallDir&"cpuminer-multi\zlib1.dll", 0)
 EndFunc
