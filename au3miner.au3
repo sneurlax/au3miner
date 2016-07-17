@@ -310,24 +310,28 @@ Global $_uGlobalWorkerPassword
 Global $_uApplySettingsGlobally
 Global $_uExportSettingsBootstrap
 
+Global $_sEPool
 Global $_sEServer
 Global $_sEPayoutAddress
 Global $_sEPoolUsername
 Global $_sEWorkerLabel
 Global $_sEWorkerPassword
 
+Global $_sDPool
 Global $_sDServer
 Global $_sDPayoutAddress
 Global $_sDPoolUsername
 Global $_sDWorkerLabel
 Global $_sDWorkerPassword
 
+Global $_sSCPool
 Global $_sSCServer
 Global $_sSCPayoutAddress
 Global $_sSCPoolUsername
 Global $_sSCWorkerLabel
 Global $_sSCWorkerPassword
 
+Global $_sHPool
 Global $_sHServer
 Global $_sHPayoutAddress
 Global $_sHPoolUsername
@@ -751,11 +755,13 @@ Func ClaymoreMiner()
    Local $_sEWorkerLabel = GUICtrlRead($_uEWorkerLabel)
    Local $_sEWorkerPassword = GUICtrlRead($_uEWorkerPassword)
 
+   Local $_sDPool = GUICtrlRead($_uDPool)
    Local $_sDServer = GUICtrlRead($_uDServer)
    Local $_sDPoolUsername = GUICtrlRead($_uDPoolUsername)
    Local $_sDWorkerLabel = GUICtrlRead($_uDWorkerLabel)
    Local $_sDWorkerPassword = GUICtrlRead($_uDWorkerPassword)
 
+   Local $_sSCPool = GUICtrlRead($_uSCPool)
    Local $_sSCServer = GUICtrlRead($_uSCServer)
    Local $_sSCPoolUsername = GUICtrlRead($_uSCPoolUsername)
    Local $_sSCWorkerLabel = GUICtrlRead($_uSCWorkerLabel)
@@ -783,26 +789,26 @@ Func ClaymoreMiner()
    If $_sClaymoreETH Then
 	  Switch $_sEPool
 		 Case "Dwarfpool"
-			$sCBatch &= "-epool "&$_sEServer&" -ewal "&$_sEPayoutAddress&"/"&$_sEWorkerLabel
+			$_sCBatch &= "-epool "&$_sEServer&" -ewal "&$_sEPayoutAddress&"/"&$_sEWorkerLabel&" -epsw "&$_sEWorkerPassword
 		 Case "Ethpool"
-			$sCBatch &= "-epool "&$_sEServer&" -ewal "&$_sEPayoutAddress&"."&$_sEWorkerLabel
+			$_sCBatch &= "-epool "&$_sEServer&" -ewal "&$_sEPayoutAddress&"."&$_sEWorkerLabel&" -epsw "&$_sEWorkerPassword
 		 Case " sᴏʟᴏ"
-			$sCBatch &= "-epool "&$_sEServer&" -ewal "&$_sEPayoutAddress
+			$_sCBatch &= "-epool "&$_sEServer&" -ewal "&$_sEPayoutAddress&" -epsw "&$_sEWorkerPassword
 		 Case Else
-			$sCBatch &= "-epool "&$_sEServer&" -ewal "&$_sEPayoutAddress&"."&$_sEWorkerLabel
+			$_sCBatch &= "-epool "&$_sEServer&" -ewal "&$_sEPayoutAddress&"."&$_sEWorkerLabel&" -epsw "&$_sEWorkerPassword
 	  EndSwitch
    EndIf
    If $_sClaymoreDCR Then
-	  $sCBatch &= " -dpool "&$_sDServer&" -dwal "&$_sDPoolUsername&"."&$_sDWorkerLabel&" -dpsw "&$_sDWorkerPassword
+	  $_sCBatch &= " -dpool "&$_sDServer&" -dwal "&$_sDPoolUsername&"."&$_sDWorkerLabel&" -dpsw "&$_sDWorkerPassword
    EndIf
    If $_sClaymoreSC Then
 	  Switch $_sSCPool
 		 Case "Nanopool"
-			$sCBatch &= " -dpool """&$_sSCServer&"/miner/header?address="&$_sSCPayoutAddress&"&worker="&$_sSCWorkerLabel&" -dcoin sia"
+			$_sCBatch &= " -dpool """&$_sSCServer&"/miner/header?address="&$_sSCPayoutAddress&"&worker="&$_sSCWorkerLabel&" -dcoin sia"
 		 Case "Siamining"
-			$sCBatch &= " -dpool """&$_sSCServer&"/miner/header?address="&$_sSCPayoutAddress&"&worker="&$_sSCWorkerLabel&" -dcoin sia"
+			$_sCBatch &= " -dpool """&$_sSCServer&"/miner/header?address="&$_sSCPayoutAddress&"&worker="&$_sSCWorkerLabel&" -dcoin sia"
 		 Case Else
-			$sCBatch &= " -dpool """&$_sSCServer&" -dcoin sia"
+			$_sCBatch &= " -dpool """&$_sSCServer&" -dcoin sia"
 		 EndSwitch
    EndIf
 
@@ -872,8 +878,7 @@ EndFunc
 Func HOdlMiner()
    Global $_pHOdlMiner
 
-   Local $_sHOdlMinerPool = GUICtrlRead($_uHOdlMinerPool)
-
+   Local $_sHPool = GUICtrlRead($_uHPool)
    Local $_sHServer = GUICtrlRead($_uHServer)
    Local $_sHPoolUsername = GUICtrlRead($_uHPoolUsername)
    Local $_sHWorkerLabel = GUICtrlRead($_uHWorkerLabel)
@@ -882,7 +887,7 @@ Func HOdlMiner()
    Local $_sHOpts
 
    Local $_HBatch
-   $_sBatch = "cd "&$_sInstallDir&"hodlminer"&@CRLF&"hodlminer.exe -a hodl -o stratum+tcp://hodl.blockquarry.com:3032 -u "&$_sHPoolUsername&"."&$_sHWorkerLabel&" -p "&$_sHWorkerPassword&" "&$_sHOpts
+   $_sBatch = "cd "&$_sInstallDir&"hodlminer"&@CRLF&"hodlminer.exe -a hodl -o "&$_sHServer&" -u "&$_sHPoolUsername&"."&$_sHWorkerLabel&" -p "&$_sHWorkerPassword&" "&$_sHOpts
    If FileExists($_sInstallDir&"au3-hodlminer.bat") Then FileDelete($_sInstallDir&"au3-hodlminer.bat")
    FileWrite($_sInstallDir&"au3-hodlminer.bat", $_sBatch)
    $_pHOdlMiner = Run(@ComSpec&" /K au3-hodlminer.bat", $_sInstallDir)
@@ -893,20 +898,41 @@ EndFunc
 Func HOdlMinerWolf()
    Global $_pHOdlMinerWolf
 
-   Local $_sHOdlMinerWolfPool = GUICtrlRead($_uHOdlMinerWolfPool)
-
+   Local $_sHPool = GUICtrlRead($_uHPool)
    Local $_sHServer = GUICtrlRead($_uHServer)
    Local $_sHPoolUsername = GUICtrlRead($_uHPoolUsername)
    Local $_sHWorkerLabel = GUICtrlRead($_uHWorkerLabel)
    Local $_sHWorkerPassword = GUICtrlRead($_uHWorkerPassword)
 
+   Local $_sHOpts
+
    Local $_HBatch
-   $_sBatch = "cd "&$_sInstallDir&"hodlminer-wolf"&@CRLF&"hodlminer-wolf.exe -a hodl -o stratum+tcp://hodl.blockquarry.com:3032 -u "&$_sHPoolUsername&"."&$_sHWorkerLabel&" -p "&$_sHWorkerPassword&" "&$_sHOpts
+   $_sHBatch = "cd "&$_sInstallDir&"hodlminer-wolf"&@CRLF&"hodlminer-wolf.exe -a hodl -o "&$_sHServer&" -u "&$_sHPoolUsername&"."&$_sHWorkerLabel&" -p "&$_sHWorkerPassword&" "&$_sHOpts
    If FileExists($_sInstallDir&"au3-hodlminer-wolf.bat") Then FileDelete($_sInstallDir&"au3-hodlminer-wolf.bat")
-   FileWrite($_sInstallDir&"au3-hodlminer-wolf.bat", $_sBatch)
+   FileWrite($_sInstallDir&"au3-hodlminer-wolf.bat", $_sHBatch)
    $_pHOdlMinerWolf = Run(@ComSpec&" /K au3-hodlminer-wolf.bat", $_sInstallDir)
 
    $_iHOdlMinerWolf_state = 1 ; launching
+EndFunc
+
+Func CPUMinerMulti()
+   Global $_pCPUMinerMulti
+
+   Local $_sMPool = GUICtrlRead($_uMPool)
+   Local $_sMServer = GUICtrlRead($_uMServer)
+   Local $_sMPoolUsername = GUICtrlRead($_uMPoolUsername)
+   Local $_sMWorkerLabel = GUICtrlRead($_uMWorkerLabel)
+   Local $_sMWorkerPassword = GUICtrlRead($_uMWorkerPassword)
+
+   Local $_sMOpts
+
+   Local $_MBatch
+   $_sMBatch = "cd "&$_sInstallDir&"cpuminer-multi"&@CRLF&"minerd.exe -o "&$_sMServer&" -u "&$_sMPoolUsername&" -p "&$_sMWorkerPassword&" "&$_sMOpts
+   If FileExists($_sInstallDir&"au3-cpuminer-multi.bat") Then FileDelete($_sInstallDir&"au3-cpuminer-multi.bat")
+   FileWrite($_sInstallDir&"au3-cpuminer-multi.bat", $_sMBatch)
+   $_pCPUMinerMulti = Run(@ComSpec&" /K au3-cpuminer-multi.bat", $_sInstallDir)
+
+   $_iCPUMinerMulti_state = 1 ; launching
 EndFunc
 
 Func CheckInternet()
@@ -952,7 +978,7 @@ OnAutoItExitRegister("_PowerResetState")
 While 1
    Switch GUIGetMsg()
 	  Case $GUI_EVENT_CLOSE
-		 If WinExists("au3miner "&$_Ver&" settings manager") Then
+		 If WinGetState("au3miner "&$_Ver&" settings manager") == 4 Then
 			GUISetState(@SW_HIDE, $_GUISettingsManage)
 			GUISetState(@SW_DISABLE, $_GUISettingsManage)
 		 Else
@@ -1099,7 +1125,7 @@ While 1
 		 GUICtrlSetData($_uClaymoreMiner_launch, "Launching claymoreminer...")
 		 If ProcessExists($_pClaymoreMiner) Then
 			$_iClaymoreMiner_state = 2
-			GUICtrlSetData($_uClaymoreMiner_launch, "claymoreminer")
+			GUICtrlSetData($_uClaymoreMiner_launch, "claymoreminer is running")
 		 EndIf
 	  Case $_iClaymoreMiner_state == 2
 		 If Not ProcessExists($_pClaymoreMiner) Then
@@ -1122,7 +1148,7 @@ While 1
 		 Until Not ProcessExists($_pClaymoreMiner)
 		 $_iClaymoreMiner_state = 0
 		 GUICtrlSetState($_uClaymoreMiner_launch, $GUI_ENABLE)
-		 GUICtrlSetData($_uClaymoreMiner_launch, "Launching claymoreminer...")
+		 GUICtrlSetData($_uClaymoreMiner_launch, "claymoreminer")
 	  Case Else
 		 If ProcessExists($_pClaymoreMiner) Then
 			GUICtrlSetState($_uClaymoreMiner_launch, $GUI_DISABLE)
@@ -1160,7 +1186,7 @@ While 1
 		 Until Not ProcessExists($_pQtMiner)
 		 $_iQtMiner_state = 0
 		 GUICtrlSetState($_uQtMiner_launch, $GUI_ENABLE)
-		 GUICtrlSetData($_uQtMiner_launch, "Launch qtminer")
+		 GUICtrlSetData($_uQtMiner_launch, "qtminer")
 	  Case Else
 		 If ProcessExists($_pQtMiner) Then
 			GUICtrlSetState($_uQtMiner_launch, $GUI_DISABLE)
@@ -1198,7 +1224,7 @@ While 1
 		 Until Not ProcessExists($_pEthminerGenoil)
 		 $_iEthminerGenoil_state = 0
 		 GUICtrlSetState($_uEthminerGenoil_launch, $GUI_ENABLE)
-		 GUICtrlSetData($_uEthminerGenoil_launch, "Launch ethminer-genoil")
+		 GUICtrlSetData($_uEthminerGenoil_launch, "ethminer-genoil")
 	  Case Else
 		 If ProcessExists($_pEthminerGenoil) Then
 			GUICtrlSetState($_uEthminerGenoil_launch, $GUI_DISABLE)
@@ -1236,7 +1262,7 @@ While 1
 		 Until Not ProcessExists($_pHOdlMiner)
 		 $_iHOdlMiner_state = 0
 		 GUICtrlSetState($_uHOdlMiner_launch, $GUI_ENABLE)
-		 GUICtrlSetData($_uHOdlMiner_launch, "Launch HOdlminer")
+		 GUICtrlSetData($_uHOdlMiner_launch, "HOdlminer")
 	  Case Else
 		 If ProcessExists($_pHOdlMiner) Then
 			GUICtrlSetState($_uHOdlMiner_launch, $GUI_DISABLE)
@@ -1274,7 +1300,7 @@ While 1
 		 Until Not ProcessExists($_pHOdlMinerWolf)
 		 $_iHOdlMinerWolf_state = 0
 		 GUICtrlSetState($_uHOdlMinerWolf_launch, $GUI_ENABLE)
-		 GUICtrlSetData($_uHOdlMinerWolf_launch, "Launch HOdlminer-wolf")
+		 GUICtrlSetData($_uHOdlMinerWolf_launch, "HOdlminer-wolf")
 	  Case Else
 		 If ProcessExists($_pHOdlMinerWolf) Then
 			GUICtrlSetState($_uHOdlMinerWolf_launch, $GUI_DISABLE)
@@ -1312,7 +1338,7 @@ While 1
 		 Until Not ProcessExists($_pCPUMinerMulti)
 		 $_iCPUMinerMulti_state = 0
 		 GUICtrlSetState($_uCPUMinerMulti_launch, $GUI_ENABLE)
-		 GUICtrlSetData($_uCPUMinerMulti_launch, "Launch cpuminer-multi")
+		 GUICtrlSetData($_uCPUMinerMulti_launch, "cpuminer-multi")
 	  Case Else
 		 If ProcessExists($_pCPUMinerMulti) Then
 			GUICtrlSetState($_uCPUMinerMulti_launch, $GUI_DISABLE)
