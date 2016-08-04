@@ -1,0 +1,1 @@
+EthDcrMiner64.exe -epool eth-us2.dwarfpool.com:8008 -ewal 0xfcf119EFA3D9ba98786177376fE7356eD407Fe20/005GLU -epsw power -dpool "http://sia-eu1.nanopool.org:9980/miner/header?address=3be0304dee313515cf401b8593a0c1df905ed13f0adaee89a8d7337d2ba8209e5ca9f297bbc2" -dcoin sia

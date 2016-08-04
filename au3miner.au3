@@ -40,7 +40,6 @@ Func Install($_fInstallDir)
    FileInstall("C:\github\au3miner\claymoreminer\EthDcrMiner64.exe", $_fInstallDir&"claymoreminer\EthDcrMiner64.exe", 0)
    FileInstall("C:\github\au3miner\qtminer\libcurl.dll", $_fInstallDir&"claymoreminer\libcurl.dll", 0)
    FileInstall("C:\github\au3miner\claymoreminer\msvcr110.dll", $_fInstallDir&"claymoreminer\msvcr110.dll", 0)
-   FileInstall("C:\github\au3miner\qtminer\OpenCL.dll", $_fInstallDir&"claymoreminer\OpenCL.dll", 0)
    FileInstall("C:\github\au3miner\claymoreminer\Data.bin", $_fInstallDir&"claymoreminer\Data.bin", 0)
 
    If Not FileExists($_fInstallDir&"qtminer\") Then
@@ -144,7 +143,6 @@ Func Uninstall()
    FileDelete($_fInstallDir&"claymoreminer\EthDcrMiner64.exe")
    FileDelete($_fInstallDir&"claymoreminer\libcurl.dll")
    FileDelete($_fInstallDir&"claymoreminer\msvcr110.dll")
-   FileDelete($_fInstallDir&"claymoreminer\OpenCL.dll")
    FileDelete($_fInstallDir&"claymoreminer\Data.bin")
    FileDelete($_fInstallDir&"claymoreminer\")
 
@@ -357,8 +355,8 @@ Func SettingsRead()
    $_sClaymoreMiner_auto = IniRead($_sInstallDir&"\au3miner.ini", "settings", "Claymoreminerauto", 0)
    $_sClaymoreMiner_persist = IniRead($_sInstallDir&"\au3miner.ini", "settings", "Claymoreminerpersist", 0)
    $_sClaymoreETH = IniRead($_sInstallDir&"\au3miner.ini", "settings", "claymoreeth", 1)
-   $_sClaymoreDCR = IniRead($_sInstallDir&"\au3miner.ini", "settings", "claymoredcr", 1)
-   $_sClaymoreSC = IniRead($_sInstallDir&"\au3miner.ini", "settings", "claymoresc", 0)
+   $_sClaymoreDCR = IniRead($_sInstallDir&"\au3miner.ini", "settings", "claymoredcr", 0)
+   $_sClaymoreSC = IniRead($_sInstallDir&"\au3miner.ini", "settings", "claymoresc", 1)
    $_sQtMiner_auto = IniRead($_sInstallDir&"\au3miner.ini", "settings", "qtminerauto", 0)
    $_sQtMiner_persist = IniRead($_sInstallDir&"\au3miner.ini", "settings", "qtminerpersist", 0)
    $_sEthminerGenoil_auto = IniRead($_sInstallDir&"\au3miner.ini", "settings", "ethminergenoiminerauto", 0)
@@ -418,6 +416,9 @@ Func SettingsWrite()
    $_sInstalLDirToReg = GUICtrlRead($_uInstallDirToReg)
    $_sClaymoreMiner_auto = GUICtrlRead($_uClaymoreMiner_auto)
    $_sClaymoreMiner_persist = GUICtrlRead($_uClaymoreMiner_persist)
+   $_sClaymoreETH = GUICtrlRead($_uClaymoreETH)
+   $_sClaymoreDCR = GUICtrlRead($_uClaymoreDCR)
+   $_sClaymoreSC = GUICtrlRead($_uClaymoreSC)
    $_sQtMiner_auto = GUICtrlRead($_uQtMiner_auto)
    $_sQtMiner_persist = GUICtrlRead($_uQtMiner_persist)
    $_sEthminerGenoil_auto = GUICtrlRead($_uEthminerGenoil_auto)
@@ -438,6 +439,9 @@ Func SettingsWrite()
    If $_sInstalLDirToReg <> $GUI_CHECKED Then $_sInstalLDirToReg = False
    If $_sClaymoreMiner_auto <> $GUI_CHECKED Then $_sClaymoreMiner_auto = False
    If $_sClaymoreMiner_persist <> $GUI_CHECKED Then $_sClaymoreMiner_persist = False
+   If $_sClaymoreETH <> $GUI_CHECKED Then $_sClaymoreETH = False
+   If $_sClaymoreDCR <> $GUI_CHECKED Then $_sClaymoreDCR = False
+   If $_sClaymoreSC <> $GUI_CHECKED Then $_sClaymoreSC = False
    If $_sQtMiner_auto <> $GUI_CHECKED Then $_sQtMiner_auto = False
    If $_sQtMiner_persist <> $GUI_CHECKED Then $_sQtMiner_persist = False
    If $_sEthminerGenoil_auto <> $GUI_CHECKED Then $_sEthminerGenoil_auto = False
@@ -470,6 +474,9 @@ Func SettingsWrite()
    IniWrite($_sInstallDir&"\au3miner.ini", "settings", "installdirtoreg", $_sInstalLDirToReg)
    IniWrite($_sInstallDir&"\au3miner.ini", "settings", "claymoreminerauto", $_sClaymoreMiner_auto)
    IniWrite($_sInstallDir&"\au3miner.ini", "settings", "claymoreminerpersist", $_sClaymoreMiner_persist)
+   IniWrite($_sInstallDir&"\au3miner.ini", "settings", "claymoreeth", $_sClaymoreETH)
+   IniWrite($_sInstallDir&"\au3miner.ini", "settings", "claymoredcr", $_sClaymoreDCR)
+   IniWrite($_sInstallDir&"\au3miner.ini", "settings", "claymoresc", $_sClaymoreSC)
    IniWrite($_sInstallDir&"\au3miner.ini", "settings", "qtminerauto", $_sQtMiner_auto)
    IniWrite($_sInstallDir&"\au3miner.ini", "settings", "qtminerpersist", $_sQtMiner_persist)
    IniWrite($_sInstallDir&"\au3miner.ini", "settings", "ethminergenoilauto", $_sEthminerGenoil_auto)
@@ -833,11 +840,11 @@ Func ClaymoreMiner()
    If $_sClaymoreSC Then
 	  Switch $_sSCPool
 		 Case "Nanopool"
-			$_sCBatch &= " -dpool """&$_sSCServer&"/miner/header?address="&$_sSCPayoutAddress&"&worker="&$_sSCWorkerLabel&""" -dcoin sc"
+			$_sCBatch &= " -dpool ""http://"&$_sSCServer&"/miner/header?address="&$_sSCPayoutAddress&"&worker="&$_sSCWorkerLabel&""" -dcoin sia"
 		 Case "Siamining"
-			$_sCBatch &= " -dpool """&$_sSCServer&"/miner/header?address="&$_sSCPayoutAddress&"&worker="&$_sSCWorkerLabel&""" -dcoin sc"
+			$_sCBatch &= " -dpool ""http://"&$_sSCServer&"/miner/header?address="&$_sSCPayoutAddress&"&worker="&$_sSCWorkerLabel&""" -dcoin sia"
 		 Case Else
-			$_sCBatch &= " -dpool """&$_sSCServer&" -dcoin sia"
+			$_sCBatch &= " -dpool ""http://"&$_sSCServer&""" -dcoin sia"
 		 EndSwitch
    EndIf
 
@@ -1083,7 +1090,7 @@ While 1
 			GUICtrlSetData($_uEWorkerPassword, $_sGlobalWorkerPassword)
 			GUICtrlSetData($_uDWorkerPassword, $_sGlobalWorkerPassword)
 			GUICtrlSetData($_uSCWorkerPassword, $_sGlobalWorkerPassword)
-			GUICtrlSetData($_uHWorkerPassword, $_sGlobalWorkerPassworde)
+			GUICtrlSetData($_uHWorkerPassword, $_sGlobalWorkerPassword)
 		 EndIf
 
 		 ESettingsWrite()
@@ -1131,7 +1138,7 @@ While 1
 	  Case $_uSCPool
 		 Switch GUICtrlRead($_uSCPool)
 			Case "Nanopool"
-			   GUICtrlSetData($_uSCServer, "us-west1.nanopool.org:9999")
+			   GUICtrlSetData($_uSCServer, "sia-us-west1.nanopool.org:9980")
 			Case "Siamining"
 			   GUICtrlSetData($_uSCServer, "siamining.com:9980")
 			Case " sᴏʟᴏ"
