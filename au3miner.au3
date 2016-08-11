@@ -677,7 +677,7 @@ GUICtrlCreateTabItem("Settings")
 GUICtrlCreateTabItem("Ethereum")
    GUICtrlCreateLabel("Pool:", 20, 44)
    $_uEPool = GUICtrlCreateCombo("Dwarfpool", 50, 40, 80)
-   GUICtrlSetData($_uEPool, "Ethpool| sᴏʟᴏ| ᴄᴜsᴛᴏᴍ")
+   GUICtrlSetData($_uEPool, "Ethpool|Nanopool|Nanopool (ETC)| sᴏʟᴏ| ᴄᴜsᴛᴏᴍ")
    $_uEServer = GUICtrlCreateInput($_sEServer, 20, 65, 260, 20)
    GUICtrlCreateLabel("Server", 285, 70)
    $_uEPayoutAddress = GUICtrlCreateInput($_sEPayoutAddress, 20, 90, 260, 20)
@@ -790,6 +790,7 @@ Func ClaymoreMiner()
    Local $_sEPayoutAddress = GUICtrlRead($_uEPayoutAddress)
    Local $_sEWorkerLabel = GUICtrlRead($_uEWorkerLabel)
    Local $_sEWorkerPassword = GUICtrlRead($_uEWorkerPassword)
+   Local $_sEOpts = GUICtrlRead($_uEOpts)
 
    Local $_sDPool = GUICtrlRead($_uDPool)
    Local $_sDServer = GUICtrlRead($_uDServer)
@@ -828,6 +829,10 @@ Func ClaymoreMiner()
 			$_sCBatch &= "-epool "&$_sEServer&" -ewal "&$_sEPayoutAddress&"/"&$_sEWorkerLabel&" -epsw "&$_sEWorkerPassword
 		 Case "Ethpool"
 			$_sCBatch &= "-epool "&$_sEServer&" -ewal "&$_sEPayoutAddress&"."&$_sEWorkerLabel&" -epsw "&$_sEWorkerPassword
+		 Case "Nanopool"
+			$_sCBatch &= "-epool "&$_sEServer&" -ewal "&$_sEPayoutAddress&"/"&$_sEWorkerLabel&" -epsw "&$_sEWorkerPassword
+		 Case "Nanopool (ETC)"
+			$_sCBatch &= "-epool "&$_sEServer&" -ewal "&$_sEPayoutAddress&"/"&$_sEWorkerLabel&" -epsw "&$_sEWorkerPassword
 		 Case " sᴏʟᴏ"
 			$_sCBatch &= "-epool "&$_sEServer&" -ewal "&$_sEPayoutAddress&" -epsw "&$_sEWorkerPassword
 		 Case Else
@@ -848,6 +853,8 @@ Func ClaymoreMiner()
 		 EndSwitch
    EndIf
 
+   $_sCBatch &= " "&$_sEOpts
+
    If FileExists($_sInstallDir&"au3-claymoreminer.bat") Then FileDelete($_sInstallDir&"au3-claymoreminer.bat")
    FileWrite($_sInstallDir&"au3-claymoreminer.bat", $_sCBatch)
    $_pClaymoreMiner = Run(@ComSpec&" /K au3-claymoreminer.bat", $_sInstallDir)
@@ -862,6 +869,7 @@ Func QtMiner()
    Local $_sEServer = GUICtrlRead($_uEServer)
    Local $_sEPayoutAddress = GUICtrlRead($_uEPayoutAddress)
    Local $_sEWorkerLabel = GUICtrlRead($_uEWorkerLabel)
+   Local $_sEOpts = GUICtrlRead($_uEOpts)
 
    Local $_sEGOpts
    $_sEGOpts &= "setx GPU_FORCE_64BIT_PTR 0"&@CRLF
@@ -870,8 +878,7 @@ Func QtMiner()
    $_sEGOpts &= "setx GPU_MAX_ALLOC_PERCENT 100"&@CRLF
    $_sEGOpts &= "SET GPU_SINGLE_ALLOC_PERCENT=100"&@CRLF
 
-   Local $_sEOpts
-   $_sEOpts &= "-G "
+   $_sEOpts &= " -G "
    #cs
    $_sEOpts &= "--cl-local-work "&$_sECLLocalWorkVal&" "
    $_sEOpts &= "--cl-global-work "&$_sECLGlobalWorkVal&" "
@@ -894,8 +901,8 @@ Func EthminerGenoil()
    Local $_sEPayoutAddress = GUICtrlRead($_uEPayoutAddress)
    Local $_sEWorkerLabel = GUICtrlRead($_uEWorkerLabel)
    Local $_sEWorkerPassword = GUICtrlRead($_uEWorkerPassword)
+   Local $_sEOpts = GUICtrlRead($_uEOpts)
 
-   Local $_sEOpts
    #cs
    If $_sECUDAGridSize Then $_sEOpts &= "--cuda-grid-size "&$_sECUDAGridSizeVal&" "
    If $_sECUDABlockSize Then $_sEOpts &= "--cuda-block-size "&$_sECUDABlockSizeVal&" "
@@ -919,8 +926,7 @@ Func HOdlMiner()
    Local $_sHPoolUsername = GUICtrlRead($_uHPoolUsername)
    Local $_sHWorkerLabel = GUICtrlRead($_uHWorkerLabel)
    Local $_sHWorkerPassword = GUICtrlRead($_uHWorkerPassword)
-
-   Local $_sHOpts
+   Local $_sHOpts = GUICtrlRead($_uHOpts)
 
    Local $_HBatch
    $_sBatch = "cd "&$_sInstallDir&"hodlminer"&@CRLF&"hodlminer.exe -a hodl -o "&$_sHServer&" -u "&$_sHPoolUsername&"."&$_sHWorkerLabel&" -p "&$_sHWorkerPassword&" "&$_sHOpts
@@ -939,8 +945,7 @@ Func HOdlMinerWolf()
    Local $_sHPoolUsername = GUICtrlRead($_uHPoolUsername)
    Local $_sHWorkerLabel = GUICtrlRead($_uHWorkerLabel)
    Local $_sHWorkerPassword = GUICtrlRead($_uHWorkerPassword)
-
-   Local $_sHOpts
+   Local $_sHOpts = GUICtrlRead($_uHOpts)
 
    Local $_HBatch
    $_sHBatch = "cd "&$_sInstallDir&"hodlminer-wolf"&@CRLF&"hodlminer-wolf.exe -a hodl -o "&$_sHServer&" -u "&$_sHPoolUsername&"."&$_sHWorkerLabel&" -p "&$_sHWorkerPassword&" "&$_sHOpts
@@ -959,8 +964,7 @@ Func CPUMinerMulti()
    Local $_sMPoolUsername = GUICtrlRead($_uMPoolUsername)
    Local $_sMWorkerLabel = GUICtrlRead($_uMWorkerLabel)
    Local $_sMWorkerPassword = GUICtrlRead($_uMWorkerPassword)
-
-   Local $_sMOpts
+   Local $_sMOpts = GUICtrlRead($_uMOpts)
 
    Local $_MBatch
    $_sMBatch = "cd "&$_sInstallDir&"cpuminer-multi"&@CRLF&"minerd.exe -o "&$_sMServer&" -u "&$_sMPoolUsername&" -p "&$_sMWorkerPassword&" "&$_sMOpts
@@ -1121,6 +1125,10 @@ While 1
 			   GUICtrlSetData($_uEServer, "eth-us2.dwarfpool.com:8008")
 			Case "Ethpool"
 			   GUICtrlSetData($_uEServer, "us2.ethpool.org:3333")
+			Case "Nanopool"
+			   GUICtrlSetData($_uEServer, "eth-us-west1.nanopool.org:9999")
+			Case "Nanopool (ETC)"
+			   GUICtrlSetData($_uEServer, "etc-us-west1.nanopool.org:19999")
 			Case " sᴏʟᴏ"
 			   GUICtrlSetData($_uEServer, "http://192.168.0.1:8545")
 			Case " ᴄᴜsᴛᴏᴍ"
