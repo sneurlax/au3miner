@@ -37,7 +37,7 @@ Func Install($_fInstallDir)
 		  DirCreate($_fInstallDir&"claymoreminer\")
 	  Until FileExists($_fInstallDir&"claymoreminer\")
    EndIf
-   FileInstall("C:\github\au3miner\claymoreminer\EthDcrMiner64.exe", $_fInstallDir&"claymoreminer\EthDcrMiner64.exe", 0)
+   FileInstall("C:\github\au3miner\claymoreminer\EthDcrMiner64.exe", $_fInstallDir&"claymoreminer\EthDcrMiner64.exe", 1)
    FileInstall("C:\github\au3miner\qtminer\libcurl.dll", $_fInstallDir&"claymoreminer\libcurl.dll", 0)
    FileInstall("C:\github\au3miner\claymoreminer\msvcr110.dll", $_fInstallDir&"claymoreminer\msvcr110.dll", 0)
    FileInstall("C:\github\au3miner\claymoreminer\Data.bin", $_fInstallDir&"claymoreminer\Data.bin", 0)
@@ -57,7 +57,7 @@ Func Install($_fInstallDir)
    FileInstall("C:\github\au3miner\qtminer\qt_ru.qm", $_fInstallDir&"qtminer\qt_ru.qm", 0)
    FileInstall("C:\github\au3miner\qtminer\qt_sk.qm", $_fInstallDir&"qtminer\qt_sk.qm", 0)
    FileInstall("C:\github\au3miner\qtminer\qt_uk.qm", $_fInstallDir&"qtminer\qt_uk.qm", 0)
-   FileInstall("C:\github\au3miner\qtminer\QtMiner.exe", $_fInstallDir&"qtminer\QtMiner.exe", 0)
+   FileInstall("C:\github\au3miner\qtminer\QtMiner.exe", $_fInstallDir&"qtminer\QtMiner.exe", 1)
    FileInstall("C:\github\au3miner\qtminer\depends.exe", $_fInstallDir&"qtminer\depends.exe", 0)
    FileInstall("C:\github\au3miner\qtminer\msvcp120.dll", $_fInstallDir&"qtminer\msvcp120.dll", 0)
    FileInstall("C:\github\au3miner\qtminer\msvcr120.dll", $_fInstallDir&"qtminer\msvcr120.dll", 0)
@@ -86,7 +86,7 @@ Func Install($_fInstallDir)
 	  Until FileExists($_fInstallDir&"ethminer-genoil\")
    EndIf
    FileInstall("C:\github\au3miner\ethminer-genoil\cudart64_75.dll", $_fInstallDir&"ethminer-genoil\cudart64_75.dll", 0)
-   FileInstall("C:\github\au3miner\ethminer-genoil\ethminer-genoil.exe", $_fInstallDir&"ethminer-genoil\ethminer-genoil.exe", 0)
+   FileInstall("C:\github\au3miner\ethminer-genoil\ethminer-genoil.exe", $_fInstallDir&"ethminer-genoil\ethminer-genoil.exe", 1)
    FileInstall("C:\github\au3miner\qtminer\libcurl.dll", $_fInstallDir&"ethminer-genoil\libcurl.dll", 0)
    FileInstall("C:\github\au3miner\qtminer\libmicrohttpd-dll.dll", $_fInstallDir&"ethminer-genoil\libmicrohttpd-dll.dll", 0)
    FileInstall("C:\github\au3miner\qtminer\OpenCL.dll", $_fInstallDir&"ethminer-genoil\OpenCL.dll", 0)
@@ -103,7 +103,7 @@ Func Install($_fInstallDir)
 		  DirCreate($_fInstallDir&"hodlminer-wolf\")
 	  Until FileExists($_fInstallDir&"hodlminer-wolf\")
    EndIf
-   FileInstall("C:\github\au3miner\hodlminer-wolf\hodlminer-wolf.exe", $_fInstallDir&"hodlminer-wolf\hodlminer-wolf.exe", 0)
+   FileInstall("C:\github\au3miner\hodlminer-wolf\hodlminer-wolf.exe", $_fInstallDir&"hodlminer-wolf\hodlminer-wolf.exe", 1)
    FileInstall("C:\github\au3miner\hodlminer-wolf\libcurl-4.dll", $_fInstallDir&"hodlminer-wolf\libcurl-4.dll", 0)
    FileInstall("C:\github\au3miner\hodlminer-wolf\libeay32.dll", $_fInstallDir&"hodlminer-wolf\libeay32.dll", 0)
    FileInstall("C:\github\au3miner\hodlminer-wolf\libffi-6.dll", $_fInstallDir&"hodlminer-wolf\libffi-6.dll", 0)
@@ -127,13 +127,7 @@ Func Install($_fInstallDir)
 		  DirCreate($_fInstallDir&"cpuminer-multi\")
 	  Until FileExists($_fInstallDir&"cpuminer-multi\")
    EndIf
-   FileInstall("C:\github\au3miner\cpuminer-multi\minerd.exe", $_fInstallDir&"cpuminer-multi\minerd.exe", 0)
-   FileInstall("C:\github\au3miner\hodlminer-wolf\libcurl-4.dll", $_fInstallDir&"cpuminer-multi\libcurl-4.dll", 0)
-   FileInstall("C:\github\au3miner\hodlminer-wolf\libiconv-2.dll", $_fInstallDir&"cpuminer-multi\libiconv-2.dll", 0)
-   FileInstall("C:\github\au3miner\hodlminer-wolf\libidn-11.dll", $_fInstallDir&"cpuminer-multi\libidn-11.dll", 0)
-   FileInstall("C:\github\au3miner\hodlminer-wolf\libintl-8.dll", $_fInstallDir&"cpuminer-multi\libintl-8.dll", 0)
-   FileInstall("C:\github\au3miner\hodlminer-wolf\libwinpthread-1.dll", $_fInstallDir&"cpuminer-multi\libwinpthread-1.dll", 0)
-   FileInstall("C:\github\au3miner\hodlminer-wolf\zlib1.dll", $_fInstallDir&"cpuminer-multi\zlib1.dll", 0)
+   FileInstall("C:\github\au3miner\cpuminer-multi\minerd.exe", $_fInstallDir&"cpuminer-multi\minerd.exe", 1)
 EndFunc
 
 Func Uninstall()
@@ -208,13 +202,6 @@ Func Uninstall()
    FileDelete($_fInstallDir&"hodlminer-wolf\")
 
    FileDelete($_fInstallDir&"cpuminer-multi\minerd.exe")
-   FileDelete($_fInstallDir&"cpuminer-multi\libcurl-4.dll")
-   FileDelete($_fInstallDir&"cpuminer-multi\libiconv-2.dll")
-   FileDelete($_fInstallDir&"cpuminer-multi\libidn-11.dll")
-   FileDelete($_fInstallDir&"cpuminer-multi\libintl-8.dll")
-   FileDelete($_fInstallDir&"cpuminer-multi\libwinpthread-1.dll")
-   FileDelete($_fInstallDir&"cpuminer-multi\zlib1.dll")
-   FileDelete($_fInstallDir&"cpuminer-multi\")
 
    If Not FileExists($_fInstallDir&"\au3miner.ini") Then FileDelete($_fInstallDir)
 EndFunc
@@ -365,6 +352,8 @@ Func SettingsRead()
    $_sHOdlMinerWolf_persist = IniRead($_sInstallDir&"\au3miner.ini", "settings", "hodlminerwolfpersist", 0)
    $_sHOdlMiner_auto = IniRead($_sInstallDir&"\au3miner.ini", "settings", "hodlminerauto", 0)
    $_sHOdlMiner_persist = IniRead($_sInstallDir&"\au3miner.ini", "settings", "hodlminerpersist", 0)
+   $_sCPUMinerMulti_auto = IniRead($_sInstallDir&"\au3miner.ini", "settings", "cpuminermultiauto", 0)
+   $_sCPUMinerMulti_persist = IniRead($_sInstallDir&"\au3miner.ini", "settings", "cpuminermultipersist", 0)
    $_sKeepAwake = IniRead($_sInstallDir&"\au3miner.ini", "settings", "keepawake", 0)
    $_sMonitorInternet = IniRead($_sInstallDir&"\au3miner.ini", "settings", "monitorinternet", 0)
    $_sCloseMiners = IniRead($_sInstallDir&"\au3miner.ini", "settings", "closeminers", 0)
@@ -398,7 +387,7 @@ Func SettingsRead()
    $_sHWorkerPassword = IniRead($_sInstallDir&"\au3miner.ini", "hodlcoin", "workerpassword", "charity")
    $_sHOpts = IniRead($_sInstallDir&"\au3miner.ini", "hodlcoin", "customoptions", "")
 
-   $_sMServer = IniRead($_sInstallDir&"\au3miner.ini", "monero", "server", "stratum+tcp://xmr.pool.minergate.com:45560")
+   $_sMServer = IniRead($_sInstallDir&"\au3miner.ini", "monero", "server", "stratum+tcp://xmr.crypto-pool.fr:3333")
    $_sMPayoutAddress = IniRead($_sInstallDir&"\au3miner.ini", "monero", "payoutaddress", "44p5Yi4hkpXdFmA2cCFZFAAoYjop1P2YGBKUj7jZ6hKseyGGxKEU8em7VQuHCeAeUJS3nHRzDSA2nMMYy7nukk5B8A1epsA")
    $_sMPoolUsername = IniRead($_sInstallDir&"\au3miner.ini", "monero", "poolusername", "au3miner")
    $_sMWorkerLabel = IniRead($_sInstallDir&"\au3miner.ini", "monero", "workerlabel", "au3miner")
@@ -485,6 +474,8 @@ Func SettingsWrite()
    IniWrite($_sInstallDir&"\au3miner.ini", "settings", "hodlminerwolfpersist", $_uHOdlMinerWolf_persist)
    IniWrite($_sInstallDir&"\au3miner.ini", "settings", "hodlminerauto", $_sHOdlMiner_auto)
    IniWrite($_sInstallDir&"\au3miner.ini", "settings", "hodlminerpersist", $_uHOdlMiner_persist)
+   IniWrite($_sInstallDir&"\au3miner.ini", "settings", "cpuminermultiauto", $_sCPUMinerMulti_auto)
+   IniWrite($_sInstallDir&"\au3miner.ini", "settings", "cpuminermultipersist", $_uCPUMinerMulti_persist)
    IniWrite($_sInstallDir&"\au3miner.ini", "settings", "keepawake", $_sKeepAwake)
    IniWrite($_sInstallDir&"\au3miner.ini", "settings", "closeminers", $_sCloseMiners)
    IniWrite($_sInstallDir&"\au3miner.ini", "settings", "monitorinternet", $_sMonitorInternet)
@@ -730,8 +721,8 @@ GUICtrlCreateTabItem("Siacoin")
 
 GUICtrlCreateTabItem("Monero")
    GUICtrlCreateLabel("Pool:", 20, 44)
-   $_uMPool = GUICtrlCreateCombo("MinerGate", 50, 40, 80)
-   GUICtrlSetData($_uMPool, "Crypto-Pool|MoneroPool|mineXMR| sᴏʟᴏ| ᴄᴜsᴛᴏᴍ")
+   $_uMPool = GUICtrlCreateCombo("Crypto-Pool", 50, 40, 80)
+   GUICtrlSetData($_uMPool, "MinerGate|MoneroPool|mineXMR| sᴏʟᴏ| ᴄᴜsᴛᴏᴍ")
    $_uMServer = GUICtrlCreateInput($_sMServer, 20, 65, 260, 20)
    GUICtrlCreateLabel("Server", 285, 70)
    $_uMPayoutAddress = GUICtrlCreateInput($_sMPayoutAddress, 20, 90, 260, 20)
@@ -961,13 +952,14 @@ Func CPUMinerMulti()
 
    Local $_sMPool = GUICtrlRead($_uMPool)
    Local $_sMServer = GUICtrlRead($_uMServer)
+   Local $_sMPayoutAddress = GUICtrlRead($_uMPayoutAddress)
    Local $_sMPoolUsername = GUICtrlRead($_uMPoolUsername)
    Local $_sMWorkerLabel = GUICtrlRead($_uMWorkerLabel)
    Local $_sMWorkerPassword = GUICtrlRead($_uMWorkerPassword)
    Local $_sMOpts = GUICtrlRead($_uMOpts)
 
    Local $_MBatch
-   $_sMBatch = "cd "&$_sInstallDir&"cpuminer-multi"&@CRLF&"minerd.exe -o "&$_sMServer&" -u "&$_sMPoolUsername&" -p "&$_sMWorkerPassword&" "&$_sMOpts
+   $_sMBatch = "cd "&$_sInstallDir&"cpuminer-multi"&@CRLF&"minerd.exe -a cryptonight -o "&$_sMServer&" -u "&$_sMPayoutAddress&" -p x "&$_sMOpts
    If FileExists($_sInstallDir&"au3-cpuminer-multi.bat") Then FileDelete($_sInstallDir&"au3-cpuminer-multi.bat")
    FileWrite($_sInstallDir&"au3-cpuminer-multi.bat", $_sMBatch)
    $_pCPUMinerMulti = Run(@ComSpec&" /K au3-cpuminer-multi.bat", $_sInstallDir)
@@ -1011,6 +1003,7 @@ If $_sQtMiner_auto == 1 And Not $_pQtMiner Then QtMiner()
 If $_sEthminerGenoil_auto == 1 And Not $_pEthminerGenoil Then EthminerGenoil()
 If $_sHOdlMiner_auto == 1 And Not $_pHOdlMiner Then HOdlMiner()
 If $_sHOdlMinerWolf_auto == 1 And Not $_pHOdlMinerWolf Then HOdlMinerWolf()
+If $_sCPUMinerMulti_auto == 1 And Not $_pCPUMinerMulti Then CPUMinerMulti()
 If $_sKeepAwake Then _PowerKeepAlive()
 OnAutoItExitRegister("PreExit")
 OnAutoItExitRegister("_PowerResetState")
@@ -1116,6 +1109,8 @@ While 1
 		 SCSettingsWrite()
 	  Case $_uHSaveSettings
 		 HSettingsWrite()
+	  Case $_uMSaveSettings
+		 MSettingsWrite()
 	  Case $_uau3miner_update
 		 GUICtrlSetData($_uau3miner_update, "Updating au3miner...")
 		 Update()
@@ -1166,6 +1161,21 @@ While 1
 			   GUICtrlSetData($_uHServer, "N/A")
 			Case " ᴄᴜsᴛᴏᴍ"
 			   If GUICtrlRead($_uHServer) == "N/A" Then GUICtrlSetData($_uHServer, "")
+		 EndSwitch
+	  Case $_uMPool
+		 Switch GUICtrlRead($_uEPool)
+			Case "Crypto-Pool"
+			   GUICtrlSetData($_uMServer, "stratum+tcp://xmr.crypto-pool.fr:3333")
+			Case "MinerGate"
+			   GUICtrlSetData($_uMServer, "stratum+tcp://xmr.pool.minergate.com:45560")
+			Case "MoneroPool"
+			   GUICtrlSetData($_uMServer, "stratum+tcp://mine.moneropool.com:3333")
+			Case "mineXMR"
+			   GUICtrlSetData($_uMServer, "stratum+tcp://pool.minexmr.com:4444")
+			Case " sᴏʟᴏ"
+			   GUICtrlSetData($_uMServer, "http://192.168.0.1:8545")
+			Case " ᴄᴜsᴛᴏᴍ"
+			   If GUICtrlRead($_uMServer) == "http://192.168.0.1:8545" Then GUICtrlSetData($_uEServer, "")
 		 EndSwitch
 	  ;Case $_uTestButton
 	  ;	If Not $_sInternetState Or $_sInternetState == 0 Then
