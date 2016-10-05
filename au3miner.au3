@@ -41,6 +41,8 @@ Func Install($_fInstallDir)
    FileInstall("C:\github\au3miner\qtminer\libcurl.dll", $_fInstallDir&"claymoreminer\libcurl.dll", 0)
    FileInstall("C:\github\au3miner\claymoreminer\msvcr110.dll", $_fInstallDir&"claymoreminer\msvcr110.dll", 0)
    FileInstall("C:\github\au3miner\claymoreminer\Data.bin", $_fInstallDir&"claymoreminer\Data.bin", 0)
+   FileInstall("C:\github\au3miner\claymoreminer\cudart64_80.dll", $_fInstallDir&"claymoreminer\cudart64_80.dll", 0)
+
 
    If Not FileExists($_fInstallDir&"qtminer\") Then
 	  Do
