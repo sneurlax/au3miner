@@ -43,7 +43,6 @@ Func Install($_fInstallDir)
    FileInstall("C:\github\au3miner\claymoreminer\Data.bin", $_fInstallDir&"claymoreminer\Data.bin", 0)
    FileInstall("C:\github\au3miner\claymoreminer\cudart64_80.dll", $_fInstallDir&"claymoreminer\cudart64_80.dll", 0)
 
-
    If Not FileExists($_fInstallDir&"qtminer\") Then
 	  Do
 		  DirCreate($_fInstallDir&"qtminer\")
@@ -124,12 +123,91 @@ Func Install($_fInstallDir)
    FileInstall("C:\github\au3miner\hodlminer-wolf\ssleay32.dll", $_fInstallDir&"hodlminer-wolf\ssleay32.dll", 0)
    FileInstall("C:\github\au3miner\hodlminer-wolf\zlib1.dll", $_fInstallDir&"hodlminer-wolf\zlib1.dll", 0)
 
-   If Not FileExists($_fInstallDir&"cpuminer-multi\") Then
+   If Not FileExists($_fInstallDir&"sgminer-gm\") Then
 	  Do
-		  DirCreate($_fInstallDir&"cpuminer-multi\")
-	  Until FileExists($_fInstallDir&"cpuminer-multi\")
+		  DirCreate($_fInstallDir&"sgminer-gm\")
+	  Until FileExists($_fInstallDir&"sgminer-gm\")
    EndIf
-   FileInstall("C:\github\au3miner\cpuminer-multi\minerd.exe", $_fInstallDir&"cpuminer-multi\minerd.exe", 1)
+   FileInstall("C:\github\au3miner\sgminer-gm\aes_helper.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\alexkarnew.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\alexkarold.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\animecoin.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\arebyp.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\bitblock.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\bitblockold.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\blake.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\blake256.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\blake256r14.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\blake256r8.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\bmw.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\bmw256.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\bufius.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\ckolivas.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\credits.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\cryptonight.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\cryptonightHawaiigw8l4.bin", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\cubehash.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\cubehash256.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\darkcoin-mod.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\darkcoin.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\diamond.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\echo.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\equihash-param.h", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\equihash.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\ethash-genoil.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\ethash.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\fresh.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\fugue.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\fuguecoin.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\groestl.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\groestl256.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\groestlcoin-v1.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\groestlcoin.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\hamsi.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\hamsi_helper.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\hamsi_helper_big.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\inkcoin.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\jh.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\keccak.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\keccak1600.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\luffa.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\lyra2.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\lyra2re.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\lyra2rev2.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\lyra2v2.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\marucoin-mod.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\marucoin-modold.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\marucoin.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\maxcoin.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\myriadcoin-groestl.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\neoscrypt.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\panama.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\pluck.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\psw.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\quarkcoin.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\qubitcoin.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\sgminer.exe", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\shabal.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\shavite.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\sifcoin.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\simd.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\skein.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\skein256.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\talkcoin-mod.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\twecoin.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\vanilla.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\whirlcoin.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\whirlpool.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\whirlpoolx.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\wolf-aes.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\wolf-skein.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\x14.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\x14old.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\xmr.conf", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\yescrypt-multi.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\yescrypt.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\yescrypt_essential.cl", $_fInstallDir&"sgminer-gm\", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\zuikkis.cl", $_fInstallDir&"sgminer-gm\", 0)
 EndFunc
 
 Func Uninstall()
@@ -203,7 +281,87 @@ Func Uninstall()
    FileDelete($_fInstallDir&"hodlminer-wolf\zlib1.dll")
    FileDelete($_fInstallDir&"hodlminer-wolf\")
 
-   FileDelete($_fInstallDir&"cpuminer-multi\minerd.exe")
+   FileDelete($_fInstallDir&"sgminer-gm\aes_helper.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\alexkarnew.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\alexkarold.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\animecoin.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\arebyp.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\bitblock.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\bitblockold.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\blake.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\blake256.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\blake256r14.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\blake256r8.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\bmw.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\bmw256.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\bufius.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\ckolivas.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\credits.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\cryptonight.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\cryptonightHawaiigw8l4.bin")
+   FileDelete($_fInstallDir&"sgminer-gm\cubehash.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\cubehash256.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\darkcoin-mod.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\darkcoin.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\diamond.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\echo.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\equihash-param.h")
+   FileDelete($_fInstallDir&"sgminer-gm\equihash.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\ethash-genoil.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\ethash.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\fresh.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\fugue.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\fuguecoin.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\groestl.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\groestl256.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\groestlcoin-v1.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\groestlcoin.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\hamsi.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\hamsi_helper.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\hamsi_helper_big.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\inkcoin.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\jh.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\keccak.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\keccak1600.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\luffa.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\lyra2.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\lyra2re.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\lyra2rev2.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\lyra2v2.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\marucoin-mod.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\marucoin-modold.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\marucoin.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\maxcoin.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\myriadcoin-groestl.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\neoscrypt.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\panama.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\pluck.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\psw.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\quarkcoin.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\qubitcoin.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\sgminer.exe")
+   FileDelete($_fInstallDir&"sgminer-gm\shabal.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\shavite.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\sifcoin.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\simd.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\skein.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\skein256.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\talkcoin-mod.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\twecoin.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\vanilla.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\whirlcoin.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\whirlpool.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\whirlpoolx.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\wolf-aes.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\wolf-skein.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\x14.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\x14old.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\xmr.conf")
+   FileDelete($_fInstallDir&"sgminer-gm\yescrypt-multi.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\yescrypt.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\yescrypt_essential.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\zuikkis.cl")
+   FileDelete($_fInstallDir&"sgminer-gm\")
 
    If Not FileExists($_fInstallDir&"\au3miner.ini") Then FileDelete($_fInstallDir)
 EndFunc
@@ -280,10 +438,10 @@ Global $_pHOdlMiner = ProcessExists("hodlminer.exe")
 Global $_sHOdlMiner_auto
 Global $_sHOdlMiner_persist
 Global $_iHOdlMiner_state ; 0 default/not running, 1 launching, 2 running, 3 closing
-Global $_pCPUMinerMulti = ProcessExists("minerd.exe")
-Global $_sCPUMinerMulti_auto
-Global $_sCPUMinerMulti_persist
-Global $_iCPUMinerMulti_state ; 0 default/not running, 1 launching, 2 running, 3 closing
+Global $_pSGMinerGM = ProcessExists("sgminer.exe")
+Global $_sSGMinerGM_auto
+Global $_sSGMinerGM_persist
+Global $_iSGMinerGM_state ; 0 default/not running, 1 launching, 2 running, 3 closing
 Global $_sKeepAwake
 Global $_sMonitorInternet
 Global $_sInternetState ; 0 default/connect, >1::failed pings, <0 miners closed due to disconnection (Claymore 1, Qt 2, Ethminer 4, HodlWolf 8, HodlCore 16)
@@ -354,8 +512,8 @@ Func SettingsRead()
    $_sHOdlMinerWolf_persist = IniRead($_sInstallDir&"\au3miner.ini", "settings", "hodlminerwolfpersist", 0)
    $_sHOdlMiner_auto = IniRead($_sInstallDir&"\au3miner.ini", "settings", "hodlminerauto", 0)
    $_sHOdlMiner_persist = IniRead($_sInstallDir&"\au3miner.ini", "settings", "hodlminerpersist", 0)
-   $_sCPUMinerMulti_auto = IniRead($_sInstallDir&"\au3miner.ini", "settings", "cpuminermultiauto", 0)
-   $_sCPUMinerMulti_persist = IniRead($_sInstallDir&"\au3miner.ini", "settings", "cpuminermultipersist", 0)
+   $_sSGMinerGM_auto = IniRead($_sInstallDir&"\au3miner.ini", "settings", "SGMinerGMauto", 0)
+   $_sSGMinerGM_persist = IniRead($_sInstallDir&"\au3miner.ini", "settings", "SGMinerGMpersist", 0)
    $_sKeepAwake = IniRead($_sInstallDir&"\au3miner.ini", "settings", "keepawake", 0)
    $_sMonitorInternet = IniRead($_sInstallDir&"\au3miner.ini", "settings", "monitorinternet", 0)
    $_sCloseMiners = IniRead($_sInstallDir&"\au3miner.ini", "settings", "closeminers", 0)
@@ -418,8 +576,8 @@ Func SettingsWrite()
    $_sHOdlMinerWolf_persist = GUICtrlRead($_uHOdlMinerWolf_persist)
    $_sHOdlMiner_auto = GUICtrlRead($_uHOdlMiner_auto)
    $_sHOdlMiner_persist = GUICtrlRead($_uHOdlMiner_persist)
-   $_sCPUMinerMulti_auto = GUICtrlRead($_uCPUMinerMulti_auto)
-   $_sCPUMinerMulti_persist = GUICtrlRead($_uCPUMinerMulti_persist)
+   $_sSGMinerGM_auto = GUICtrlRead($_uSGMinerGM_auto)
+   $_sSGMinerGM_persist = GUICtrlRead($_uSGMinerGM_persist)
    $_sKeepAwake = GUICtrlRead($_uKeepAwake)
    $_sCloseMiners = GUICtrlRead($_uCloseMiners)
    $_sMonitorInternet = GUICtrlRead($_uMonitorInternet)
@@ -441,8 +599,8 @@ Func SettingsWrite()
    If $_uHOdlMinerWolf_persist <> $GUI_CHECKED Then $_uHOdlMinerWolf_persist = False
    If $_sHOdlMiner_auto <> $GUI_CHECKED Then $_sHOdlMiner_auto = False
    If $_uHOdlMiner_persist <> $GUI_CHECKED Then $_uHOdlMiner_persist = False
-   If $_sCPUMinerMulti_auto <> $GUI_CHECKED Then $_sCPUMinerMulti_auto = False
-   If $_uCPUMinerMulti_persist <> $GUI_CHECKED Then $_uCPUMinerMulti_persist = False
+   If $_sSGMinerGM_auto <> $GUI_CHECKED Then $_sSGMinerGM_auto = False
+   If $_uSGMinerGM_persist <> $GUI_CHECKED Then $_uSGMinerGM_persist = False
    If $_sKeepAwake <> $GUI_CHECKED Then $_sKeepAwake = False
    If $_sCloseMiners <> $GUI_CHECKED Then $_sCloseMiners = False
    If $_sMonitorInternet <> $GUI_CHECKED Then $_sMonitorInternet = False
@@ -476,8 +634,8 @@ Func SettingsWrite()
    IniWrite($_sInstallDir&"\au3miner.ini", "settings", "hodlminerwolfpersist", $_uHOdlMinerWolf_persist)
    IniWrite($_sInstallDir&"\au3miner.ini", "settings", "hodlminerauto", $_sHOdlMiner_auto)
    IniWrite($_sInstallDir&"\au3miner.ini", "settings", "hodlminerpersist", $_uHOdlMiner_persist)
-   IniWrite($_sInstallDir&"\au3miner.ini", "settings", "cpuminermultiauto", $_sCPUMinerMulti_auto)
-   IniWrite($_sInstallDir&"\au3miner.ini", "settings", "cpuminermultipersist", $_uCPUMinerMulti_persist)
+   IniWrite($_sInstallDir&"\au3miner.ini", "settings", "SGMinerGMauto", $_sSGMinerGM_auto)
+   IniWrite($_sInstallDir&"\au3miner.ini", "settings", "SGMinerGMpersist", $_uSGMinerGM_persist)
    IniWrite($_sInstallDir&"\au3miner.ini", "settings", "keepawake", $_sKeepAwake)
    IniWrite($_sInstallDir&"\au3miner.ini", "settings", "closeminers", $_sCloseMiners)
    IniWrite($_sInstallDir&"\au3miner.ini", "settings", "monitorinternet", $_sMonitorInternet)
@@ -615,7 +773,7 @@ GUICtrlCreateTabItem("Home")
    GUICtrlSetState($_uHOdlMinerHODL, $GUI_CHECKED)
    GUICtrlSetState($_uHOdlMinerHODL, $GUI_DISABLE)
 
-   $_uCPUMinerMulti_launch = GUICtrlCreateButton("cpuminer-multi", 20, 251, 140, 37)
+   $_uSGMinerGM_launch = GUICtrlCreateButton("sgminer-gm", 20, 251, 140, 37)
    $_uCPUMinerXMR = GUICtrlCreateCheckbox("ɱ", 170, 259)
    GUICtrlSetState($_uCPUMinerXMR, $GUI_CHECKED)
    GUICtrlSetState($_uCPUMinerXMR, $GUI_DISABLE)
@@ -660,10 +818,10 @@ GUICtrlCreateTabItem("Settings")
    GUICtrlSetState($_uHOdlMiner_auto, $_sHOdlMiner_auto)
    $_uHOdlMiner_persist = GUICtrlCreateCheckbox("keep alive", 290, 245)
    GUICtrlSetState($_uHOdlMiner_persist, $_sHOdlMiner_persist)
-   $_uCPUMinerMulti_auto = GUICtrlCreateCheckbox("Start cpuminer-multi as soon as au3miner launches", 20, 265)
-   GUICtrlSetState($_uCPUMinerMulti_auto, $_sCPUMinerMulti_auto)
-   $_uCPUMinerMulti_persist = GUICtrlCreateCheckbox("keep alive", 290, 265)
-   GUICtrlSetState($_uCPUMinerMulti_persist, $_sCPUMinerMulti_persist)
+   $_uSGMinerGM_auto = GUICtrlCreateCheckbox("Start sgminer-gm as soon as au3miner launches", 20, 265)
+   GUICtrlSetState($_uSGMinerGM_auto, $_sSGMinerGM_auto)
+   $_uSGMinerGM_persist = GUICtrlCreateCheckbox("keep alive", 290, 265)
+   GUICtrlSetState($_uSGMinerGM_persist, $_sSGMinerGM_persist)
    $_uManageSettings = GUICtrlCreateButton("Manage settings", 18, 289, 100)
    $_uSaveSettings = GUICtrlCreateButton("Save au3miner settings", 160, 289, 200)
 
@@ -949,8 +1107,8 @@ Func HOdlMinerWolf()
    $_iHOdlMinerWolf_state = 1 ; launching
 EndFunc
 
-Func CPUMinerMulti()
-   Global $_pCPUMinerMulti
+Func SGMinerGM()
+   Global $_pSGMinerGM
 
    Local $_sMPool = GUICtrlRead($_uMPool)
    Local $_sMServer = GUICtrlRead($_uMServer)
@@ -960,13 +1118,21 @@ Func CPUMinerMulti()
    Local $_sMWorkerPassword = GUICtrlRead($_uMWorkerPassword)
    Local $_sMOpts = GUICtrlRead($_uMOpts)
 
+   #cs
    Local $_MBatch
-   $_sMBatch = "cd "&$_sInstallDir&"cpuminer-multi"&@CRLF&"minerd.exe -a cryptonight -o "&$_sMServer&" -u "&$_sMPayoutAddress&" -p x "&$_sMOpts
-   If FileExists($_sInstallDir&"au3-cpuminer-multi.bat") Then FileDelete($_sInstallDir&"au3-cpuminer-multi.bat")
-   FileWrite($_sInstallDir&"au3-cpuminer-multi.bat", $_sMBatch)
-   $_pCPUMinerMulti = Run(@ComSpec&" /K au3-cpuminer-multi.bat", $_sInstallDir)
+   $_sMBatch = "cd "&$_sInstallDir&"sgminer-gm"&@CRLF&"minerd.exe -a cryptonight -o "&$_sMServer&" -u "&$_sMPayoutAddress&" -p x "&$_sMOpts
+   If FileExists($_sInstallDir&"au3-sgminer-gm.bat") Then FileDelete($_sInstallDir&"au3-sgminer-gm.bat")
+   FileWrite($_sInstallDir&"au3-sgminer-gm.bat", $_sMBatch)
+   $_pSGMinerGM = Run(@ComSpec&" /K au3-sgminer-gm.bat", $_sInstallDir)
+   #ce
 
-   $_iCPUMinerMulti_state = 1 ; launching
+   Local $_MBatch
+   $_sMBatch = "cd "&$_sInstallDir&"sgminer-gm"&@CRLF&"sgminer.exe --config xmr.conf"
+   If FileExists($_sInstallDir&"au3-sgminer-gm.bat") Then FileDelete($_sInstallDir&"au3-sgminer-gm.bat")
+   FileWrite($_sInstallDir&"au3-sgminer-gm.bat", $_sMBatch)
+   $_pSGMinerGM = Run(@ComSpec&" /K au3-sgminer-gm.bat", $_sInstallDir)
+
+   $_iSGMinerGM_state = 1 ; launching
 EndFunc
 
 Func CheckInternet()
@@ -1005,7 +1171,7 @@ If $_sQtMiner_auto == 1 And Not $_pQtMiner Then QtMiner()
 If $_sEthminerGenoil_auto == 1 And Not $_pEthminerGenoil Then EthminerGenoil()
 If $_sHOdlMiner_auto == 1 And Not $_pHOdlMiner Then HOdlMiner()
 If $_sHOdlMinerWolf_auto == 1 And Not $_pHOdlMinerWolf Then HOdlMinerWolf()
-If $_sCPUMinerMulti_auto == 1 And Not $_pCPUMinerMulti Then CPUMinerMulti()
+If $_sSGMinerGM_auto == 1 And Not $_pSGMinerGM Then SGMinerGM()
 If $_sKeepAwake Then _PowerKeepAlive()
 OnAutoItExitRegister("PreExit")
 OnAutoItExitRegister("_PowerResetState")
@@ -1046,9 +1212,9 @@ While 1
 	  Case $_uHOdlMinerWolf_launch
 		 $_pHOdlMinerWolf = ProcessExists("hodlminer-wolf.exe")
 		 If Not $_pHOdlMinerWolf Then HOdlMinerWolf()
-	  Case $_uCPUMinerMulti_launch
-		 $_pCPUMinerMulti = ProcessExists("minerd.exe")
-		 If Not $_pCPUMinerMulti Then CPUMinerMulti()
+	  Case $_uSGMinerGM_launch
+		 $_pSGMinerGM = ProcessExists("minerd.exe")
+		 If Not $_pSGMinerGM Then SGMinerGM()
 	  Case $_uSaveSettings
 		 SettingsWrite()
 	  Case $_uManageSettings
@@ -1378,40 +1544,40 @@ While 1
    EndSelect
 
    Select
-	  Case $_iCPUMinerMulti_state == 1
-		 GUICtrlSetState($_uCPUMinerMulti_launch, $GUI_DISABLE)
-		 GUICtrlSetData($_uCPUMinerMulti_launch, "Launching cpuminer-multi...")
-		 If ProcessExists($_pCPUMinerMulti) Then
-			$_iCPUMinerMulti_state = 2
-			GUICtrlSetData($_uCPUMinerMulti_launch, "cpuminer-multi is running")
+	  Case $_iSGMinerGM_state == 1
+		 GUICtrlSetState($_uSGMinerGM_launch, $GUI_DISABLE)
+		 GUICtrlSetData($_uSGMinerGM_launch, "Launching sgminer-gm...")
+		 If ProcessExists($_pSGMinerGM) Then
+			$_iSGMinerGM_state = 2
+			GUICtrlSetData($_uSGMinerGM_launch, "sgminer-gm is running")
 		 EndIf
-	  Case $_iCPUMinerMulti_state == 2
-		 If Not ProcessExists($_pCPUMinerMulti) Then
-			If $_sCPUMinerMulti_persist == 1 Then
-			   CPUMinerMulti()
-			   $_iCPUMinerMulti_state = 1
+	  Case $_iSGMinerGM_state == 2
+		 If Not ProcessExists($_pSGMinerGM) Then
+			If $_sSGMinerGM_persist == 1 Then
+			   SGMinerGM()
+			   $_iSGMinerGM_state = 1
 			Else
-			   $_iCPUMinerMulti_state = 3
-			   GUICtrlSetData($_uCPUMinerMulti_launch, "cpuminer-multi closed")
+			   $_iSGMinerGM_state = 3
+			   GUICtrlSetData($_uSGMinerGM_launch, "sgminer-gm closed")
 			EndIf
 		 EndIf
 		 If WinExists("minerd.exe", "&Close program") Then
 			WinClose("minerd.exe", "&Close program")
-			ProcessClose($_pCPUMinerMulti)
-			CPUMinerMulti()
+			ProcessClose($_pSGMinerGM)
+			SGMinerGM()
 		 EndIf
-	  Case $_iCPUMinerMulti_state == 3
+	  Case $_iSGMinerGM_state == 3
 		 Do
-			ProcessClose($_pCPUMinerMulti)
-		 Until Not ProcessExists($_pCPUMinerMulti)
-		 $_iCPUMinerMulti_state = 0
-		 GUICtrlSetState($_uCPUMinerMulti_launch, $GUI_ENABLE)
-		 GUICtrlSetData($_uCPUMinerMulti_launch, "cpuminer-multi")
+			ProcessClose($_pSGMinerGM)
+		 Until Not ProcessExists($_pSGMinerGM)
+		 $_iSGMinerGM_state = 0
+		 GUICtrlSetState($_uSGMinerGM_launch, $GUI_ENABLE)
+		 GUICtrlSetData($_uSGMinerGM_launch, "sgminer-gm")
 	  Case Else
-		 If ProcessExists($_pCPUMinerMulti) Then
-			GUICtrlSetState($_uCPUMinerMulti_launch, $GUI_DISABLE)
-			$_iCPUMinerMulti_state = 2
-			GUICtrlSetData($_uCPUMinerMulti_launch, "cpuminer-multi is running")
+		 If ProcessExists($_pSGMinerGM) Then
+			GUICtrlSetState($_uSGMinerGM_launch, $GUI_DISABLE)
+			$_iSGMinerGM_state = 2
+			GUICtrlSetData($_uSGMinerGM_launch, "sgminer-gm is running")
 		 EndIf
    EndSelect
 
