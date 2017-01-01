@@ -47,7 +47,6 @@ Temporary Items
 .apdisk
 
 # au3miner development-related items that shouldn't be synced up
-utility
 drivers
 *charity.bat*
 *_log.txt*
