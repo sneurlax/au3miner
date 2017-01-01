@@ -48,6 +48,14 @@ Temporary Items
 
 # au3miner development-related items that shouldn't be synced up
 drivers
+utility/SpybotAntiBeacon/*
 *charity.bat*
 *_log.txt*
 eth-proxy.pid
+utility/au3miner.ini
+utility/autohodl.au3
+utility/bitphila.priv
+utility/bitphila.pub
+utility/GPU-Z.1.9.0.exe
+utility/nomachine_5.1.44_1.exe
+utility/patchset.au3
