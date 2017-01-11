@@ -92,37 +92,6 @@ Func Install($_fInstallDir)
    FileInstall("C:\github\au3miner\qtminer\libmicrohttpd-dll.dll", $_fInstallDir&"ethminer-genoil\libmicrohttpd-dll.dll", 0)
    FileInstall("C:\github\au3miner\qtminer\OpenCL.dll", $_fInstallDir&"ethminer-genoil\OpenCL.dll", 0)
 
-   If Not FileExists($_fInstallDir&"hodlminer\") Then
-	  Do
-		  DirCreate($_fInstallDir&"hodlminer\")
-	  Until FileExists($_fInstallDir&"hodlminer\")
-   EndIf
-   FileInstall("C:\github\au3miner\hodlminer\hodlminer.exe", $_fInstallDir&"hodlminer\hodlminer.exe", 0)
-
-   If Not FileExists($_fInstallDir&"hodlminer-wolf\") Then
-	  Do
-		  DirCreate($_fInstallDir&"hodlminer-wolf\")
-	  Until FileExists($_fInstallDir&"hodlminer-wolf\")
-   EndIf
-   FileInstall("C:\github\au3miner\hodlminer-wolf\hodlminer-wolf.exe", $_fInstallDir&"hodlminer-wolf\hodlminer-wolf.exe", 1)
-   FileInstall("C:\github\au3miner\hodlminer-wolf\libcurl-4.dll", $_fInstallDir&"hodlminer-wolf\libcurl-4.dll", 0)
-   FileInstall("C:\github\au3miner\hodlminer-wolf\libeay32.dll", $_fInstallDir&"hodlminer-wolf\libeay32.dll", 0)
-   FileInstall("C:\github\au3miner\hodlminer-wolf\libffi-6.dll", $_fInstallDir&"hodlminer-wolf\libffi-6.dll", 0)
-   FileInstall("C:\github\au3miner\hodlminer-wolf\libgmp-10.dll", $_fInstallDir&"hodlminer-wolf\libgmp-10.dll", 0)
-   FileInstall("C:\github\au3miner\hodlminer-wolf\libgnutls-30.dll", $_fInstallDir&"hodlminer-wolf\libgnutls-30.dll", 0)
-   FileInstall("C:\github\au3miner\hodlminer-wolf\libhogweed-4-1.dll", $_fInstallDir&"hodlminer-wolf\libhogweed-4-1.dll", 0)
-   FileInstall("C:\github\au3miner\hodlminer-wolf\libiconv-2.dll", $_fInstallDir&"hodlminer-wolf\libiconv-2.dll", 0)
-   FileInstall("C:\github\au3miner\hodlminer-wolf\libidn-11.dll", $_fInstallDir&"hodlminer-wolf\libidn-11.dll", 0)
-   FileInstall("C:\github\au3miner\hodlminer-wolf\libintl-8.dll", $_fInstallDir&"hodlminer-wolf\libintl-8.dll", 0)
-   FileInstall("C:\github\au3miner\hodlminer-wolf\libnettle-6-1.dll", $_fInstallDir&"hodlminer-wolf\libnettle-6-1.dll", 0)
-   FileInstall("C:\github\au3miner\hodlminer-wolf\libp11-kit-0.dll", $_fInstallDir&"hodlminer-wolf\libp11-kit-0.dll", 0)
-   FileInstall("C:\github\au3miner\hodlminer-wolf\librtmp-1.dll", $_fInstallDir&"hodlminer-wolf\librtmp-1.dll", 0)
-   FileInstall("C:\github\au3miner\hodlminer-wolf\libssh2-1.dll", $_fInstallDir&"hodlminer-wolf\libssh2-1.dll", 0)
-   FileInstall("C:\github\au3miner\hodlminer-wolf\libtasn1-6.dll", $_fInstallDir&"hodlminer-wolf\libtasn1-6.dll", 0)
-   FileInstall("C:\github\au3miner\hodlminer-wolf\libwinpthread-1.dll", $_fInstallDir&"hodlminer-wolf\libwinpthread-1.dll", 0)
-   FileInstall("C:\github\au3miner\hodlminer-wolf\ssleay32.dll", $_fInstallDir&"hodlminer-wolf\ssleay32.dll", 0)
-   FileInstall("C:\github\au3miner\hodlminer-wolf\zlib1.dll", $_fInstallDir&"hodlminer-wolf\zlib1.dll", 0)
-
    If Not FileExists($_fInstallDir&"sgminer-gm\") Then
 	  Do
 		  DirCreate($_fInstallDir&"sgminer-gm\")
@@ -251,35 +220,12 @@ Func Uninstall()
    FileDelete($_fInstallDir&"qtminer\bearer\qnativewifibearer.dll")
    FileDelete($_fInstallDir&"qtminer\bearer\")
 
-   FileDelete($_fInstallDir&"hodlminer\hodlminer.exe")
-   FileDelete($_fInstallDir&"hodlminer\")
-
    FileDelete($_fInstallDir&"ethminer-genoil\cudart64_75.dll")
    FileDelete($_fInstallDir&"ethminer-genoil\ethminer-genoil.exel")
    FileDelete($_fInstallDir&"ethminer-genoil\libcurl.dll")
    FileDelete($_fInstallDir&"ethminer-genoil\libmicrohttpd-dll.dll")
    FileDelete($_fInstallDir&"ethminer-genoil\OpenCL.dll")
    FileDelete($_fInstallDir&"ethminer-genoil\")
-
-   FileDelete($_fInstallDir&"hodlminer-wolf\hodlminer-wolf.exe")
-   FileDelete($_fInstallDir&"hodlminer-wolf\libcurl-4.dll")
-   FileDelete($_fInstallDir&"hodlminer-wolf\libeay32.dll")
-   FileDelete($_fInstallDir&"hodlminer-wolf\libffi-6.dll")
-   FileDelete($_fInstallDir&"hodlminer-wolf\libgmp-10.dll")
-   FileDelete($_fInstallDir&"hodlminer-wolf\libgnutls-30.dll")
-   FileDelete($_fInstallDir&"hodlminer-wolf\libhogweed-4-1.dll")
-   FileDelete($_fInstallDir&"hodlminer-wolf\libiconv-2.dll")
-   FileDelete($_fInstallDir&"hodlminer-wolf\libidn-11.dll")
-   FileDelete($_fInstallDir&"hodlminer-wolf\libintl-8.dll")
-   FileDelete($_fInstallDir&"hodlminer-wolf\libnettle-6-1.dll")
-   FileDelete($_fInstallDir&"hodlminer-wolf\libp11-kit-0.dll")
-   FileDelete($_fInstallDir&"hodlminer-wolf\librtmp-1.dll")
-   FileDelete($_fInstallDir&"hodlminer-wolf\libssh2-1.dll")
-   FileDelete($_fInstallDir&"hodlminer-wolf\libtasn1-6.dll")
-   FileDelete($_fInstallDir&"hodlminer-wolf\libwinpthread-1.dll")
-   FileDelete($_fInstallDir&"hodlminer-wolf\ssleay32.dll")
-   FileDelete($_fInstallDir&"hodlminer-wolf\zlib1.dll")
-   FileDelete($_fInstallDir&"hodlminer-wolf\")
 
    FileDelete($_fInstallDir&"sgminer-gm\aes_helper.cl")
    FileDelete($_fInstallDir&"sgminer-gm\alexkarnew.cl")
@@ -430,21 +376,13 @@ Global $_pEthminerGenoil = ProcessExists("etherminer-genoil.exe")
 Global $_sEthminerGenoil_auto
 Global $_sEthminerGenoil_persist
 Global $_iEthminerGenoil_state ; 0 default/not running, 1 launching, 2 running, 3 closing
-Global $_pHOdlMinerWolf = ProcessExists("hodlminer-wolf.exe")
-Global $_sHOdlMinerWolf_auto
-Global $_sHOdlMinerWolf_persist
-Global $_iHOdlMinerWolf_state ; 0 default/not running, 1 launching, 2 running, 3 closing
-Global $_pHOdlMiner = ProcessExists("hodlminer.exe")
-Global $_sHOdlMiner_auto
-Global $_sHOdlMiner_persist
-Global $_iHOdlMiner_state ; 0 default/not running, 1 launching, 2 running, 3 closing
 Global $_pSGMinerGM = ProcessExists("sgminer.exe")
 Global $_sSGMinerGM_auto
 Global $_sSGMinerGM_persist
 Global $_iSGMinerGM_state ; 0 default/not running, 1 launching, 2 running, 3 closing
 Global $_sKeepAwake
 Global $_sMonitorInternet
-Global $_sInternetState ; 0 default/connect, >1::failed pings, <0 miners closed due to disconnection (Claymore 1, Qt 2, Ethminer 4, HodlWolf 8, HodlCore 16)
+Global $_sInternetState ; 0 default/connect, >1::failed pings, <0 miners closed due to disconnection (Claymore 1, Qt 2, Ethminer 4)
 Global $_sCloseMiners
 Global $_pMinersClosed
 Global $_sCleanExit
@@ -508,10 +446,6 @@ Func SettingsRead()
    $_sQtMiner_persist = IniRead($_sInstallDir&"\au3miner.ini", "settings", "qtminerpersist", 0)
    $_sEthminerGenoil_auto = IniRead($_sInstallDir&"\au3miner.ini", "settings", "ethminergenoiminerauto", 0)
    $_sEthminerGenoil_persist = IniRead($_sInstallDir&"\au3miner.ini", "settings", "ethminergenoilpersist", 0)
-   $_sHOdlMinerWolf_auto = IniRead($_sInstallDir&"\au3miner.ini", "settings", "hodlminerwolfauto", 0)
-   $_sHOdlMinerWolf_persist = IniRead($_sInstallDir&"\au3miner.ini", "settings", "hodlminerwolfpersist", 0)
-   $_sHOdlMiner_auto = IniRead($_sInstallDir&"\au3miner.ini", "settings", "hodlminerauto", 0)
-   $_sHOdlMiner_persist = IniRead($_sInstallDir&"\au3miner.ini", "settings", "hodlminerpersist", 0)
    $_sSGMinerGM_auto = IniRead($_sInstallDir&"\au3miner.ini", "settings", "SGMinerGMauto", 0)
    $_sSGMinerGM_persist = IniRead($_sInstallDir&"\au3miner.ini", "settings", "SGMinerGMpersist", 0)
    $_sKeepAwake = IniRead($_sInstallDir&"\au3miner.ini", "settings", "keepawake", 0)
@@ -540,15 +474,8 @@ Func SettingsRead()
    $_sSCWorkerPassword = IniRead($_sInstallDir&"\au3miner.ini", "siacoin", "workerpassword", "charity")
    $_sSCOpts = IniRead($_sInstallDir&"\au3miner.ini", "siacoin", "customoptions", "")
 
-   $_sHServer = IniRead($_sInstallDir&"\au3miner.ini", "hodlcoin", "server", "stratum+tcp://hodl.blockquarry.com:3032")
-   $_sHPayoutAddress = IniRead($_sInstallDir&"\au3miner.ini", "hodlcoin", "payoutaddress", "HKWfa34PpDrJR7LvbxuZoCMyARyEAj1JSy")
-   $_sHPoolUsername = IniRead($_sInstallDir&"\au3miner.ini", "hodlcoin", "poolusername", "au3miner")
-   $_sHWorkerLabel = IniRead($_sInstallDir&"\au3miner.ini", "hodlcoin", "workerlabel", "au3miner")
-   $_sHWorkerPassword = IniRead($_sInstallDir&"\au3miner.ini", "hodlcoin", "workerpassword", "charity")
-   $_sHOpts = IniRead($_sInstallDir&"\au3miner.ini", "hodlcoin", "customoptions", "")
-
    $_sMServer = IniRead($_sInstallDir&"\au3miner.ini", "monero", "server", "stratum+tcp://xmr.crypto-pool.fr:3333")
-   $_sMPayoutAddress = IniRead($_sInstallDir&"\au3miner.ini", "monero", "payoutaddress", "44p5Yi4hkpXdFmA2cCFZFAAoYjop1P2YGBKUj7jZ6hKseyGGxKEU8em7VQuHCeAeUJS3nHRzDSA2nMMYy7nukk5B8A1epsA")
+   $_sMPayoutAddress = IniRead($_sInstallDir&"\au3miner.ini", "monero", "payoutaddress", "4Aqm2RebbpmZEATdPjzpHodLJeYMW8C5oX79jQxboJQhJ3sUU48BwmrerBbFfrVHi8acW6D6EgFTobGaoH2EnK1MVqhYmrf")
    $_sMPoolUsername = IniRead($_sInstallDir&"\au3miner.ini", "monero", "poolusername", "au3miner")
    $_sMWorkerLabel = IniRead($_sInstallDir&"\au3miner.ini", "monero", "workerlabel", "au3miner")
    $_sMWorkerPassword = IniRead($_sInstallDir&"\au3miner.ini", "monero", "workerpassword", "charity")
@@ -572,10 +499,6 @@ Func SettingsWrite()
    $_sQtMiner_persist = GUICtrlRead($_uQtMiner_persist)
    $_sEthminerGenoil_auto = GUICtrlRead($_uEthminerGenoil_auto)
    $_sEthminerGenoil_persist = GUICtrlRead($_uEthminerGenoil_persist)
-   $_sHOdlMinerWolf_auto = GUICtrlRead($_uHOdlMinerWolf_auto)
-   $_sHOdlMinerWolf_persist = GUICtrlRead($_uHOdlMinerWolf_persist)
-   $_sHOdlMiner_auto = GUICtrlRead($_uHOdlMiner_auto)
-   $_sHOdlMiner_persist = GUICtrlRead($_uHOdlMiner_persist)
    $_sSGMinerGM_auto = GUICtrlRead($_uSGMinerGM_auto)
    $_sSGMinerGM_persist = GUICtrlRead($_uSGMinerGM_persist)
    $_sKeepAwake = GUICtrlRead($_uKeepAwake)
@@ -595,10 +518,6 @@ Func SettingsWrite()
    If $_sQtMiner_persist <> $GUI_CHECKED Then $_sQtMiner_persist = False
    If $_sEthminerGenoil_auto <> $GUI_CHECKED Then $_sEthminerGenoil_auto = False
    If $_sEthminerGenoil_persist <> $GUI_CHECKED Then $_sEthminerGenoil_persist = False
-   If $_sHOdlMinerWolf_auto <> $GUI_CHECKED Then $_sHOdlMinerWolf_auto = False
-   If $_uHOdlMinerWolf_persist <> $GUI_CHECKED Then $_uHOdlMinerWolf_persist = False
-   If $_sHOdlMiner_auto <> $GUI_CHECKED Then $_sHOdlMiner_auto = False
-   If $_uHOdlMiner_persist <> $GUI_CHECKED Then $_uHOdlMiner_persist = False
    If $_sSGMinerGM_auto <> $GUI_CHECKED Then $_sSGMinerGM_auto = False
    If $_uSGMinerGM_persist <> $GUI_CHECKED Then $_uSGMinerGM_persist = False
    If $_sKeepAwake <> $GUI_CHECKED Then $_sKeepAwake = False
@@ -629,11 +548,6 @@ Func SettingsWrite()
    IniWrite($_sInstallDir&"\au3miner.ini", "settings", "qtminerauto", $_sQtMiner_auto)
    IniWrite($_sInstallDir&"\au3miner.ini", "settings", "qtminerpersist", $_sQtMiner_persist)
    IniWrite($_sInstallDir&"\au3miner.ini", "settings", "ethminergenoilauto", $_sEthminerGenoil_auto)
-   IniWrite($_sInstallDir&"\au3miner.ini", "settings", "ethminergenoilpersist", $_uHOdlMinerWolf_persist)
-   IniWrite($_sInstallDir&"\au3miner.ini", "settings", "hodlminerwolfauto", $_sHOdlMinerWolf_auto)
-   IniWrite($_sInstallDir&"\au3miner.ini", "settings", "hodlminerwolfpersist", $_uHOdlMinerWolf_persist)
-   IniWrite($_sInstallDir&"\au3miner.ini", "settings", "hodlminerauto", $_sHOdlMiner_auto)
-   IniWrite($_sInstallDir&"\au3miner.ini", "settings", "hodlminerpersist", $_uHOdlMiner_persist)
    IniWrite($_sInstallDir&"\au3miner.ini", "settings", "SGMinerGMauto", $_sSGMinerGM_auto)
    IniWrite($_sInstallDir&"\au3miner.ini", "settings", "SGMinerGMpersist", $_uSGMinerGM_persist)
    IniWrite($_sInstallDir&"\au3miner.ini", "settings", "keepawake", $_sKeepAwake)
@@ -699,24 +613,6 @@ Func SCSettingsWrite()
    IniWrite($_sInstallDir&"\au3miner.ini", "siacoin", "customoptions", $_sSCOpts)
 EndFunc
 
-Func HSettingsWrite()
-   $_sHPool = GUICtrlRead($_uHPool)
-   $_sHServer = GUICtrlRead($_uHServer)
-   $_sHPayoutAddress = GUICtrlRead($_uHPayoutAddress)
-   $_sHPoolUsername = GUICtrlRead($_uHPoolUsername)
-   $_sHWorkerLabel = GUICtrlRead($_uHWorkerLabel)
-   $_sHWorkerPassword = GUICtrlRead($_uHWorkerPassword)
-   $_sHOpts = GUICtrlRead($_uHOpts)
-
-   IniWrite($_sInstallDir&"\au3miner.ini", "hodlcoin", "pool", $_sHPool)
-   IniWrite($_sInstallDir&"\au3miner.ini", "hodlcoin", "server", $_sHServer)
-   IniWrite($_sInstallDir&"\au3miner.ini", "hodlcoin", "payoutaddress", $_sHPayoutAddress)
-   IniWrite($_sInstallDir&"\au3miner.ini", "hodlcoin", "poolusername", $_sHPoolUsername)
-   IniWrite($_sInstallDir&"\au3miner.ini", "hodlcoin", "workerlabel", $_sHWorkerLabel)
-   IniWrite($_sInstallDir&"\au3miner.ini", "hodlcoin", "workerpassword", $_sHWorkerPassword)
-   IniWrite($_sInstallDir&"\au3miner.ini", "hodlcoin", "customoptions", $_sHOpts)
-EndFunc
-
 Func MSettingsWrite()
    $_sMPool = GUICtrlRead($_uMPool)
    $_sMServer = GUICtrlRead($_uMServer)
@@ -763,16 +659,6 @@ GUICtrlCreateTabItem("Home")
    GUICtrlSetState($_uEthminerETH, $GUI_CHECKED)
    GUICtrlSetState($_uEthminerETH, $GUI_DISABLE)
 
-   $_uHOdlMinerWolf_launch = GUICtrlCreateButton("HOdlminer-wolf", 20, 167, 140, 37)
-   $_uHOdlMinerWolfHODL = GUICtrlCreateCheckbox("HODL", 170, 175)
-   GUICtrlSetState($_uHOdlMinerWolfHODL, $GUI_CHECKED)
-   GUICtrlSetState($_uHOdlMinerWolfHODL, $GUI_DISABLE)
-
-   $_uHOdlMiner_launch = GUICtrlCreateButton("HOdlminer", 20, 209, 140, 37)
-   $_uHOdlMinerHODL = GUICtrlCreateCheckbox("HODL", 170, 217)
-   GUICtrlSetState($_uHOdlMinerHODL, $GUI_CHECKED)
-   GUICtrlSetState($_uHOdlMinerHODL, $GUI_DISABLE)
-
    $_uSGMinerGM_launch = GUICtrlCreateButton("sgminer-gm", 20, 251, 140, 37)
    $_uCPUMinerXMR = GUICtrlCreateCheckbox("ɱ", 170, 259)
    GUICtrlSetState($_uCPUMinerXMR, $GUI_CHECKED)
@@ -810,14 +696,6 @@ GUICtrlCreateTabItem("Settings")
    GUICtrlSetState($_uEthminerGenoil_auto, $_sEthminerGenoil_auto)
    $_uEthminerGenoil_persist = GUICtrlCreateCheckbox("keep alive", 290, 205)
    GUICtrlSetState($_uEthminerGenoil_persist, $_sEthminerGenoil_persist)
-   $_uHOdlMinerWolf_auto = GUICtrlCreateCheckbox("Start hodlminer-wolf as soon as au3miner launches", 20, 225)
-   GUICtrlSetState($_uHOdlMinerWolf_auto, $_sHOdlMinerWolf_auto)
-   $_uHOdlMinerWolf_persist = GUICtrlCreateCheckbox("keep alive", 290, 225)
-   GUICtrlSetState($_uHOdlMinerWolf_persist, $_sHOdlMinerWolf_persist)
-   $_uHOdlMiner_auto = GUICtrlCreateCheckbox("Start hodlminer as soon as au3miner launches", 20, 245)
-   GUICtrlSetState($_uHOdlMiner_auto, $_sHOdlMiner_auto)
-   $_uHOdlMiner_persist = GUICtrlCreateCheckbox("keep alive", 290, 245)
-   GUICtrlSetState($_uHOdlMiner_persist, $_sHOdlMiner_persist)
    $_uSGMinerGM_auto = GUICtrlCreateCheckbox("Start sgminer-gm as soon as au3miner launches", 20, 265)
    GUICtrlSetState($_uSGMinerGM_auto, $_sSGMinerGM_auto)
    $_uSGMinerGM_persist = GUICtrlCreateCheckbox("keep alive", 290, 265)
@@ -896,24 +774,6 @@ GUICtrlCreateTabItem("Monero")
    $_uMOpts = GUICtrlCreateInput($_sMOpts, 20, 190, 260, 20)
    GUICtrlCreateLabel("Custom options", 285, 195)
    $_uMSaveSettings = GUICtrlCreateButton("Save Monero settings", 164, 293, 200)
-
-GUICtrlCreateTabItem("HOdlcoin")
-   GUICtrlCreateLabel("Pool:", 20, 44)
-   $_uHPool = GUICtrlCreateCombo("Suprnova", 50, 40, 80)
-   GUICtrlSetData($_uHPool, "MaxMiners|Blockquarry| sᴏʟᴏ| ᴄᴜsᴛᴏᴍ")
-   $_uHServer = GUICtrlCreateInput($_sHServer, 20, 65, 260, 20)
-   GUICtrlCreateLabel("Server", 285, 70)
-   $_uHPayoutAddress = GUICtrlCreateInput($_sHPayoutAddress, 20, 90, 260, 20)
-   GUICtrlCreateLabel("Payout address", 285, 95)
-   $_uHPoolUsername = GUICtrlCreateInput($_sSCPoolUsername, 20, 115, 110)
-   GUICtrlCreateLabel("Pool username", 135, 120)
-   $_uHWorkerLabel = GUICtrlCreateInput($_sSCWorkerLabel, 20, 140, 110, 21)
-   GUICtrlCreateLabel("Worker label", 135, 145)
-   $_uHWorkerPassword = GUICtrlCreateInput($_sSCWorkerPassword, 20, 165, 110, 21, $ES_PASSWORD)
-   GUICtrlCreateLabel("Worker password", 135, 170)
-   $_uHOpts = GUICtrlCreateInput($_sHOpts, 20, 190, 260, 20)
-   GUICtrlCreateLabel("Custom options", 285, 195)
-   $_uHSaveSettings = GUICtrlCreateButton("Save HOdlcoin settings", 164, 293, 200)
 
 GUICtrlCreateTabItem("") ; end tabitem definition
 
@@ -1069,44 +929,6 @@ Func EthminerGenoil()
    $_iEthminerGenoil_state = 1 ; launching
 EndFunc
 
-Func HOdlMiner()
-   Global $_pHOdlMiner
-
-   Local $_sHPool = GUICtrlRead($_uHPool)
-   Local $_sHServer = GUICtrlRead($_uHServer)
-   Local $_sHPoolUsername = GUICtrlRead($_uHPoolUsername)
-   Local $_sHWorkerLabel = GUICtrlRead($_uHWorkerLabel)
-   Local $_sHWorkerPassword = GUICtrlRead($_uHWorkerPassword)
-   Local $_sHOpts = GUICtrlRead($_uHOpts)
-
-   Local $_HBatch
-   $_sBatch = "cd "&$_sInstallDir&"hodlminer"&@CRLF&"hodlminer.exe -a hodl -o "&$_sHServer&" -u "&$_sHPoolUsername&"."&$_sHWorkerLabel&" -p "&$_sHWorkerPassword&" "&$_sHOpts
-   If FileExists($_sInstallDir&"au3-hodlminer.bat") Then FileDelete($_sInstallDir&"au3-hodlminer.bat")
-   FileWrite($_sInstallDir&"au3-hodlminer.bat", $_sBatch)
-   $_pHOdlMiner = Run(@ComSpec&" /K au3-hodlminer.bat", $_sInstallDir)
-
-   $_iHOdlMiner_state = 1 ; launching
-EndFunc
-
-Func HOdlMinerWolf()
-   Global $_pHOdlMinerWolf
-
-   Local $_sHPool = GUICtrlRead($_uHPool)
-   Local $_sHServer = GUICtrlRead($_uHServer)
-   Local $_sHPoolUsername = GUICtrlRead($_uHPoolUsername)
-   Local $_sHWorkerLabel = GUICtrlRead($_uHWorkerLabel)
-   Local $_sHWorkerPassword = GUICtrlRead($_uHWorkerPassword)
-   Local $_sHOpts = GUICtrlRead($_uHOpts)
-
-   Local $_HBatch
-   $_sHBatch = "cd "&$_sInstallDir&"hodlminer-wolf"&@CRLF&"hodlminer-wolf.exe -a hodl -o "&$_sHServer&" -u "&$_sHPoolUsername&"."&$_sHWorkerLabel&" -p "&$_sHWorkerPassword&" "&$_sHOpts
-   If FileExists($_sInstallDir&"au3-hodlminer-wolf.bat") Then FileDelete($_sInstallDir&"au3-hodlminer-wolf.bat")
-   FileWrite($_sInstallDir&"au3-hodlminer-wolf.bat", $_sHBatch)
-   $_pHOdlMinerWolf = Run(@ComSpec&" /K au3-hodlminer-wolf.bat", $_sInstallDir)
-
-   $_iHOdlMinerWolf_state = 1 ; launching
-EndFunc
-
 Func SGMinerGM()
    Global $_pSGMinerGM
 
@@ -1120,14 +942,49 @@ Func SGMinerGM()
 
    #cs
    Local $_MBatch
-   $_sMBatch = "cd "&$_sInstallDir&"sgminer-gm"&@CRLF&"minerd.exe -a cryptonight -o "&$_sMServer&" -u "&$_sMPayoutAddress&" -p x "&$_sMOpts
+   $_sMBatch = "cd "&$_sInstallDir&"sgminer-gm"&@CRLF&"minerd.exe -a cryptonight -o "&$_sMServer&" -u "&$_sMPayoutAddress&"."&$_sMWorkerLabel&" -p x "&$_sMOpts
    If FileExists($_sInstallDir&"au3-sgminer-gm.bat") Then FileDelete($_sInstallDir&"au3-sgminer-gm.bat")
    FileWrite($_sInstallDir&"au3-sgminer-gm.bat", $_sMBatch)
    $_pSGMinerGM = Run(@ComSpec&" /K au3-sgminer-gm.bat", $_sInstallDir)
    #ce
 
-   Local $_MBatch
-   $_sMBatch = "cd "&$_sInstallDir&"sgminer-gm"&@CRLF&"sgminer.exe --config xmr.conf"
+   Local $_sMConfBatch
+   $_sMConfBatch = '' & @CRLF & _
+                   '{' & @CRLF & _
+                   '    "pools":' & @CRLF & _
+                   '    [' & @CRLF & _
+                   '        {' & @CRLF & _
+                   '            "name": "' & $_sMPool & '",' & @CRLF & _
+                   '            "url": "' & $_sMServer & '",' & @CRLF & _
+                   '            "user": "' & $_sMPayoutAddress & '.' & $_sMWorkerLabel & '",' & @CRLF & _
+                   '            "pass": "' & $_sMWorkerPassword & '",' & @CRLF & _
+                   '            "priority": "0",' & @CRLF & _
+                   '            "profile": "xmr"' & @CRLF & _
+                   '        }' & @CRLF & _
+                   '    ],' & @CRLF & _
+                   '    "profiles":' & @CRLF & _
+                   '    [' & @CRLF & _
+                   '        {' & @CRLF & _
+                   '            "name": "xmr",' & @CRLF & _
+                   '            "algorithm": "cryptonight",' & @CRLF & _
+                   '            "rawintensity": "1024",' & @CRLF & _
+                   '            "worksize": "8",' & @CRLF & _
+                   '            "gpu-engine": "1000,1050,1050,1000",' & @CRLF & _
+                   '            "gpu-memclock": "1500,500,1500,1500",' & @CRLF & _
+                   '            "gpu-powertune": "20,50,50,50",' & @CRLF & _
+                   '            "gpu-threads": "1",' & @CRLF & _
+                   '            "gpu-fan": "100"' & @CRLF & _
+                   '        }' & @CRLF & _
+                   '    ],' & @CRLF & _
+                   '    "default-profile": "xmr",' & @CRLF & _
+                   '    "no-submit-stale": false,' & @CRLF & _
+                   '    "no-extranonce": true' & @CRLF & _
+                   '}'
+   If FileExists($_sInstallDir&"sgminer-gm\au3miner.conf") Then FileDelete($_sInstallDir&"sgminer-gm\au3miner.conf")
+   FileWrite($_sInstallDir&"sgminer-gm\au3miner.conf", $_sMConfBatch)
+
+   Local $_sMBatch
+   $_sMBatch = "cd "&$_sInstallDir&"sgminer-gm"&@CRLF&"sgminer.exe --config au3miner.conf " & $_sMOpts
    If FileExists($_sInstallDir&"au3-sgminer-gm.bat") Then FileDelete($_sInstallDir&"au3-sgminer-gm.bat")
    FileWrite($_sInstallDir&"au3-sgminer-gm.bat", $_sMBatch)
    $_pSGMinerGM = Run(@ComSpec&" /K au3-sgminer-gm.bat", $_sInstallDir)
@@ -1151,14 +1008,10 @@ Func CloseMiners()
    Global $_pClaymoreMiner
    Global $_pQtMiner
    Global $_pEthMinerGenoil
-   Global $_pHOdlMiner
-   Global $_pHOdlMinerWolf
 
    $_iClaymoreMiner_state = 3
    $_iQtMiner_state = 3
    $_iEthminerGenoil_state = 3
-   $_iHOdlMiner_state = 3
-   $_iHOdlMinerWolf_state = 3
 EndFunc
 
 Func PreExit()
@@ -1169,8 +1022,6 @@ EndFunc
 If $_sClaymoreMiner_auto == 1 And Not $_pClaymoreMiner Then ClaymoreMiner()
 If $_sQtMiner_auto == 1 And Not $_pQtMiner Then QtMiner()
 If $_sEthminerGenoil_auto == 1 And Not $_pEthminerGenoil Then EthminerGenoil()
-If $_sHOdlMiner_auto == 1 And Not $_pHOdlMiner Then HOdlMiner()
-If $_sHOdlMinerWolf_auto == 1 And Not $_pHOdlMinerWolf Then HOdlMinerWolf()
 If $_sSGMinerGM_auto == 1 And Not $_pSGMinerGM Then SGMinerGM()
 If $_sKeepAwake Then _PowerKeepAlive()
 OnAutoItExitRegister("PreExit")
@@ -1206,12 +1057,6 @@ While 1
 	  Case $_uEthminerGenoil_launch
 		 $_pEthminerGenoil = ProcessExists("ethminer-genoil.exe")
 		 If Not $_pEthminerGenoil Then EthminerGenoil()
-	  Case $_uHOdlMiner_launch
-		 $_pHOdlMiner = ProcessExists("hodlminer.exe")
-		 If Not $_pHOdlMiner Then HOdlMiner()
-	  Case $_uHOdlMinerWolf_launch
-		 $_pHOdlMinerWolf = ProcessExists("hodlminer-wolf.exe")
-		 If Not $_pHOdlMinerWolf Then HOdlMinerWolf()
 	  Case $_uSGMinerGM_launch
 		 $_pSGMinerGM = ProcessExists("minerd.exe")
 		 If Not $_pSGMinerGM Then SGMinerGM()
@@ -1229,11 +1074,9 @@ While 1
 			$_sEPoolUsername = $_sGlobalPoolUsername
 			$_sDPoolUsername = $_sGlobalPoolUsername
 			$_sSCPoolUsername = $_sGlobalPoolUsername
-			$_sHPoolUsername = $_sGlobalPoolUsername
 			GUICtrlSetData($_uEPoolUsername, $_sGlobalPoolUsername)
 			GUICtrlSetData($_uDPoolUsername, $_sGlobalPoolUsername)
 			GUICtrlSetData($_uSCPoolUsername, $_sGlobalPoolUsername)
-			GUICtrlSetData($_uHPoolUsername, $_sGlobalPoolUsername)
 		 EndIf
 
 		 If $_sGlobalWorkerLabel <> "" Then
@@ -1244,7 +1087,6 @@ While 1
 			GUICtrlSetData($_uEWorkerLabel, $_sGlobalWorkerLabel)
 			GUICtrlSetData($_uDWorkerLabel, $_sGlobalWorkerLabel)
 			GUICtrlSetData($_uSCWorkerLabel, $_sGlobalWorkerLabel)
-			GUICtrlSetData($_uHWorkerLabel, $_sGlobalWorkerLabel)
 		 EndIf
 
 		 If $_sGlobalWorkerPassword <> "" Then
@@ -1255,7 +1097,6 @@ While 1
 			GUICtrlSetData($_uEWorkerPassword, $_sGlobalWorkerPassword)
 			GUICtrlSetData($_uDWorkerPassword, $_sGlobalWorkerPassword)
 			GUICtrlSetData($_uSCWorkerPassword, $_sGlobalWorkerPassword)
-			GUICtrlSetData($_uHWorkerPassword, $_sGlobalWorkerPassword)
 		 EndIf
 
 		 ESettingsWrite()
@@ -1275,8 +1116,6 @@ While 1
 		 DSettingsWrite()
 	  Case $_uSCSaveSettings
 		 SCSettingsWrite()
-	  Case $_uHSaveSettings
-		 HSettingsWrite()
 	  Case $_uMSaveSettings
 		 MSettingsWrite()
 	  Case $_uau3miner_update
@@ -1317,21 +1156,10 @@ While 1
 			Case " ᴄᴜsᴛᴏᴍ"
 			   If GUICtrlRead($_uSCServer) == "N/A" Then GUICtrlSetData($_uSCServer, "")
 		 EndSwitch
-	  Case $_uHPool
-		 Switch GUICtrlRead($_uHPool)
-			Case "Suprnova"
-			   GUICtrlSetData($_uHServer, "stratum+tcp://hodl.suprnova.cc:4693")
-			Case "MaxMiners"
-			   GUICtrlSetData($_uHServer, "stratum+tcp://hodl.maxminers.net:5256 ")
-			Case "Blockquarry"
-			   GUICtrlSetData($_uHServer, "stratum+tcp://hodl.blockquarry.com:3032")
-			Case " sᴏʟᴏ"
-			   GUICtrlSetData($_uHServer, "N/A")
-			Case " ᴄᴜsᴛᴏᴍ"
-			   If GUICtrlRead($_uHServer) == "N/A" Then GUICtrlSetData($_uHServer, "")
-		 EndSwitch
 	  Case $_uMPool
-		 Switch GUICtrlRead($_uEPool)
+		 Switch GUICtrlRead($_uMPool)
+			Case "DwarfPool"
+			   GUICtrlSetData($_uMServer, "stratum+tcp://xmr-usa.dwarfpool.com:8080")
 			Case "Crypto-Pool"
 			   GUICtrlSetData($_uMServer, "stratum+tcp://xmr.crypto-pool.fr:3333")
 			Case "MinerGate"
@@ -1468,82 +1296,6 @@ While 1
    EndSelect
 
    Select
-	  Case $_iHOdlMiner_state == 1
-		 GUICtrlSetState($_uHOdlMiner_launch, $GUI_DISABLE)
-		 GUICtrlSetData($_uHOdlMiner_launch, "Launching HOdlminer...")
-		 If ProcessExists($_pHOdlMiner) Then
-			$_iHOdlMiner_state = 2
-			GUICtrlSetData($_uHOdlMiner_launch, "HOdlminer is running")
-		 EndIf
-	  Case $_iHOdlMiner_state == 2
-		 If Not ProcessExists($_pHOdlMiner) Then
-			If $_sHOdlMiner_persist == 1 Then
-			   HOdlMiner()
-			   $_iHOdlMiner_state = 1
-			Else
-			   $_iHOdlMiner_state = 3
-			   GUICtrlSetData($_uHOdlMiner_launch, "HOdlminer closed")
-			EndIf
-		 EndIf
-		 If WinExists("hodlminer.exe", "&Close program") Then
-			WinClose("hodlminer.exe", "&Close program")
-			ProcessClose($_pHOdlMiner)
-			HOdlMiner()
-		 EndIf
-	  Case $_iHOdlMiner_state == 3
-		 Do
-			ProcessClose($_pHOdlMiner)
-		 Until Not ProcessExists($_pHOdlMiner)
-		 $_iHOdlMiner_state = 0
-		 GUICtrlSetState($_uHOdlMiner_launch, $GUI_ENABLE)
-		 GUICtrlSetData($_uHOdlMiner_launch, "HOdlminer")
-	  Case Else
-		 If ProcessExists($_pHOdlMiner) Then
-			GUICtrlSetState($_uHOdlMiner_launch, $GUI_DISABLE)
-			$_iHOdlMiner_state = 2
-			GUICtrlSetData($_uHOdlMiner_launch, "HOldminer is running")
-		 EndIf
-   EndSelect
-
-   Select
-	  Case $_iHOdlMinerWolf_state == 1
-		 GUICtrlSetState($_uHOdlMinerWolf_launch, $GUI_DISABLE)
-		 GUICtrlSetData($_uHOdlMinerWolf_launch, "Launching HOdlminer-wolf...")
-		 If ProcessExists($_pHOdlMinerWolf) Then
-			$_iHOdlMinerWolf_state = 2
-			GUICtrlSetData($_uHOdlMinerWolf_launch, "HOdlminer-wolf is running")
-		 EndIf
-	  Case $_iHOdlMinerWolf_state == 2
-		 If Not ProcessExists($_pHOdlMinerWolf) Then
-			If $_sHOdlMinerWolf_persist == 1 Then
-			   HOdlMinerWolf()
-			   $_iHOdlMinerWolf_state = 1
-			Else
-			   $_iHOdlMinerWolf_state = 3
-			   GUICtrlSetData($_uHOdlMinerWolf_launch, "HOdlminer-wolf closed")
-			EndIf
-		 EndIf
-		 If WinExists("hodlminer-wolf.exe", "&Close program") Then
-			WinClose("hodlminer-wolf.exe", "&Close program")
-			ProcessClose($_pHOdlMinerWolf)
-			HOdlMinerWolf()
-		 EndIf
-	  Case $_iHOdlMinerWolf_state == 3
-		 Do
-			ProcessClose($_pHOdlMinerWolf)
-		 Until Not ProcessExists($_pHOdlMinerWolf)
-		 $_iHOdlMinerWolf_state = 0
-		 GUICtrlSetState($_uHOdlMinerWolf_launch, $GUI_ENABLE)
-		 GUICtrlSetData($_uHOdlMinerWolf_launch, "HOdlminer-wolf")
-	  Case Else
-		 If ProcessExists($_pHOdlMinerWolf) Then
-			GUICtrlSetState($_uHOdlMinerWolf_launch, $GUI_DISABLE)
-			$_iHOdlMinerWolf_state = 2
-			GUICtrlSetData($_uHOdlMinerWolf_launch, "HOldminer is running")
-		 EndIf
-   EndSelect
-
-   Select
 	  Case $_iSGMinerGM_state == 1
 		 GUICtrlSetState($_uSGMinerGM_launch, $GUI_DISABLE)
 		 GUICtrlSetData($_uSGMinerGM_launch, "Launching sgminer-gm...")
@@ -1597,22 +1349,8 @@ While 1
 			$_iEthminerGenoil_state = 3
 			$_sInternetState = $_sInternetState-4
 		 EndIf
-		 If $_iHOdlMinerWolf_state > 0 Then
-			$_iHOdlMinerWolf_state = 3
-			$_sInternetState = $_sInternetState-8
-		 EndIf
-		 If $_iHOdlMiner_state > 0 Then
-			$_iHOdlMiner_state = 3
-			$_sInternetState = $_sInternetState-16
-		 EndIf
 		 $_sInternetState = -1;
 	  ElseIf $_sInternetState < 0 Then
-		 If $_sInternetState >= 16 Then
-			$_iHOdlMiner_state = 1
-		 EndIf
-		 If $_sInternetState >= 8 Then
-			$_iHOdlMinerWolf_state = 1
-		 EndIf
 		 If $_sInternetState >= 4 Then
 			$_iEthminerGenoil_state = 1
 		 EndIf
