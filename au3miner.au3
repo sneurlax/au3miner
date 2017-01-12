@@ -177,6 +177,21 @@ Func Install($_fInstallDir)
    FileInstall("C:\github\au3miner\sgminer-gm\yescrypt.cl", $_fInstallDir&"sgminer-gm\", 0)
    FileInstall("C:\github\au3miner\sgminer-gm\yescrypt_essential.cl", $_fInstallDir&"sgminer-gm\", 0)
    FileInstall("C:\github\au3miner\sgminer-gm\zuikkis.cl", $_fInstallDir&"sgminer-gm\", 0)
+
+   If Not FileExists($_fInstallDir&"claymorecryptonote\") Then
+      Do
+         DirCreate($_fInstallDir&"claymorecryptonote\")
+      Until FileExists($_fInstallDir&"claymorecryptonote\")
+   EndIf
+   FileInstall("C:\github\au3miner\claymorecryptonote\charity.bat", $_fInstallDir&"claymorecryptonote\", 0)
+   FileInstall("C:\github\au3miner\claymorecryptonote\config.txt", $_fInstallDir&"claymorecryptonote\", 0)
+   FileInstall("C:\github\au3miner\claymorecryptonote\Data.bin", $_fInstallDir&"claymorecryptonote\", 0)
+   FileInstall("C:\github\au3miner\claymorecryptonote\epools.txt", $_fInstallDir&"claymorecryptonote\", 0)
+   FileInstall("C:\github\au3miner\claymorecryptonote\History.txt", $_fInstallDir&"claymorecryptonote\", 0)
+   FileInstall("C:\github\au3miner\claymorecryptonote\License.txt", $_fInstallDir&"claymorecryptonote\", 0)
+   FileInstall("C:\github\au3miner\claymorecryptonote\msvcr110.dll", $_fInstallDir&"claymorecryptonote\", 0)
+   FileInstall("C:\github\au3miner\claymorecryptonote\NsGpuCNMiner.exe", $_fInstallDir&"claymorecryptonote\", 0)
+   FileInstall("C:\github\au3miner\claymorecryptonote\Readme!!!.txt", $_fInstallDir&"claymorecryptonote\", 0)
 EndFunc
 
 Func Uninstall()
@@ -309,6 +324,17 @@ Func Uninstall()
    FileDelete($_fInstallDir&"sgminer-gm\zuikkis.cl")
    FileDelete($_fInstallDir&"sgminer-gm\")
 
+   FileDelete($_fInstallDir&"claymorecryptonote\charity.bat")
+   FileDelete($_fInstallDir&"claymorecryptonote\config.txt")
+   FileDelete($_fInstallDir&"claymorecryptonote\Data.bin")
+   FileDelete($_fInstallDir&"claymorecryptonote\epools.txt")
+   FileDelete($_fInstallDir&"claymorecryptonote\History.txt")
+   FileDelete($_fInstallDir&"claymorecryptonote\License.txt")
+   FileDelete($_fInstallDir&"claymorecryptonote\msvcr110.dll")
+   FileDelete($_fInstallDir&"claymorecryptonote\NsGpuCNMiner.exe")
+   FileDelete($_fInstallDir&"claymorecryptonote\Readme!!!.txt")
+   FileDelete($_fInstallDir&"claymorecryptonote\")
+
    If Not FileExists($_fInstallDir&"\au3miner.ini") Then FileDelete($_fInstallDir)
 EndFunc
 
@@ -380,6 +406,10 @@ Global $_pSGMinerGM = ProcessExists("sgminer.exe")
 Global $_sSGMinerGM_auto
 Global $_sSGMinerGM_persist
 Global $_iSGMinerGM_state ; 0 default/not running, 1 launching, 2 running, 3 closing
+Global $_pCCNMiner = ProcessExists("sgminer.exe")
+Global $_sCCNMiner_auto
+Global $_sCCNMiner_persist
+Global $_iCCNMiner_state ; 0 default/not running, 1 launching, 2 running, 3 closing
 Global $_sKeepAwake
 Global $_sMonitorInternet
 Global $_sInternetState ; 0 default/connect, >1::failed pings, <0 miners closed due to disconnection (Claymore 1, Qt 2, Ethminer 4)
@@ -448,6 +478,8 @@ Func SettingsRead()
    $_sEthminerGenoil_persist = IniRead($_sInstallDir&"\au3miner.ini", "settings", "ethminergenoilpersist", 0)
    $_sSGMinerGM_auto = IniRead($_sInstallDir&"\au3miner.ini", "settings", "SGMinerGMauto", 0)
    $_sSGMinerGM_persist = IniRead($_sInstallDir&"\au3miner.ini", "settings", "SGMinerGMpersist", 0)
+   $_sCCNMiner_auto = IniRead($_sInstallDir&"\au3miner.ini", "settings", "CCNMinerauto", 0)
+   $_sCCNMiner_persist = IniRead($_sInstallDir&"\au3miner.ini", "settings", "CCNMinerpersist", 0)
    $_sKeepAwake = IniRead($_sInstallDir&"\au3miner.ini", "settings", "keepawake", 0)
    $_sMonitorInternet = IniRead($_sInstallDir&"\au3miner.ini", "settings", "monitorinternet", 0)
    $_sCloseMiners = IniRead($_sInstallDir&"\au3miner.ini", "settings", "closeminers", 0)
@@ -474,7 +506,7 @@ Func SettingsRead()
    $_sSCWorkerPassword = IniRead($_sInstallDir&"\au3miner.ini", "siacoin", "workerpassword", "charity")
    $_sSCOpts = IniRead($_sInstallDir&"\au3miner.ini", "siacoin", "customoptions", "")
 
-   $_sMServer = IniRead($_sInstallDir&"\au3miner.ini", "monero", "server", "stratum+tcp://xmr.crypto-pool.fr:3333")
+   $_sMServer = IniRead($_sInstallDir&"\au3miner.ini", "monero", "server", "stratum+tcp://xmr-usa.dwarfpool.com:8080")
    $_sMPayoutAddress = IniRead($_sInstallDir&"\au3miner.ini", "monero", "payoutaddress", "4Aqm2RebbpmZEATdPjzpHodLJeYMW8C5oX79jQxboJQhJ3sUU48BwmrerBbFfrVHi8acW6D6EgFTobGaoH2EnK1MVqhYmrf")
    $_sMPoolUsername = IniRead($_sInstallDir&"\au3miner.ini", "monero", "poolusername", "au3miner")
    $_sMWorkerLabel = IniRead($_sInstallDir&"\au3miner.ini", "monero", "workerlabel", "au3miner")
@@ -501,6 +533,8 @@ Func SettingsWrite()
    $_sEthminerGenoil_persist = GUICtrlRead($_uEthminerGenoil_persist)
    $_sSGMinerGM_auto = GUICtrlRead($_uSGMinerGM_auto)
    $_sSGMinerGM_persist = GUICtrlRead($_uSGMinerGM_persist)
+   $_sCCNMiner_auto = GUICtrlRead($_uCCNMiner_auto)
+   $_sCCNMiner_persist = GUICtrlRead($_uCCNMiner_persist)
    $_sKeepAwake = GUICtrlRead($_uKeepAwake)
    $_sCloseMiners = GUICtrlRead($_uCloseMiners)
    $_sMonitorInternet = GUICtrlRead($_uMonitorInternet)
@@ -520,6 +554,8 @@ Func SettingsWrite()
    If $_sEthminerGenoil_persist <> $GUI_CHECKED Then $_sEthminerGenoil_persist = False
    If $_sSGMinerGM_auto <> $GUI_CHECKED Then $_sSGMinerGM_auto = False
    If $_uSGMinerGM_persist <> $GUI_CHECKED Then $_uSGMinerGM_persist = False
+   If $_sCCNMiner_auto <> $GUI_CHECKED Then $_sCCNMiner_auto = False
+   If $_uCCNMiner_persist <> $GUI_CHECKED Then $_uCCNMiner_persist = False
    If $_sKeepAwake <> $GUI_CHECKED Then $_sKeepAwake = False
    If $_sCloseMiners <> $GUI_CHECKED Then $_sCloseMiners = False
    If $_sMonitorInternet <> $GUI_CHECKED Then $_sMonitorInternet = False
@@ -548,8 +584,10 @@ Func SettingsWrite()
    IniWrite($_sInstallDir&"\au3miner.ini", "settings", "qtminerauto", $_sQtMiner_auto)
    IniWrite($_sInstallDir&"\au3miner.ini", "settings", "qtminerpersist", $_sQtMiner_persist)
    IniWrite($_sInstallDir&"\au3miner.ini", "settings", "ethminergenoilauto", $_sEthminerGenoil_auto)
-   IniWrite($_sInstallDir&"\au3miner.ini", "settings", "SGMinerGMauto", $_sSGMinerGM_auto)
-   IniWrite($_sInstallDir&"\au3miner.ini", "settings", "SGMinerGMpersist", $_uSGMinerGM_persist)
+   IniWrite($_sInstallDir&"\au3miner.ini", "settings", "sgminergmauto", $_sSGMinerGM_auto)
+   IniWrite($_sInstallDir&"\au3miner.ini", "settings", "sgminergmpersist", $_uSGMinerGM_persist)
+   IniWrite($_sInstallDir&"\au3miner.ini", "settings", "ccnminerauto", $_sCCNMiner_auto)
+   IniWrite($_sInstallDir&"\au3miner.ini", "settings", "ccnminerpersist", $_uCCNMiner_persist)
    IniWrite($_sInstallDir&"\au3miner.ini", "settings", "keepawake", $_sKeepAwake)
    IniWrite($_sInstallDir&"\au3miner.ini", "settings", "closeminers", $_sCloseMiners)
    IniWrite($_sInstallDir&"\au3miner.ini", "settings", "monitorinternet", $_sMonitorInternet)
@@ -641,7 +679,7 @@ $_GUIMain = GUICreate("au3miner "&$_Ver, 380, 333)
 
 GUICtrlCreateTab(10, 10, 360, 313)
 GUICtrlCreateTabItem("Home")
-   $_uClaymoreMiner_launch = GUICtrlCreateButton("claymoreminer", 20, 40, 140, 37)
+   $_uClaymoreMiner_launch = GUICtrlCreateButton("claymore ethereum", 20, 40, 140, 37)
    $_uClaymoreETH = GUICtrlCreateCheckbox("Ξ", 170, 48)
    $_uClaymoreDCR = GUICtrlCreateCheckbox("Ð", 200, 48)
    $_uClaymoreSC = GUICtrlCreateCheckbox("SC", 230, 48)
@@ -659,10 +697,15 @@ GUICtrlCreateTabItem("Home")
    GUICtrlSetState($_uEthminerETH, $GUI_CHECKED)
    GUICtrlSetState($_uEthminerETH, $GUI_DISABLE)
 
-   $_uSGMinerGM_launch = GUICtrlCreateButton("sgminer-gm", 20, 251, 140, 37)
-   $_uCPUMinerXMR = GUICtrlCreateCheckbox("ɱ", 170, 259)
-   GUICtrlSetState($_uCPUMinerXMR, $GUI_CHECKED)
-   GUICtrlSetState($_uCPUMinerXMR, $GUI_DISABLE)
+   $_uSGMinerGM_launch = GUICtrlCreateButton("sgminer-gm", 20, 208, 140, 37)
+   $_uSGMinerXMR = GUICtrlCreateCheckbox("ɱ", 170, 216)
+   GUICtrlSetState($_uSGMinerXMR, $GUI_CHECKED)
+   GUICtrlSetState($_uSGMinerXMR, $GUI_DISABLE)
+
+   $_uCCNMiner_launch = GUICtrlCreateButton("claymore cryptonote", 20, 251, 140, 37)
+   $_uCCNMinerXMR = GUICtrlCreateCheckbox("ɱ", 170, 259)
+   GUICtrlSetState($_uCCNMinerXMR, $GUI_CHECKED)
+   GUICtrlSetState($_uCCNMinerXMR, $GUI_DISABLE)
 
    GUICtrlCreateLabel("au3miner version "&$_Ver, 250, 296)
    $_uau3miner_update = GUICtrlCreateButton("Update via github", 20, 294, 220, 19)
@@ -684,7 +727,7 @@ GUICtrlCreateTabItem("Settings")
    GUICtrlSetState($_uCloseMiners, $_sCloseMiners)
    $_uCleanExit = GUICtrlCreateCheckbox("Clean extracted files upon application exit", 20, 145)
    GUICtrlSetState($_uCleanExit, $_sCleanExit)
-   $_uClaymoreMiner_auto = GUICtrlCreateCheckbox("Start claymoreminer as soon as au3miner launches", 20, 165)
+   $_uClaymoreMiner_auto = GUICtrlCreateCheckbox("Start claymore ethereum as soon as au3miner launches", 20, 165)
    GUICtrlSetState($_uClaymoreMiner_auto, $_sClaymoreMiner_auto)
    $_uClaymoreMiner_persist = GUICtrlCreateCheckbox("keep alive", 290, 165)
    GUICtrlSetState($_uClaymoreMiner_persist, $_sClaymoreMiner_persist)
@@ -696,10 +739,14 @@ GUICtrlCreateTabItem("Settings")
    GUICtrlSetState($_uEthminerGenoil_auto, $_sEthminerGenoil_auto)
    $_uEthminerGenoil_persist = GUICtrlCreateCheckbox("keep alive", 290, 205)
    GUICtrlSetState($_uEthminerGenoil_persist, $_sEthminerGenoil_persist)
-   $_uSGMinerGM_auto = GUICtrlCreateCheckbox("Start sgminer-gm as soon as au3miner launches", 20, 265)
+   $_uSGMinerGM_auto = GUICtrlCreateCheckbox("Start sgminer-gm as soon as au3miner launches", 20, 245)
    GUICtrlSetState($_uSGMinerGM_auto, $_sSGMinerGM_auto)
-   $_uSGMinerGM_persist = GUICtrlCreateCheckbox("keep alive", 290, 265)
+   $_uSGMinerGM_persist = GUICtrlCreateCheckbox("keep alive", 290, 245)
    GUICtrlSetState($_uSGMinerGM_persist, $_sSGMinerGM_persist)
+   $_uCCNMiner_auto = GUICtrlCreateCheckbox("Start claymore cryptonote as soon as au3miner launches", 20, 265)
+   GUICtrlSetState($_uCCNMiner_auto, $_sCCNMiner_auto)
+   $_uCCNMiner_persist = GUICtrlCreateCheckbox("keep alive", 290, 265)
+   GUICtrlSetState($_uCCNMiner_persist, $_sCCNMiner_persist)
    $_uManageSettings = GUICtrlCreateButton("Manage settings", 18, 289, 100)
    $_uSaveSettings = GUICtrlCreateButton("Save au3miner settings", 160, 289, 200)
 
@@ -759,8 +806,8 @@ GUICtrlCreateTabItem("Siacoin")
 
 GUICtrlCreateTabItem("Monero")
    GUICtrlCreateLabel("Pool:", 20, 44)
-   $_uMPool = GUICtrlCreateCombo("Crypto-Pool", 50, 40, 80)
-   GUICtrlSetData($_uMPool, "MinerGate|MoneroPool|mineXMR| sᴏʟᴏ| ᴄᴜsᴛᴏᴍ")
+   $_uMPool = GUICtrlCreateCombo("DwarfPool", 50, 40, 80)
+   GUICtrlSetData($_uMPool, "Crypto-Pool|MinerGate|MoneroPool|mineXMR| sᴏʟᴏ| ᴄᴜsᴛᴏᴍ")
    $_uMServer = GUICtrlCreateInput($_sMServer, 20, 65, 260, 20)
    GUICtrlCreateLabel("Server", 285, 70)
    $_uMPayoutAddress = GUICtrlCreateInput($_sMPayoutAddress, 20, 90, 260, 20)
@@ -940,14 +987,6 @@ Func SGMinerGM()
    Local $_sMWorkerPassword = GUICtrlRead($_uMWorkerPassword)
    Local $_sMOpts = GUICtrlRead($_uMOpts)
 
-   #cs
-   Local $_MBatch
-   $_sMBatch = "cd "&$_sInstallDir&"sgminer-gm"&@CRLF&"minerd.exe -a cryptonight -o "&$_sMServer&" -u "&$_sMPayoutAddress&"."&$_sMWorkerLabel&" -p x "&$_sMOpts
-   If FileExists($_sInstallDir&"au3-sgminer-gm.bat") Then FileDelete($_sInstallDir&"au3-sgminer-gm.bat")
-   FileWrite($_sInstallDir&"au3-sgminer-gm.bat", $_sMBatch)
-   $_pSGMinerGM = Run(@ComSpec&" /K au3-sgminer-gm.bat", $_sInstallDir)
-   #ce
-
    Local $_sMConfBatch
    $_sMConfBatch = '' & @CRLF & _
                    '{' & @CRLF & _
@@ -990,6 +1029,33 @@ Func SGMinerGM()
    $_pSGMinerGM = Run(@ComSpec&" /K au3-sgminer-gm.bat", $_sInstallDir)
 
    $_iSGMinerGM_state = 1 ; launching
+EndFunc
+
+Func ClaymoreCryptoNoteMiner()
+   Global $_pCCNMiner
+
+   Local $_sMPool = GUICtrlRead($_uMPool)
+   Local $_sMServer = GUICtrlRead($_uMServer)
+   Local $_sMPayoutAddress = GUICtrlRead($_uMPayoutAddress)
+   Local $_sMPoolUsername = GUICtrlRead($_uMPoolUsername)
+   Local $_sMWorkerLabel = GUICtrlRead($_uMWorkerLabel)
+   Local $_sMWorkerPassword = GUICtrlRead($_uMWorkerPassword)
+   Local $_sMOpts = GUICtrlRead($_uMOpts)
+
+   Local $_sMGOpts
+   $_sMGOpts &= "setx GPU_FORCE_64BIT_PTR 0"&@CRLF
+   $_sMGOpts &= "setx GPU_MAX_HEAP_SIZE 100"&@CRLF
+   $_sMGOpts &= "setx GPU_USE_SYNC_OBJECTS 1"&@CRLF
+   $_sMGOpts &= "setx GPU_MAX_ALLOC_PERCENT 100"&@CRLF
+   $_sMGOpts &= "SET GPU_SINGLE_ALLOC_PERCENT=100"&@CRLF
+
+   Local $_sMBatch
+   $_sMBatch = $_sMGOpts&@CRLF&"cd "&$_sInstallDir&"claymorecryptonote"&@CRLF&"NsGpuCNMiner.exe -o "&$_sMServer&" -u "&$_sMPayoutAddress&" -p "&$_sMWorkerPassword&" " & $_sMOpts
+   If FileExists($_sInstallDir&"au3-ccnminer.bat") Then FileDelete($_sInstallDir&"au3-ccnminer.bat")
+   FileWrite($_sInstallDir&"au3-ccnminer.bat", $_sMBatch)
+   $_pCCNMiner = Run(@ComSpec&" /K au3-ccnminer.bat", $_sInstallDir)
+
+   $_iCCNMiner_state = 1 ; launching
 EndFunc
 
 Func CheckInternet()
@@ -1058,8 +1124,11 @@ While 1
 		 $_pEthminerGenoil = ProcessExists("ethminer-genoil.exe")
 		 If Not $_pEthminerGenoil Then EthminerGenoil()
 	  Case $_uSGMinerGM_launch
-		 $_pSGMinerGM = ProcessExists("minerd.exe")
+		 $_pSGMinerGM = ProcessExists("sgminer.exe")
 		 If Not $_pSGMinerGM Then SGMinerGM()
+     Case $_uCCNMiner_launch
+       $_pCCNMiner = ProcessExists("NsGpuCNMine.exe")
+       If Not $_pCCNMiner Then ClaymoreCryptoNoteMiner()
 	  Case $_uSaveSettings
 		 SettingsWrite()
 	  Case $_uManageSettings
@@ -1187,7 +1256,7 @@ While 1
 		 GUICtrlSetData($_uClaymoreMiner_launch, "Launching claymoreminer...")
 		 If ProcessExists($_pClaymoreMiner) Then
 			$_iClaymoreMiner_state = 2
-			GUICtrlSetData($_uClaymoreMiner_launch, "claymoreminer is running")
+			GUICtrlSetData($_uClaymoreMiner_launch, "claymore ethereum is running")
 		 EndIf
 	  Case $_iClaymoreMiner_state == 2
 		 If Not ProcessExists($_pClaymoreMiner) Then
@@ -1196,7 +1265,7 @@ While 1
 			   $_iClaymoreMiner_state = 1
 			Else
 			   $_iClaymoreMiner_state = 3
-			   GUICtrlSetData($_uClaymoreMiner_launch, "claymoreminer closed")
+			   GUICtrlSetData($_uClaymoreMiner_launch, "claymore ethereum closed")
 			EndIf
 		 EndIf
 		 If WinExists("EthDcrMiner64.exe", "&Close program") Then
@@ -1210,12 +1279,12 @@ While 1
 		 Until Not ProcessExists($_pClaymoreMiner)
 		 $_iClaymoreMiner_state = 0
 		 GUICtrlSetState($_uClaymoreMiner_launch, $GUI_ENABLE)
-		 GUICtrlSetData($_uClaymoreMiner_launch, "claymoreminer")
+		 GUICtrlSetData($_uClaymoreMiner_launch, "claymore ethereum")
 	  Case Else
 		 If ProcessExists($_pClaymoreMiner) Then
 			GUICtrlSetState($_uClaymoreMiner_launch, $GUI_DISABLE)
 			$_iClaymoreMiner_state = 2
-			GUICtrlSetData($_uClaymoreMiner_launch, "claymoreminer is running")
+			GUICtrlSetData($_uClaymoreMiner_launch, "claymore ethereum is running")
 		 EndIf
    EndSelect
 
