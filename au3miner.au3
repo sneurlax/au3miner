@@ -99,11 +99,11 @@ Func Install($_fInstallDir)
    EndIf
    FileInstall("C:\github\au3miner\sgminer-gm\pdcurses.dll", $_fInstallDir&"sgminer-gm\", 0)
    FileInstall("C:\github\au3miner\sgminer-gm\pthreadGC2.dll", $_fInstallDir&"sgminer-gm\", 0)
-   FileInstall("C:\github\au3miner\sgminer-gm\sgminer-eth.conf", $_fInstallDir&"sgminer-gm\"", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\sgminer-eth.conf", $_fInstallDir&"sgminer-gm\", 0)
    FileInstall("C:\github\au3miner\sgminer-gm\sgminer-xmr.conf", $_fInstallDir&"sgminer-gm\", 0)
    FileInstall("C:\github\au3miner\sgminer-gm\sgminer-zcash.conf", $_fInstallDir&"sgminer-gm\", 0)
    FileInstall("C:\github\au3miner\sgminer-gm\sgminer.exe", $_fInstallDir&"sgminer-gm\", 0)
-   FileInstall("C:\github\au3miner\sgminer-gm\start.bat", $_fInstallDir&"sgminer-gm\"", 0)
+   FileInstall("C:\github\au3miner\sgminer-gm\start.bat", $_fInstallDir&"sgminer-gm\", 0)
    FileInstall("C:\github\au3miner\sgminer-gm\xmr.conf", $_fInstallDir&"sgminer-gm\", 0)
 
    If Not FileExists($_fInstallDir&"claymorecryptonote\") Then
