@@ -2,6 +2,12 @@
 
 Simple tool for deploying and automating mining binaries on Windows x64 environments
 
+### Autoupdate process
+
+Place au3miner-latest.exe and au3miner-latest.exe.sig in the root of a USB drive (or in a subfolder called au3miner), where au3miner.exe.sig is the PGP-signed `SHA1,version` of au3miner-latest.exe
+
+au3miner will watch for an au3miner-latest.exe to appear, check au3miner-latest.exe.sig's validity, check the SHA1 of au3miner-latest.exe, and will update itself if `version > $_Ver`
+
 ### Donation addresses
 
 If you appreciate this work, please consider donating to the default addresses included in the code:
