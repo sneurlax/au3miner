@@ -1584,21 +1584,21 @@ While 1
 	Next
 
 	If $_Update Then
-		$_pComSpec = Run(@ComSpec)
-		ProcessWait($_pComSpec)
-		Send("cd gpg4win{ENTER}")
-		Send("gpg2 --import sneurlax.asc{ENTER}") ; You can change this to YOUR public key in ASCII-armored form
-		Send("gpg2 --verify au3miner-latest.exe.sig{ENTER}")
-		Send("{SHIFTDOWN}{HOME}{UP 20}{SHIFTUP}")
-		Send("^C")
-		ProcessClose($_pComSpec)
-		$_Verification = ClipGet()
-		If StringInStr($_Verification, 'Good signature from "sneurlax <sneurlax@gmail.com>"') Then
-			$_Sig = FileRead($_sInstallDir&"\gpg4win\au3miner-latest.exe.sig") ; A signed "SHA1(au3miner-latext.exe),version"
-			$_UpdateInfo = StringMid($_Sig, StringInStr($_Sig, "Hash: SHA512")+15, StringInStr($_Sig, "-----BEGIN PGP SIGNATURE-----")-StringInStr($_Sig, "Hash: SHA512")-15)
-			$_SHA1 = StringLeft($_UpdateInfo, StringInStr($_UpdateInfo, ",")-1)
-			$_UpdateVer = StringRight($_UpdateInfo, StringLen($_UpdateInfo)-StringInStr($_UpdateInfo, ","))
-			If $_UpdateVer > $_Ver Then
+		$_Sig = FileRead($_sInstallDir&"\gpg4win\au3miner-latest.exe.sig") ; A signed "SHA1(au3miner-latext.exe),version"
+		$_UpdateInfo = StringMid($_Sig, StringInStr($_Sig, "Hash: SHA512")+15, StringInStr($_Sig, "-----BEGIN PGP SIGNATURE-----")-StringInStr($_Sig, "Hash: SHA512")-15)
+		$_SHA1 = StringLeft($_UpdateInfo, StringInStr($_UpdateInfo, ",")-1)
+		$_UpdateVer = StringRight($_UpdateInfo, StringLen($_UpdateInfo)-StringInStr($_UpdateInfo, ","))
+		If $_UpdateVer > $_Ver Then
+			$_pComSpec = Run(@ComSpec)
+			ProcessWait($_pComSpec)
+			Send("cd gpg4win{ENTER}")
+			Send("gpg2 --import sneurlax.asc{ENTER}") ; You can change this to YOUR public key in ASCII-armored form
+			Send("gpg2 --verify au3miner-latest.exe.sig{ENTER}")
+			Send("{SHIFTDOWN}{HOME}{UP 20}{SHIFTUP}")
+			Send("^C")
+			ProcessClose($_pComSpec)
+			$_Verification = ClipGet()
+			If StringInStr($_Verification, 'Good signature from "sneurlax <sneurlax@gmail.com>"') Then
 				If StringStripWS(_Crypt_HashFile($_Update, $CALG_SHA1),8) == StringStripWS($_SHA1,8) Then
 					Run("au3miner-updater.exe")
 				EndIf
