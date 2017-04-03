@@ -15,14 +15,21 @@ For $d = 1 to $_Drives[0]
 			FileCopy($_Drives[$d]&"\au3miner-latest.exe.sig", $_sInstallDir&"\gpg4win\au3miner-latest.exe.sig", 1)
 		EndIf
 	EndIf
+	If FileExists($_Drives[$d]&"\au3miner\au3miner-latest.exe") Then
+		If FileExists($_Drives[$d]&"\au3miner\au3miner-latest.exe.sig") Then
+			$_Update = $_Drives[$d]&"\au3miner\au3miner-latest.exe"
+			FileCopy($_Drives[$d]&"\au3miner\au3miner-latest.exe.sig", $_sInstallDir&"\gpg4win\au3miner-latest.exe.sig", 1)
+		EndIf
+	EndIf
 Next
 
 If $_Update Then
-	$_pComSpec = Run(@ComSpec)
+	$_pComSpec = Run(@ComSpec, $_sInstallDir)
 	ProcessWait($_pComSpec)
 	Send("cd gpg4win{ENTER}")
 	Send("gpg2 --import sneurlax.asc{ENTER}")
 	Send("gpg2 --verify au3miner-latest.exe.sig{ENTER}")
+	Sleep(500)
 	Send("{SHIFTDOWN}{HOME}{UP 20}{SHIFTUP}")
 	Send("^C")
 	ProcessClose($_pComSpec)
@@ -36,8 +43,15 @@ If $_Update Then
 				ProcessClose("au3miner-latest.exe")
 				ProcessWaitClose("au3miner-latest.exe")
 			EndIf
-			FileCopy($_Update,$_sInstallDir,1)
-			Run("au3miner-latest.exe")
+			If FileExists(@DesktopDir&"\au3miner-latest.exe") Then
+				FileCopy($_Update,@DesktopDir&"\au3miner-latest.exe",1)
+				Run(@DesktopDir&"\au3miner-latest.exe")
+				Exit
+			EndIf
+			If FileExists($_sInstallDir&"\au3miner-latest.exe") Then
+				FileCopy($_Update,$_sInstallDir&"\au3miner-latest.exe",1)
+				Run($_sInstallDir&"\au3miner-latest.exe")
+			EndIf
 		EndIf
 	EndIf
 EndIf
