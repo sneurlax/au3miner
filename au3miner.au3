@@ -3,10 +3,6 @@ Global $_Ver = "0.1.1"
 #include <Array.au3>
 #include <Crypt.au3>
 
-If FileExists("au3miner.bootstrap") Then
-	FileCopy("au3miner.bootstrap", @TempDir&"\au3miner\au3miner.ini", 1)
-EndIf
-
 Select
 	Case RegRead("HKEY_LOCAL_MACHINE\SOFTWARE\au3miner\", "installdir")
 		Global $_sInstallDir = RegRead("HKEY_LOCAL_MACHINE\SOFTWARE\au3miner\", "installdir")
@@ -610,7 +606,7 @@ Func SettingsRead()
 	$_sSGMinerGM_persist = IniRead($_sInstallDir&"\au3miner.ini", "settings", "SGMinerGMpersist", 0)
 	$_sCCNMiner_auto = IniRead($_sInstallDir&"\au3miner.ini", "settings", "CCNMinerauto", 0)
 	$_sCCNMiner_persist = IniRead($_sInstallDir&"\au3miner.ini", "settings", "CCNMinerpersist", 0)
-	$_sKeepAwake = IniRead($_sInstallDir&"\au3miner.ini", "settings", "keepawake", 0)
+	$_sKeepAwake = IniRead($_sInstallDir&"\au3miner.ini", "settings", "keepawake", 1)
 	$_sMonitorInternet = IniRead($_sInstallDir&"\au3miner.ini", "settings", "monitorinternet", 0)
 	$_sCloseMiners = IniRead($_sInstallDir&"\au3miner.ini", "settings", "closeminers", 0)
 	$_sCleanExit = IniRead($_sInstallDir&"\au3miner.ini", "settings", "cleanexit", 0)
@@ -997,7 +993,7 @@ Func ClaymoreMiner()
 	Local $_sDPoolUsername = GUICtrlRead($_uDPoolUsername)
 	Local $_sDWorkerLabel = GUICtrlRead($_uDWorkerLabel)
 	If $_sDWorkerLabel <> "" Then
-		$_sDWorkerLabel = "."&$_sDWorkerLabel 
+		$_sDWorkerLabel = "."&$_sDWorkerLabel
 	EndIF
 	Local $_sDWorkerPassword = GUICtrlRead($_uDWorkerPassword)
 
@@ -1590,6 +1586,7 @@ While 1
 	; Auto-update feature
 	$_Drives = DriveGetDrive("ALL")
 	Local $_Update = 0
+	Local $_SettingsUpdate = 0
 
 	; Look for au3miner-latest.exe and an accompanying .sig file
 	For $d = 1 to $_Drives[0]
@@ -1605,6 +1602,18 @@ While 1
 				FileCopy($_Drives[$d]&"\au3miner\au3miner-latest.exe.sig", $_sInstallDir&"\gpg4win\au3miner-latest.exe.sig", 1)
 			EndIf
 		EndIf
+		If FileExists($_Drives[$d]&"\au3miner.bootstrap") Then
+			If FileExists($_Drives[$d]&"\au3miner.bootstrap.sig") Then
+				$_SettingsUpdate = $_Drives[$d]&"\au3miner.bootstrap"
+				FileCopy($_Drives[$d]&"\au3miner.bootstrap.sig", $_sInstallDir&"\gpg4win\au3miner.bootstrap.sig", 1)
+			EndIf
+		EndIf
+		If FileExists($_Drives[$d]&"\au3miner\au3miner.bootstrap") Then
+			If FileExists($_Drives[$d]&"\au3miner\au3miner.bootstrap.sig") Then
+				$_SettingsUpdate = $_Drives[$d]&"\au3miner\au3miner.bootstrap"
+				FileCopy($_Drives[$d]&"\au3miner\au3miner.bootstrap.sig", $_sInstallDir&"\gpg4win\au3miner.bootstrap.sig", 1)
+			EndIf
+		EndIf
 	Next
 
 	If $_Update Then
@@ -1613,20 +1622,47 @@ While 1
 		$_SHA1 = StringLeft($_UpdateInfo, StringInStr($_UpdateInfo, ",")-1)
 		$_UpdateVer = StringRight($_UpdateInfo, StringLen($_UpdateInfo)-StringInStr($_UpdateInfo, ","))
 		If $_UpdateVer > $_Ver Then
+			If StringStripWS(_Crypt_HashFile($_Update, $CALG_SHA1),8) == StringStripWS($_SHA1,8) Then
+				$_pComSpec = Run(@ComSpec, $_sInstallDir)
+				ProcessWait($_pComSpec)
+				Send("cd gpg4win{ENTER}")
+				Send("gpg2 --import sneurlax.asc{ENTER}") ; You can change this to YOUR public key in ASCII-armored form
+				Send("gpg2 --verify au3miner-latest.exe.sig{ENTER}")
+				Sleep(500)
+				Send("{SHIFTDOWN}{HOME}{UP 20}{SHIFTUP}")
+				Send("^C")
+				ProcessClose($_pComSpec)
+				$_Verification = ClipGet()
+				If StringInStr($_Verification, 'Good signature from "sneurlax <sneurlax@gmail.com>"') Then
+						RunWait($_sInstallDir&"au3miner-updater.exe", $_sInstallDir)
+				EndIf
+			EndIf
+		EndIf
+	EndIf
+
+	If $_SettingsUpdate Then
+		$_Sig = FileRead($_sInstallDir&"\gpg4win\au3miner.bootstrap") ; A signed "SHA1(au3miner.bootstrap)"
+		$_UpdateInfo = StringMid($_Sig, StringInStr($_Sig, "Hash: SHA512")+15, StringInStr($_Sig, "-----BEGIN PGP SIGNATURE-----")-StringInStr($_Sig, "Hash: SHA512")-15)
+		$_SHA1 = StringStripWS(StringLeft($_UpdateInfo, StringInStr($_UpdateInfo, "-----BEGIN PGP SIGNATURE-----")-1), 8)
+		If StringStripWS(_Crypt_HashFile($_UpdateSettings, $CALG_SHA1), 8) == StringStripWS($_SHA1, 8) Then
 			$_pComSpec = Run(@ComSpec, $_sInstallDir)
 			ProcessWait($_pComSpec)
 			Send("cd gpg4win{ENTER}")
 			Send("gpg2 --import sneurlax.asc{ENTER}") ; You can change this to YOUR public key in ASCII-armored form
-			Send("gpg2 --verify au3miner-latest.exe.sig{ENTER}")
+			Send("gpg2 --verify au3miner.bootstrap.sig{ENTER}")
 			Sleep(500)
 			Send("{SHIFTDOWN}{HOME}{UP 20}{SHIFTUP}")
 			Send("^C")
 			ProcessClose($_pComSpec)
 			$_Verification = ClipGet()
 			If StringInStr($_Verification, 'Good signature from "sneurlax <sneurlax@gmail.com>"') Then
-				If StringStripWS(_Crypt_HashFile($_Update, $CALG_SHA1),8) == StringStripWS($_SHA1,8) Then
-					RunWait($_sInstallDir&"au3miner-updater.exe", $_sInstallDir)
+				FileCopy("au3miner.bootstrap", $_sInstallDir&"\au3miner.ini", 1)
+				If @Compiled = 1 Then
+					Run(FileGetShortName(@ScriptFullPath))
+				Else
+					Run(FileGetShortName(@AutoItExe) & " " & FileGetShortName(@ScriptFullPath))
 				EndIf
+				Exit
 			EndIf
 		EndIf
 	EndIf
