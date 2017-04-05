@@ -1,4 +1,4 @@
-Global $_Ver = "0.1.0"
+Global $_Ver = "0.1.1"
 
 #include <Array.au3>
 #include <Crypt.au3>
@@ -250,7 +250,7 @@ Func Install($_fInstallDir)
 			DirCreate($_fInstallDir&"claymorecryptonote\")
 		Until FileExists($_fInstallDir&"claymorecryptonote\")
 	EndIf
-	FileInstall("C:\github\au3miner\claymorecryptonote\charity.bat", $_fInstallDir&"claymorecryptonote\", 0)
+	;FileInstall("C:\github\au3miner\claymorecryptonote\charity.bat", $_fInstallDir&"claymorecryptonote\", 0)
 	FileInstall("C:\github\au3miner\claymorecryptonote\config.txt", $_fInstallDir&"claymorecryptonote\", 0)
 	FileInstall("C:\github\au3miner\claymorecryptonote\Data.bin", $_fInstallDir&"claymorecryptonote\", 0)
 	FileInstall("C:\github\au3miner\claymorecryptonote\epools.txt", $_fInstallDir&"claymorecryptonote\", 0)
@@ -979,11 +979,26 @@ Func ClaymoreMiner()
 	Local $_sEWorkerLabel = GUICtrlRead($_uEWorkerLabel)
 	Local $_sEWorkerPassword = GUICtrlRead($_uEWorkerPassword)
 	Local $_sEOpts = GUICtrlRead($_uEOpts)
+	Switch $_sEPool
+		Case "Dwarfpool"
+			$_sEWorkerLabel = "/"&$_sEWorkerLabel
+		Case "Ethpool"
+			$_sEWorkerLabel = "."&$_sEWorkerLabel
+		Case "Nanopool"
+			$_sEWorkerLabel = "/"&$_sEWorkerLabel
+		Case "Nanopool (ETC)"
+			$_sEWorkerLabel = "/"&$_sEWorkerLabel
+		Case Else
+			$_sEWorkerLabel = "."&$_sEWorkerLabel
+	EndSwitch
 
 	Local $_sDPool = GUICtrlRead($_uDPool)
 	Local $_sDServer = GUICtrlRead($_uDServer)
 	Local $_sDPoolUsername = GUICtrlRead($_uDPoolUsername)
 	Local $_sDWorkerLabel = GUICtrlRead($_uDWorkerLabel)
+	If $_sDWorkerLabel <> "" Then
+		$_sDWorkerLabel = "."&$_sDWorkerLabel 
+	EndIF
 	Local $_sDWorkerPassword = GUICtrlRead($_uDWorkerPassword)
 
 	Local $_sSCPool = GUICtrlRead($_uSCPool)
@@ -1014,21 +1029,21 @@ Func ClaymoreMiner()
 	If $_sClaymoreETH Then
 		Switch $_sEPool
 			Case "Dwarfpool"
-				$_sCBatch &= "-epool "&$_sEServer&" -ewal "&$_sEPayoutAddress&"/"&$_sEWorkerLabel&" -epsw "&$_sEWorkerPassword
+				$_sCBatch &= "-epool "&$_sEServer&" -ewal "&$_sEPayoutAddress&$_sEWorkerLabel&" -epsw "&$_sEWorkerPassword
 			Case "Ethpool"
-				$_sCBatch &= "-epool "&$_sEServer&" -ewal "&$_sEPayoutAddress&"."&$_sEWorkerLabel&" -epsw "&$_sEWorkerPassword
+				$_sCBatch &= "-epool "&$_sEServer&" -ewal "&$_sEPayoutAddress&$_sEWorkerLabel&" -epsw "&$_sEWorkerPassword
 			Case "Nanopool"
-				$_sCBatch &= "-epool "&$_sEServer&" -ewal "&$_sEPayoutAddress&"/"&$_sEWorkerLabel&" -epsw "&$_sEWorkerPassword
+				$_sCBatch &= "-epool "&$_sEServer&" -ewal "&$_sEPayoutAddress&$_sEWorkerLabel&" -epsw "&$_sEWorkerPassword
 			Case "Nanopool (ETC)"
-				$_sCBatch &= "-epool "&$_sEServer&" -ewal "&$_sEPayoutAddress&"/"&$_sEWorkerLabel&" -epsw "&$_sEWorkerPassword
+				$_sCBatch &= "-epool "&$_sEServer&" -ewal "&$_sEPayoutAddress&$_sEWorkerLabel&" -epsw "&$_sEWorkerPassword
 			Case " sᴏʟᴏ"
 				$_sCBatch &= "-epool "&$_sEServer&" -ewal "&$_sEPayoutAddress&" -epsw "&$_sEWorkerPassword
 			Case Else
-				$_sCBatch &= "-epool "&$_sEServer&" -ewal "&$_sEPayoutAddress&"."&$_sEWorkerLabel&" -epsw "&$_sEWorkerPassword
-	  EndSwitch
+				$_sCBatch &= "-epool "&$_sEServer&" -ewal "&$_sEPayoutAddress&$_sEWorkerLabel&" -epsw "&$_sEWorkerPassword
+		EndSwitch
 	EndIf
 	If $_sClaymoreDCR Then
-	  $_sCBatch &= " -dpool "&$_sDServer&" -dwal "&$_sDPoolUsername&"."&$_sDWorkerLabel&" -dpsw "&$_sDWorkerPassword
+	  $_sCBatch &= " -dpool "&$_sDServer&" -dwal "&$_sDPoolUsername&$_sDWorkerLabel&" -dpsw "&$_sDWorkerPassword
 	EndIf
 	If $_sClaymoreSC Then
 		Switch $_sSCPool
@@ -1038,7 +1053,7 @@ Func ClaymoreMiner()
 				$_sCBatch &= " -dpool ""http://"&$_sSCServer&"/miner/header?address="&$_sSCPayoutAddress&"&worker="&$_sSCWorkerLabel&""" -dcoin sia"
 			Case Else
 				$_sCBatch &= " -dpool ""http://"&$_sSCServer&""" -dcoin sia"
-			EndSwitch
+		EndSwitch
 	EndIf
 
 	$_sCBatch &= " "&$_sEOpts
@@ -1057,6 +1072,9 @@ Func QtMiner()
 	Local $_sEServer = GUICtrlRead($_uEServer)
 	Local $_sEPayoutAddress = GUICtrlRead($_uEPayoutAddress)
 	Local $_sEWorkerLabel = GUICtrlRead($_uEWorkerLabel)
+	If $_sEWorkerLabel <> "" Then
+		$_sEWorkerLabel = "."&$_sEWorkerLabel
+	EndIf
 	Local $_sEOpts = GUICtrlRead($_uEOpts)
 
 	Local $_sEGOpts
@@ -1073,7 +1091,7 @@ Func QtMiner()
 	#ce
 
 	Local $_sBatch
-	$_sBatch = "cd "&$_sInstallDir&"qtminer"&@CRLF&$_sEGOpts&@CRLF&"qtminer.exe -G -s "&$_sEServer&" -u "&$_sEPayoutAddress&"."&$_sEWorkerLabel&$_sEOpts
+	$_sBatch = "cd "&$_sInstallDir&"qtminer"&@CRLF&$_sEGOpts&@CRLF&"qtminer.exe -G -s "&$_sEServer&" -u "&$_sEPayoutAddress&$_sEWorkerLabel&$_sEOpts
 	If FileExists($_sInstallDir&"au3-qtminer.bat") Then FileDelete($_sInstallDir&"au3-qtminer.bat")
 	FileWrite($_sInstallDir&"au3-qtminer.bat", $_sBatch)
 	$_pQtMiner = Run(@ComSpec&" /K au3-qtminer.bat", $_sInstallDir)
@@ -1088,6 +1106,9 @@ Func EthminerGenoil()
 	Local $_sEServer = GUICtrlRead($_uEServer)
 	Local $_sEPayoutAddress = GUICtrlRead($_uEPayoutAddress)
 	Local $_sEWorkerLabel = GUICtrlRead($_uEWorkerLabel)
+	If $_sEWorkerLabel <> "" Then
+		$_sEWorkerLabel = "."&$_sEWorkerLabel
+	EndIf
 	Local $_sEWorkerPassword = GUICtrlRead($_uEWorkerPassword)
 	Local $_sEOpts = GUICtrlRead($_uEOpts)
 
@@ -1098,7 +1119,7 @@ Func EthminerGenoil()
 	#ce
 
 	Local $_sBatch
-	$_sBatch = "cd "&$_sInstallDir&"ethminer-genoil"&@CRLF&"ethminer-genoil.exe -U -F "&$_sEServer&" -O "&$_sEPayoutAddress&"."&$_sEWorkerLabel&" "&$_sEOpts
+	$_sBatch = "cd "&$_sInstallDir&"ethminer-genoil"&@CRLF&"ethminer-genoil.exe -U -F "&$_sEServer&" -O "&$_sEPayoutAddress&$_sEWorkerLabel&" "&$_sEOpts
 	If FileExists($_sInstallDir&"au3-ethminer-genoil.bat") Then FileDelete($_sInstallDir&"au3-ethminer-genoil.bat")
 	FileWrite($_sInstallDir&"au3-ethminer-genoil.bat", $_sBatch)
 	$_pEthminerGenoil = Run(@ComSpec&" /K au3-ethminer-genoil.bat", $_sInstallDir)
@@ -1169,6 +1190,9 @@ Func ClaymoreCryptoNoteMiner()
 	Local $_sMPayoutAddress = GUICtrlRead($_uMPayoutAddress)
 	Local $_sMPoolUsername = GUICtrlRead($_uMPoolUsername)
 	Local $_sMWorkerLabel = GUICtrlRead($_uMWorkerLabel)
+	If $_sMWorkerLabel <> "" Then
+		$_sMWorkerLabel = "."&$_sMWorkerLabel
+	EndIf
 	Local $_sMWorkerPassword = GUICtrlRead($_uMWorkerPassword)
 	Local $_sMOpts = GUICtrlRead($_uMOpts)
 
@@ -1180,7 +1204,7 @@ Func ClaymoreCryptoNoteMiner()
 	$_sMGOpts &= "SET GPU_SINGLE_ALLOC_PERCENT=100"&@CRLF
 
 	Local $_sMBatch
-	$_sMBatch = $_sMGOpts&@CRLF&"cd "&$_sInstallDir&"claymorecryptonote"&@CRLF&"NsGpuCNMiner.exe -o "&$_sMServer&" -u "&$_sMPayoutAddress&" -p "&$_sMWorkerPassword&" " & $_sMOpts
+	$_sMBatch = $_sMGOpts&@CRLF&"cd "&$_sInstallDir&"claymorecryptonote"&@CRLF&"NsGpuCNMiner.exe -o "&$_sMServer&" -u "&$_sMPayoutAddress&$_sMWorkerLabel&" -p "&$_sMWorkerPassword&" " & $_sMOpts
 	If FileExists($_sInstallDir&"au3-ccnminer.bat") Then FileDelete($_sInstallDir&"au3-ccnminer.bat")
 	FileWrite($_sInstallDir&"au3-ccnminer.bat", $_sMBatch)
 	$_pCCNMiner = Run(@ComSpec&" /K au3-ccnminer.bat", $_sInstallDir)
