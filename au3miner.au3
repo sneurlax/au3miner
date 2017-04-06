@@ -1,4 +1,4 @@
-Global $_Ver = "0.1.1"
+Global $_Ver = "0.1.3"
 
 #include <Array.au3>
 #include <Crypt.au3>
@@ -517,22 +517,47 @@ Global $_sClaymoreETH
 Global $_sClaymoreDCR
 Global $_sClaymoreSC
 Global $_pClaymoreMiner = ProcessExists("EthDcrMiner64.exe")
+If Not $_pClaymoreMiner Then
+	If(WinExists(@WindowsDir&"\system32\cmd.exe - au3-claymoreminer.bat")) Then
+	   $_pClaymoreMiner = WinGetProcess(@WindowsDir&"\system32\cmd.exe - au3-claymoreminer.bat")
+	EndIf
+EndIf
 Global $_sClaymoreMiner_auto
 Global $_sClaymoreMiner_persist
 Global $_iClaymoreMiner_state ; 0 default/not running, 1 launching, 2 running, 3 closing
 Global $_pQtMiner = ProcessExists("qtminer.exe")
+If Not $_pQtMiner Then
+	If(WinExists(@WindowsDir&"\system32\cmd.exe - au3-qtminer.bat")) Then
+	   $_pClaymoreMiner = WinGetProcess(@WindowsDir&"\system32\cmd.exe - au3-qtminer.bat")
+	EndIf
+EndIf
 Global $_sQtMiner_auto
 Global $_sQtMiner_persist
 Global $_iQtMiner_state ; 0 default/not running, 1 launching, 2 running, 3 closing
 Global $_pEthminerGenoil = ProcessExists("etherminer-genoil.exe")
+If Not $_pEthminerGenoil Then
+	If(WinExists(@WindowsDir&"\system32\cmd.exe - au3-ethminer-genoil.bat")) Then
+	   $_pClaymoreMiner = WinGetProcess(@WindowsDir&"\system32\cmd.exe - au3-ethminer-genoil.bat")
+	EndIf
+EndIf
 Global $_sEthminerGenoil_auto
 Global $_sEthminerGenoil_persist
 Global $_iEthminerGenoil_state ; 0 default/not running, 1 launching, 2 running, 3 closing
 Global $_pSGMinerGM = ProcessExists("sgminer.exe")
+If Not $_pSGMinerGM Then
+	If(WinExists(@WindowsDir&"\system32\cmd.exe - au3-sgminer-gm.bat")) Then
+	   $_pClaymoreMiner = WinGetProcess(@WindowsDir&"\system32\cmd.exe - au3-sgminer-gm.bat")
+	EndIf
+EndIf
 Global $_sSGMinerGM_auto
 Global $_sSGMinerGM_persist
 Global $_iSGMinerGM_state ; 0 default/not running, 1 launching, 2 running, 3 closing
-Global $_pCCNMiner = ProcessExists("sgminer.exe")
+Global $_pCCNMiner = ProcessExists("NsGpuCNMiner.exe")
+If Not $_pCCNMiner Then
+	If(WinExists(@WindowsDir&"\system32\cmd.exe - au3-ccnminer.bat")) Then
+	   $_pClaymoreMiner = WinGetProcess(@WindowsDir&"\system32\cmd.exe - au3-ccnminers.bat")
+	EndIf
+EndIf
 Global $_sCCNMiner_auto
 Global $_sCCNMiner_persist
 Global $_iCCNMiner_state ; 0 default/not running, 1 launching, 2 running, 3 closing
