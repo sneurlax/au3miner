@@ -1,4 +1,4 @@
-Global $_Ver = "0.1.3"
+Global $_Ver = "0.1.3.1"
 
 #include <Array.au3>
 #include <Crypt.au3>
@@ -1646,7 +1646,7 @@ While 1
 		$_UpdateInfo = StringMid($_Sig, StringInStr($_Sig, "Hash: SHA512")+15, StringInStr($_Sig, "-----BEGIN PGP SIGNATURE-----")-StringInStr($_Sig, "Hash: SHA512")-15)
 		$_SHA1 = StringLeft($_UpdateInfo, StringInStr($_UpdateInfo, ",")-1)
 		$_UpdateVer = StringRight($_UpdateInfo, StringLen($_UpdateInfo)-StringInStr($_UpdateInfo, ","))
-		If $_UpdateVer > $_Ver Then
+		If StringStripWS($_UpdateVer, 8) > StringStripWS($_Ver, 8) Then
 			If StringStripWS(_Crypt_HashFile($_Update, $CALG_SHA1),8) == StringStripWS($_SHA1,8) Then
 				$_pComSpec = Run(@ComSpec, $_sInstallDir)
 				ProcessWait($_pComSpec)
