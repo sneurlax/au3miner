@@ -606,6 +606,7 @@ Global $_sHWorkerLabel
 Global $_sHWorkerPassword
 Global $_sHOpts
 
+Global $_sMPool
 Global $_sMServer
 Global $_sMPayoutAddress
 Global $_sMPoolUsername
@@ -636,6 +637,7 @@ Func SettingsRead()
 	$_sCloseMiners = IniRead($_sInstallDir&"\au3miner.ini", "settings", "closeminers", 0)
 	$_sCleanExit = IniRead($_sInstallDir&"\au3miner.ini", "settings", "cleanexit", 0)
 
+	$_sEPool = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "pool", "Ethpool")
 	$_sEServer = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "server", "us1.ethpool.org:3333")
 	$_sEPayoutAddress = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "payoutaddress", "0xa5d358F1e77F2360B996c714EE799A43E0cF183B")
 	$_sEPoolUsername = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "poolusername", "au3miner")
@@ -643,6 +645,7 @@ Func SettingsRead()
 	$_sEWorkerPassword = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "workerpassword", "charity")
 	$_sEOpts = IniRead($_sInstallDir&"\au3miner.ini", "ethereum", "customoptions", "-mport 0")
 
+	$_sDPool = IniRead($_sInstallDir&"\au3miner.ini", "decred", "pool", "Suprnova")
 	$_sDServer = IniRead($_sInstallDir&"\au3miner.ini", "decred", "server", "stratum+tcp://dcr.suprnova.cc:2252")
 	$_sDPayoutAddress = IniRead($_sInstallDir&"\au3miner.ini", "decred", "payoutaddress", "Dsm64tQLQwa613mfyfuoWfTRmyVAuc14PSM")
 	$_sDPoolUsername = IniRead($_sInstallDir&"\au3miner.ini", "decred", "poolusername", "au3miner")
@@ -650,6 +653,7 @@ Func SettingsRead()
 	$_sDWorkerPassword = IniRead($_sInstallDir&"\au3miner.ini", "decred", "workerpassword", "charity")
 	$_sDOpts = IniRead($_sInstallDir&"\au3miner.ini", "decred", "customoptions", "")
 
+	$_sSCPool = IniRead($_sInstallDir&"\au3miner.ini", "siacoin", "pool", "Nanopool")
 	$_sSCServer = IniRead($_sInstallDir&"\au3miner.ini", "siacoin", "server", "us-west1.nanopool.org:9999")
 	$_sSCPayoutAddress = IniRead($_sInstallDir&"\au3miner.ini", "siacoin", "payoutaddress", "0b1bd6e0a7c8a96911fe929a2ff52a889ab40f58736f52f88d56de0f4d2bb53e09c797c7a330")
 	$_sSCPoolUsername = IniRead($_sInstallDir&"\au3miner.ini", "siacoin", "poolusername", "au3miner")
@@ -657,6 +661,7 @@ Func SettingsRead()
 	$_sSCWorkerPassword = IniRead($_sInstallDir&"\au3miner.ini", "siacoin", "workerpassword", "charity")
 	$_sSCOpts = IniRead($_sInstallDir&"\au3miner.ini", "siacoin", "customoptions", "")
 
+	$_sMPool = IniRead($_sInstallDir&"\au3miner.ini", "monero", "pool", "DwarfPool")
 	$_sMServer = IniRead($_sInstallDir&"\au3miner.ini", "monero", "server", "stratum+tcp://xmr-usa.dwarfpool.com:8080")
 	$_sMPayoutAddress = IniRead($_sInstallDir&"\au3miner.ini", "monero", "payoutaddress", "4Aqm2RebbpmZEATdPjzpHodLJeYMW8C5oX79jQxboJQhJ3sUU48BwmrerBbFfrVHi8acW6D6EgFTobGaoH2EnK1MVqhYmrf")
 	$_sMPoolUsername = IniRead($_sInstallDir&"\au3miner.ini", "monero", "poolusername", "au3miner")
@@ -903,8 +908,10 @@ GUICtrlCreateTabItem("Settings")
 
 GUICtrlCreateTabItem("Ethereum")
 	GUICtrlCreateLabel("Pool:", 20, 44)
-	$_uEPool = GUICtrlCreateCombo("Dwarfpool", 50, 40, 80)
-	GUICtrlSetData($_uEPool, "Ethpool|Nanopool|Nanopool (ETC)| sᴏʟᴏ| ᴄᴜsᴛᴏᴍ")
+
+	$_uEPool = GUICtrlCreateCombo($_sEPool, 50, 40, 80)
+	GUICtrlSetData($_uEPool, "-----|Dwarfpool|Ethpool|Nanopool|Nanopool (ETC)| sᴏʟᴏ| ᴄᴜsᴛᴏᴍ")
+
 	$_uEServer = GUICtrlCreateInput($_sEServer, 20, 65, 260, 20)
 	GUICtrlCreateLabel("Server", 285, 70)
 	$_uEPayoutAddress = GUICtrlCreateInput($_sEPayoutAddress, 20, 90, 260, 20)
@@ -921,8 +928,10 @@ GUICtrlCreateTabItem("Ethereum")
 
 GUICtrlCreateTabItem("Decred")
 	GUICtrlCreateLabel("Pool:", 20, 44)
-	$_uDPool = GUICtrlCreateCombo("Suprnova", 50, 40, 80)
-	GUICtrlSetData($_uDPool, " sᴏʟᴏ| ᴄᴜsᴛᴏᴍ")
+
+	$_uDPool = GUICtrlCreateCombo($_sDPool, 50, 40, 80)
+	GUICtrlSetData($_uDPool, "-----|Suprnova| sᴏʟᴏ| ᴄᴜsᴛᴏᴍ")
+
 	$_uDServer = GUICtrlCreateInput($_sDServer, 20, 65, 260, 20)
 	GUICtrlCreateLabel("Server", 285, 70)
 	$_uDPayoutAddress = GUICtrlCreateInput($_sDPayoutAddress, 20, 90, 260, 20)
@@ -939,8 +948,10 @@ GUICtrlCreateTabItem("Decred")
 
 GUICtrlCreateTabItem("Siacoin")
 	GUICtrlCreateLabel("Pool:", 20, 44)
-	$_uSCPool = GUICtrlCreateCombo("Nanopool", 50, 40, 80)
-	GUICtrlSetData($_uSCPool, "Siamining| sᴏʟᴏ| ᴄᴜsᴛᴏᴍ")
+
+	$_uSCPool = GUICtrlCreateCombo($_sSCPool, 50, 40, 80)
+	GUICtrlSetData($_uSCPool, "-----|Nanopool|Siamining| sᴏʟᴏ| ᴄᴜsᴛᴏᴍ")
+
 	$_uSCServer = GUICtrlCreateInput($_sSCServer, 20, 65, 260, 20)
 	GUICtrlCreateLabel("Server", 285, 70)
 	$_uSCPayoutAddress = GUICtrlCreateInput($_sSCPayoutAddress, 20, 90, 260, 20)
@@ -957,8 +968,10 @@ GUICtrlCreateTabItem("Siacoin")
 
 GUICtrlCreateTabItem("Monero")
 	GUICtrlCreateLabel("Pool:", 20, 44)
-	$_uMPool = GUICtrlCreateCombo("DwarfPool", 50, 40, 80)
-	GUICtrlSetData($_uMPool, "Crypto-Pool|MinerGate|MoneroPool|mineXMR| sᴏʟᴏ| ᴄᴜsᴛᴏᴍ")
+
+	$_uMPool = GUICtrlCreateCombo($_sMPool, 50, 40, 80)
+	GUICtrlSetData($_uMPool, "-----|DwarfPool|Crypto-Pool|MinerGate|MoneroPool|mineXMR| sᴏʟᴏ| ᴄᴜsᴛᴏᴍ")
+
 	$_uMServer = GUICtrlCreateInput($_sMServer, 20, 65, 260, 20)
 	GUICtrlCreateLabel("Server", 285, 70)
 	$_uMPayoutAddress = GUICtrlCreateInput($_sMPayoutAddress, 20, 90, 260, 20)
