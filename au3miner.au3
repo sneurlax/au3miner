@@ -1,4 +1,4 @@
-Global $_Ver = "0.1.3.1"
+Global $_Ver = "0.1.3.2"
 
 #include <Array.au3>
 #include <Crypt.au3>
