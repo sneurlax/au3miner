@@ -1,4 +1,4 @@
-Global $_Ver = "0.1.3.2"
+Global $_Ver = "0.1.3.3"
 
 #include <Array.au3>
 #include <Crypt.au3>
@@ -517,46 +517,36 @@ Global $_sClaymoreETH
 Global $_sClaymoreDCR
 Global $_sClaymoreSC
 Global $_pClaymoreMiner = ProcessExists("EthDcrMiner64.exe")
-If Not $_pClaymoreMiner Then
-	If(WinExists(@WindowsDir&"\system32\cmd.exe - au3-claymoreminer.bat")) Then
-	   $_pClaymoreMiner = WinGetProcess(@WindowsDir&"\system32\cmd.exe - au3-claymoreminer.bat")
-	EndIf
+If(WinExists(@WindowsDir&"\system32\cmd.exe - au3-claymoreminer.bat")) Then
+   $_pClaymoreMiner = WinGetProcess(@WindowsDir&"\system32\cmd.exe - au3-claymoreminer.bat")
 EndIf
 Global $_sClaymoreMiner_auto
 Global $_sClaymoreMiner_persist
 Global $_iClaymoreMiner_state ; 0 default/not running, 1 launching, 2 running, 3 closing
 Global $_pQtMiner = ProcessExists("qtminer.exe")
-If Not $_pQtMiner Then
-	If(WinExists(@WindowsDir&"\system32\cmd.exe - au3-qtminer.bat")) Then
-	   $_pClaymoreMiner = WinGetProcess(@WindowsDir&"\system32\cmd.exe - au3-qtminer.bat")
-	EndIf
+If(WinExists(@WindowsDir&"\system32\cmd.exe - au3-qtminer.bat")) Then
+   $_pQtMiner = WinGetProcess(@WindowsDir&"\system32\cmd.exe - au3-qtminer.bat")
 EndIf
 Global $_sQtMiner_auto
 Global $_sQtMiner_persist
 Global $_iQtMiner_state ; 0 default/not running, 1 launching, 2 running, 3 closing
 Global $_pEthminerGenoil = ProcessExists("etherminer-genoil.exe")
-If Not $_pEthminerGenoil Then
-	If(WinExists(@WindowsDir&"\system32\cmd.exe - au3-ethminer-genoil.bat")) Then
-	   $_pClaymoreMiner = WinGetProcess(@WindowsDir&"\system32\cmd.exe - au3-ethminer-genoil.bat")
-	EndIf
+If(WinExists(@WindowsDir&"\system32\cmd.exe - au3-ethminer-genoil.bat")) Then
+   $_pEthminerGenoil = WinGetProcess(@WindowsDir&"\system32\cmd.exe - au3-ethminer-genoil.bat")
 EndIf
 Global $_sEthminerGenoil_auto
 Global $_sEthminerGenoil_persist
 Global $_iEthminerGenoil_state ; 0 default/not running, 1 launching, 2 running, 3 closing
 Global $_pSGMinerGM = ProcessExists("sgminer.exe")
-If Not $_pSGMinerGM Then
-	If(WinExists(@WindowsDir&"\system32\cmd.exe - au3-sgminer-gm.bat")) Then
-	   $_pClaymoreMiner = WinGetProcess(@WindowsDir&"\system32\cmd.exe - au3-sgminer-gm.bat")
-	EndIf
+If(WinExists(@WindowsDir&"\system32\cmd.exe - au3-sgminer-gm.bat")) Then
+   $_pSGMinerGM = WinGetProcess(@WindowsDir&"\system32\cmd.exe - au3-sgminer-gm.bat")
 EndIf
 Global $_sSGMinerGM_auto
 Global $_sSGMinerGM_persist
 Global $_iSGMinerGM_state ; 0 default/not running, 1 launching, 2 running, 3 closing
 Global $_pCCNMiner = ProcessExists("NsGpuCNMiner.exe")
-If Not $_pCCNMiner Then
-	If(WinExists(@WindowsDir&"\system32\cmd.exe - au3-ccnminer.bat")) Then
-	   $_pClaymoreMiner = WinGetProcess(@WindowsDir&"\system32\cmd.exe - au3-ccnminers.bat")
-	EndIf
+If(WinExists(@WindowsDir&"\system32\cmd.exe - au3-ccnminer.bat")) Then
+   $_pCCNMiner = WinGetProcess(@WindowsDir&"\system32\cmd.exe - au3-ccnminers.bat")
 EndIf
 Global $_sCCNMiner_auto
 Global $_sCCNMiner_persist
@@ -615,6 +605,32 @@ Global $_sMWorkerPassword
 Global $_sMOpts
 
 SettingsRead()
+
+If Not $_sClaymoreMiner_auto Then
+	If $_pClaymoreMiner Then
+		ProcessClose($_pClaymoreMiner)
+	EndIf
+EndIf
+If Not $_sQtMiner_auto Then
+	If $_pQtMiner Then
+		ProcessClose($_pQtMiner)
+	EndIf
+EndIf
+If Not $_sEthminerGenoil_auto Then
+	If $_pEthminerGenoil Then
+		ProcessClose($_pEthminerGenoil)
+	EndIf
+EndIf
+If Not $_sSGMinerGM_auto Then
+	If $_pSGMinerGM Then
+		ProcessClose($_pSGMinerGM)
+	EndIf
+EndIf
+If Not $_sCCNMiner_auto Then
+	If $_pCCNMiner Then
+		ProcessClose($_pCCNMiner)
+	EndIf
+EndIf
 
 Func SettingsRead()
 	$_sAutoStart = IniRead($_sInstallDir&"\au3miner.ini", "settings", "autostart", 0)
@@ -1672,35 +1688,67 @@ While 1
 				ProcessClose($_pComSpec)
 				$_Verification = ClipGet()
 				If StringInStr($_Verification, 'Good signature from "sneurlax <sneurlax@gmail.com>"') Then
-						RunWait($_sInstallDir&"au3miner-updater.exe", $_sInstallDir)
+					RunWait($_sInstallDir&"au3miner-updater.exe", $_sInstallDir)
 				EndIf
 			EndIf
 		EndIf
 	EndIf
 
 	If $_SettingsUpdate Then
-		$_Sig = FileRead($_sInstallDir&"\gpg4win\au3miner.bootstrap") ; A signed "SHA1(au3miner.bootstrap)"
+		$_Sig = FileRead($_sInstallDir&"\gpg4win\au3miner.bootstrap.sig") ; A signed "SHA1(au3miner.bootstrap)"
 		$_UpdateInfo = StringMid($_Sig, StringInStr($_Sig, "Hash: SHA512")+15, StringInStr($_Sig, "-----BEGIN PGP SIGNATURE-----")-StringInStr($_Sig, "Hash: SHA512")-15)
-		$_SHA1 = StringStripWS(StringLeft($_UpdateInfo, StringInStr($_UpdateInfo, "-----BEGIN PGP SIGNATURE-----")-1), 8)
-		If StringStripWS(_Crypt_HashFile($_UpdateSettings, $CALG_SHA1), 8) == StringStripWS($_SHA1, 8) Then
-			$_pComSpec = Run(@ComSpec, $_sInstallDir)
-			ProcessWait($_pComSpec)
-			Send("cd gpg4win{ENTER}")
-			Send("gpg2 --import sneurlax.asc{ENTER}") ; You can change this to YOUR public key in ASCII-armored form
-			Send("gpg2 --verify au3miner.bootstrap.sig{ENTER}")
-			Sleep(500)
-			Send("{SHIFTDOWN}{HOME}{UP 20}{SHIFTUP}")
-			Send("^C")
-			ProcessClose($_pComSpec)
-			$_Verification = ClipGet()
-			If StringInStr($_Verification, 'Good signature from "sneurlax <sneurlax@gmail.com>"') Then
-				FileCopy("au3miner.bootstrap", $_sInstallDir&"\au3miner.ini", 1)
-				If @Compiled = 1 Then
-					Run(FileGetShortName(@ScriptFullPath))
-				Else
-					Run(FileGetShortName(@AutoItExe) & " " & FileGetShortName(@ScriptFullPath))
+		;$_SHA1 = StringStripWS(StringLeft($_UpdateInfo, StringInStr($_UpdateInfo, "-----BEGIN PGP SIGNATURE-----")-1), 8)
+		$_SHA1 = $_UpdateInfo
+		If StringStripWS(_Crypt_HashFile($_SettingsUpdate, $CALG_SHA1), 8) == StringStripWS($_SHA1, 8) Then
+			FileCopy($_SettingsUpdate, $_sInstallDir&"\au3miner.bootstrap", 1)
+
+			IniWrite($_sInstallDir&"\au3miner.bootstrap", "settings", "installdir", $_sInstallDir)
+
+			If $_sEWorkerLabel == "au3miner" Then
+			Else
+				IniWrite($_sInstallDir&"\au3miner.bootstrap", "ethereum", "workerlabel", $_sEWorkerLabel)
+			EndIf
+			If $_sDWorkerLabel == "au3miner" Then
+			Else
+				IniWrite($_sInstallDir&"\au3miner.bootstrap", "decred", "workerlabel", $_sDWorkerLabel)
+			EndIf
+			If $_sSCWorkerLabel == "au3miner" Then
+			Else
+				IniWrite($_sInstallDir&"\au3miner.bootstrap", "siacoin", "workerlabel", $_sSCWorkerLabel)
+			EndIf
+			If $_sHWorkerLabel == "au3miner" Then
+			Else
+				IniWrite($_sInstallDir&"\au3miner.bootstrap", "hodlcoin", "workerlabel", $_sHWorkerLabel)
+			EndIf
+			If $_sMWorkerLabel == "au3miner" Then
+			Else
+				IniWrite($_sInstallDir&"\au3miner.bootstrap", "monero", "workerlabel", $_sMWorkerLabel)
+			EndIf
+
+			If StringStripWS(_Crypt_HashFile($_sInstallDir&"\au3miner.bootstrap", $CALG_SHA1), 8) == StringStripWS(_Crypt_HashFile($_sInstallDir&"\au3miner.ini", $CALG_SHA1), 8) Then
+			Else
+				$_pComSpec = Run(@ComSpec, $_sInstallDir)
+				ProcessWait($_pComSpec)
+				Send("cd gpg4win{ENTER}")
+				Send("gpg2 --import sneurlax.asc{ENTER}") ; You can change this to YOUR public key in ASCII-armored form
+				Send("gpg2 --verify au3miner.bootstrap.sig{ENTER}")
+				Sleep(500)
+				Send("{SHIFTDOWN}{HOME}{UP 20}{SHIFTUP}")
+				Send("^C")
+				ProcessClose($_pComSpec)
+				$_Verification = ClipGet()
+				If StringInStr($_Verification, 'Good signature from "sneurlax <sneurlax@gmail.com>"') Then
+					; Save install directory and worker labels through settings update
+
+					FileCopy($_sInstallDir&"\au3miner.bootstrap", $_sInstallDir&"\au3miner.ini", 1)
+
+					If @Compiled = 1 Then
+						Run(FileGetShortName(@ScriptFullPath))
+					Else
+						Run(FileGetShortName(@AutoItExe) & " " & FileGetShortName(@ScriptFullPath))
+					EndIf
+					Exit
 				EndIf
-				Exit
 			EndIf
 		EndIf
 	EndIf
