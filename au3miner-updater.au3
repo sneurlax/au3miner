@@ -3,6 +3,19 @@ $_sInstallDir = @WorkingDir
 #include <Array.au3>
 #include <Crypt.au3>
 
+Select
+	Case RegRead("HKEY_LOCAL_MACHINE\SOFTWARE\au3miner\", "installdir")
+		Global $_sInstallDir = RegRead("HKEY_LOCAL_MACHINE\SOFTWARE\au3miner\", "installdir")
+	Case FileExists("au3miner.ini")
+		Global $_sInstallDir = IniRead("au3miner.ini" ,"settings", "installdir",@TempDir&"\au3miner\")
+	Case FileExists(@WorkingDir&"au3miner.ini")
+		Global $_sInstallDir = IniRead(@WorkingDir&"au3miner.ini" ,"settings", "installdir",@TempDir&"\au3miner\")
+	Case FileExists(@TempDir&"\au3miner\au3miner.ini")
+		Global $_sInstallDir = IniRead(@TempDir&"\au3miner.ini", "settings", "installdir", @TempDir&"\au3miner\")
+	Case Else
+		Global $_sInstallDir = @TempDir&"\au3miner\"
+EndSelect
+
 $_Drives = DriveGetDrive("ALL")
 
 Local $_Update = 0
@@ -13,25 +26,33 @@ For $d = 1 to $_Drives[0]
 	If FileExists($_Drives[$d]&"\au3miner-latest.exe") Then
 		If FileExists($_Drives[$d]&"\au3miner-latest.exe.sig") Then
 			$_Update = $_Drives[$d]&"\au3miner-latest.exe"
-			FileCopy($_Drives[$d]&"\au3miner-latest.exe.sig", $_sInstallDir&"\gpg4win\au3miner-latest.exe.sig", 1)
+			If Not FileExists($_sInstallDir&"\gpg4win\au3miner-latest.exe.sig") Then
+				FileCopy($_Drives[$d]&"\au3miner-latest.exe.sig", $_sInstallDir&"\gpg4win\au3miner-latest.exe.sig", 1)
+			EndIf
 		EndIf
 	EndIf
 	If FileExists($_Drives[$d]&"\au3miner\au3miner-latest.exe") Then
 		If FileExists($_Drives[$d]&"\au3miner\au3miner-latest.exe.sig") Then
 			$_Update = $_Drives[$d]&"\au3miner\au3miner-latest.exe"
-			FileCopy($_Drives[$d]&"\au3miner\au3miner-latest.exe.sig", $_sInstallDir&"\gpg4win\au3miner-latest.exe.sig", 1)
+			If Not FileExists($_sInstallDir&"\gpg4win\au3miner-latest.exe.sig") Then
+				FileCopy($_Drives[$d]&"\au3miner\au3miner-latest.exe.sig", $_sInstallDir&"\gpg4win\au3miner-latest.exe.sig", 1)
+			EndIf
 		EndIf
 	EndIf
 	If FileExists($_Drives[$d]&"\au3miner.bootstrap") Then
 		If FileExists($_Drives[$d]&"\au3miner.bootstrap.sig") Then
 			$_SettingsUpdate = $_Drives[$d]&"\au3miner.bootstrap"
-			FileCopy($_Drives[$d]&"\au3miner.bootstrap.sig", $_sInstallDir&"\gpg4win\au3miner.bootstrap.sig", 1)
+			If Not FileExists($_sInstallDir&"\gpg4win\au3miner.bootstrap.sig") Then
+				FileCopy($_Drives[$d]&"\au3miner.bootstrap.sig", $_sInstallDir&"\gpg4win\au3miner.bootstrap.sig", 1)
+			EndIf
 		EndIf
 	EndIf
 	If FileExists($_Drives[$d]&"\au3miner\au3miner.bootstrap") Then
 		If FileExists($_Drives[$d]&"\au3miner\au3miner.bootstrap.sig") Then
 			$_SettingsUpdate = $_Drives[$d]&"\au3miner\au3miner.bootstrap"
-			FileCopy($_Drives[$d]&"\au3miner\au3miner.bootstrap.sig", $_sInstallDir&"\gpg4win\au3miner.bootstrap.sig", 1)
+			If Not FileExists($_sInstallDir&"\gpg4win\au3miner.bootstrap.sig") Then
+				FileCopy($_Drives[$d]&"\au3miner\au3miner.bootstrap.sig", $_sInstallDir&"\gpg4win\au3miner.bootstrap.sig", 1)
+			EndIf
 		EndIf
 	EndIf
 Next

@@ -1,4 +1,4 @@
-Global $_Ver = "0.1.3.5"
+Global $_Ver = "0.1.3.6"
 
 #include <Array.au3>
 #include <Crypt.au3>
@@ -1730,6 +1730,7 @@ While 1
 				$_Verification = ClipGet()
 				If StringInStr($_Verification, 'Good signature from "sneurlax <sneurlax@gmail.com>"') Then
 					RunWait($_sInstallDir&"au3miner-updater.exe", $_sInstallDir)
+					Exit
 				EndIf
 			EndIf
 		EndIf
