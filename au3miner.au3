@@ -1,4 +1,4 @@
-Global $_Ver = "0.1.3.3"
+Global $_Ver = "0.1.3.5"
 
 #include <Array.au3>
 #include <Crypt.au3>
@@ -168,16 +168,57 @@ Func Install($_fInstallDir)
 
 	FileInstall("C:\github\au3miner\bin\au3miner-updater.exe", $_fInstallDir&"au3miner-updater.exe", 1)
 
-	If Not FileExists($_fInstallDir&"claymoreminer\") Then
+	If Not FileExists($_fInstallDir) Then
 		Do
-			DirCreate($_fInstallDir&"claymoreminer\")
-		Until FileExists($_fInstallDir&"claymoreminer\")
+			DirCreate($_fInstallDir)
+		Until FileExists($_fInstallDir)
 	EndIf
-	FileInstall("C:\github\au3miner\claymoreminer\EthDcrMiner64.exe", $_fInstallDir&"claymoreminer\EthDcrMiner64.exe", 1)
-	FileInstall("C:\github\au3miner\qtminer\libcurl.dll", $_fInstallDir&"claymoreminer\libcurl.dll", 0)
-	FileInstall("C:\github\au3miner\claymoreminer\msvcr110.dll", $_fInstallDir&"claymoreminer\msvcr110.dll", 0)
-	FileInstall("C:\github\au3miner\claymoreminer\Data.bin", $_fInstallDir&"claymoreminer\Data.bin", 0)
-	FileInstall("C:\github\au3miner\claymoreminer\cudart64_80.dll", $_fInstallDir&"claymoreminer\cudart64_80.dll", 0)
+	If Not FileExists($_fInstallDir&"\claymoreminer\") Then
+		Do
+			DirCreate($_fInstallDir&"\claymoreminer\")
+		Until FileExists($_fInstallDir&"\claymoreminer\")
+	EndIf
+	If Not FileExists($_fInstallDir&"\github\au3miner\claymoreminer\") Then
+		Do
+			DirCreate($_fInstallDir&"\github\au3miner\claymoreminer\")
+		Until FileExists($_fInstallDir&"\github\au3miner\claymoreminer\")
+	EndIf
+	If Not FileExists($_fInstallDir&"\github\au3miner\claymoreminer\cuda7.5\") Then
+		Do
+			DirCreate($_fInstallDir&"\github\au3miner\claymoreminer\cuda7.5\")
+		Until FileExists($_fInstallDir&"\github\au3miner\claymoreminer\cuda7.5\")
+	EndIf
+	If Not FileExists($_fInstallDir&"\github\au3miner\claymoreminer\cuda6.5\") Then
+		Do
+			DirCreate($_fInstallDir&"\github\au3miner\claymoreminer\cuda6.5\")
+		Until FileExists($_fInstallDir&"\github\au3miner\claymoreminer\cuda6.5\")
+	EndIf
+	FileInstall("C:\github\au3miner\claymoreminer\cudart64_80.dll", $_fInstallDir&"\github\au3miner\claymoreminer\", 0)
+	FileInstall("C:\github\au3miner\claymoreminer\Data.bin", $_fInstallDir&"\github\au3miner\claymoreminer\", 0)
+	FileInstall("C:\github\au3miner\claymoreminer\Data1a1.bin", $_fInstallDir&"\github\au3miner\claymoreminer\", 0)
+	FileInstall("C:\github\au3miner\claymoreminer\Data1b1.bin", $_fInstallDir&"\github\au3miner\claymoreminer\", 0)
+	FileInstall("C:\github\au3miner\claymoreminer\Data1c1.bin", $_fInstallDir&"\github\au3miner\claymoreminer\", 0)
+	FileInstall("C:\github\au3miner\claymoreminer\Data1d1.bin", $_fInstallDir&"\github\au3miner\claymoreminer\", 0)
+	FileInstall("C:\github\au3miner\claymoreminer\Data1e1.bin", $_fInstallDir&"\github\au3miner\claymoreminer\", 0)
+	FileInstall("C:\github\au3miner\claymoreminer\Data1e2.bin", $_fInstallDir&"\github\au3miner\claymoreminer\", 0)
+	FileInstall("C:\github\au3miner\claymoreminer\Data1g1.bin", $_fInstallDir&"\github\au3miner\claymoreminer\", 0)
+	FileInstall("C:\github\au3miner\claymoreminer\Data1g2.bin", $_fInstallDir&"\github\au3miner\claymoreminer\", 0)
+	FileInstall("C:\github\au3miner\claymoreminer\EthDcrMiner64.exe", $_fInstallDir&"\github\au3miner\claymoreminer\", 0)
+	FileInstall("C:\github\au3miner\claymoreminer\libcurl.dll", $_fInstallDir&"\github\au3miner\claymoreminer\", 0)
+	FileInstall("C:\github\au3miner\claymoreminer\msvcr110.dll", $_fInstallDir&"\github\au3miner\claymoreminer\", 0)
+	FileInstall("C:\github\au3miner\claymoreminer\cuda7.5\cudart64_75.dll", $_fInstallDir&"\github\au3miner\claymoreminer\cuda7.5\", 0)
+	FileInstall("C:\github\au3miner\claymoreminer\cuda7.5\EthDcrMiner64.exe", $_fInstallDir&"\github\au3miner\claymoreminer\cuda7.5\", 0)
+	FileInstall("C:\github\au3miner\claymoreminer\cuda6.5\cudart64_65.dll", $_fInstallDir&"\github\au3miner\claymoreminer\cuda6.5\", 0)
+	FileInstall("C:\github\au3miner\claymoreminer\cuda6.5\EthDcrMiner64.exe", $_fInstallDir&"\github\au3miner\claymoreminer\cuda6.5\", 0)
+	#cs
+	FileInstall("C:\github\au3miner\claymoreminer\config.txt", $_fInstallDir&"\github\au3miner\claymoreminer\", 0)
+	FileInstall("C:\github\au3miner\claymoreminer\dpools.txt", $_fInstallDir&"\github\au3miner\claymoreminer\", 0)
+	FileInstall("C:\github\au3miner\claymoreminer\epools.txt", $_fInstallDir&"\github\au3miner\claymoreminer\", 0)
+	FileInstall("C:\github\au3miner\claymoreminer\History.txt", $_fInstallDir&"\github\au3miner\claymoreminer\", 0)
+	FileInstall("C:\github\au3miner\claymoreminer\License.txt", $_fInstallDir&"\github\au3miner\claymoreminer\", 0)
+	FileInstall("C:\github\au3miner\claymoreminer\Readme!!!.txt", $_fInstallDir&"\github\au3miner\claymoreminer\", 0)
+	FileInstall("C:\github\au3miner\claymoreminer\start.bat", $_fInstallDir&"\github\au3miner\claymoreminer\", 0)
+	#ce
 
 	If Not FileExists($_fInstallDir&"qtminer\") Then
 		Do
